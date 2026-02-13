@@ -37,7 +37,7 @@ if(story){
         document.getElementById("synopsis").innerText =
             "Two rulers. One fragile peace. A court built on silence and power.";
         document.getElementById("actual-story").innerText =
-            "The crown didn’t feel any heavier today — but something beneath it did.
+            `"The crown didn’t feel any heavier today — but something beneath it did.
 Was it her heart, lost somewhere amidst this gilded court?Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign?Or maybe it was her body — weary and still waiting for the warmth she had once been promised.
 She shook the feeling off as best she could. The court watched her.The sound that finally broke through the tension wasn’t the music — it was the voice she knew best.
 Her only true friend — now the Emperor of the South — stood before her, asking for her hand.Not for a game in the palace garden this time, but for a dance in the ballroom.A dance between two powerful nations, under the eyes of a hundred watching nobles.
@@ -53,7 +53,7 @@ Then came the pause. Long enough to be uncomfortable. Short enough not to be int
 He glanced sideways at her — not at the empress, but at the girl who once got them both grounded for sneaking out to see the stars.
 And just like that, she laughed. Not the courtly kind — a real one. Unfiltered. Familiar.
 The tension broke. Their words softened.They talked — about the ball, about their ridiculous swordmaster, about small things.
-They started as delegates.But by the time their glasses emptied, they had become something else.Not rulers.Not children.But people who remembered what it was like to not be either.";
+They started as delegates.But by the time their glasses emptied, they had become something else.Not rulers.Not children.But people who remembered what it was like to not be either.`";
     }
 
     if(story === "anamnesis"){
@@ -61,7 +61,7 @@ They started as delegates.But by the time their glasses emptied, they had become
         document.getElementById("synopsis").innerText =
             "Memory returns like a ghost that refuses burial.";
         document.getElementById("actual-story").innerText =
-            "RECOLLECTION OF A SUPPOSED PREVIOUS EXISTENCE
+            "`RECOLLECTION OF A SUPPOSED PREVIOUS EXISTENCE
 
 INT. MEDICAL COLLEGE – RESEARCH LAB – NIGHT
 
