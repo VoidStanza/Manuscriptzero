@@ -10,7 +10,7 @@ window.onload = function() {
 };
 
 // Countdown
-var releaseDate = new Date("March 30, 2026 00:00:00").getTime();
+var releaseDate = new Date("February 15, 2026 00:19:00").getTime();
 
 if(document.getElementById("countdown")){
     setInterval(function() {
