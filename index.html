@@ -5,97 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Archive | Noir Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&display=swap');
-        
-        :root {
-            --bg-dark: #0a0a0b;
-            --card-bg: #161618;
-            --accent: #d4af37; /* Gold */
-            --text-main: #e2e2e2;
-        }
-
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            background-color: var(--bg-dark); 
-            color: var(--text-main); 
-            scroll-behavior: smooth; 
-        }
-
+        :root { --bg-dark: #0a0a0b; --accent: #d4af37; --text-main: #e2e2e2; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); color: var(--text-main); scroll-behavior: smooth; overflow-x: hidden; }
         .serif { font-family: 'Playfair Display', serif; }
         .reading-font { font-family: 'Lora', serif; line-height: 1.9; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0a0b; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-
-        .fade-in { animation: fadeIn 1s ease-out; }
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .gold-glow:hover { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
     </style>
 </head>
 <body>
 
     <div id="loading-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-1000">
         <div class="text-center">
-            <h1 class="serif text-3xl md:text-5xl italic tracking-[0.3em] text-[#d4af37] animate-pulse mb-2">THE ARCHIVE</h1>
-            <p class="text-xs uppercase tracking-widest text-gray-500">Welcome to this exclusive archive</p>
+            <h1 class="serif text-3xl md:text-5xl italic tracking-[0.3em] text-[#d4af37] animate-pulse">THE ARCHIVE</h1>
         </div>
     </div>
 
     <div id="main-content" class="hidden min-h-screen">
-        
-        <nav class="p-6 border-b border-white/5 flex justify-between items-center bg-black/20 backdrop-blur-md sticky top-0 z-40">
-            <h2 class="serif text-xl gold-glow cursor-pointer" onclick="showHome()">V.</h2>
+        <nav class="p-6 border-b border-white/5 flex justify-between items-center bg-black/50 backdrop-blur-md sticky top-0 z-40">
+            <h2 class="serif text-xl cursor-pointer hover:text-[#d4af37]" onclick="showHome()">V.</h2>
             <div class="h-[1px] w-20 bg-[#d4af37]/30"></div>
         </nav>
 
         <div class="p-6 md:p-16">
             <div id="home-page" class="max-w-6xl mx-auto fade-in">
                 <header class="mb-16">
-                    <h2 class="serif text-5xl md:text-7xl font-bold mb-4">The Vault</h2>
-                    <p class="text-gray-400 italic tracking-wide">Privately curated works for my readers.</p>
+                    <h1 class="serif text-5xl md:text-7xl font-bold mb-4">The Vault</h1>
+                    <p class="text-gray-400 italic">Curated works for the curious.</p>
                 </header>
-                
-                <section>
-                    <h3 class="text-[10px] uppercase tracking-[0.4em] text-[#d4af37] font-bold mb-10 border-b border-[#d4af37]/20 pb-2 inline-block">Latest Releases</h3>
-                    <div id="story-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"></div>
-                </section>
+                <div id="story-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"></div>
             </div>
 
             <div id="detail-page" class="hidden max-w-4xl mx-auto fade-in">
-                <button onclick="showHome()" class="mb-12 text-xs uppercase tracking-widest text-gray-500 hover:text-[#d4af37] transition duration-300">← Return to Vault</button>
+                <button onclick="showHome()" class="mb-12 text-xs uppercase tracking-widest text-gray-500 hover:text-[#d4af37]">← Back</button>
                 
                 <div id="synopsis-view">
                     <div class="flex flex-col md:flex-row gap-12 items-start">
-                        <div id="detail-cover" class="w-full md:w-5/12 aspect-[2/3] rounded shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-cover bg-center grayscale hover:grayscale-0 transition duration-700"></div>
+                        <div id="detail-cover" class="w-full md:w-5/12 aspect-[2/3] rounded bg-cover bg-center shadow-2xl"></div>
                         <div class="w-full md:w-7/12">
-                            <h2 id="detail-title" class="serif text-5xl md:text-6xl mb-6"></h2>
-                            <p id="detail-synopsis" class="reading-font text-xl text-gray-400 mb-10 leading-relaxed"></p>
-                            <div class="flex items-center gap-6">
-                                <button onclick="startReading()" class="bg-[#d4af37] text-black px-10 py-4 rounded-full font-bold hover:bg-white transition duration-500 transform hover:-translate-y-1">Read Story</button>
-                                <button id="like-btn" onclick="toggleLike()" class="text-2xl hover:scale-125 transition">♡</button>
-                            </div>
+                            <h2 id="detail-title" class="serif text-5xl mb-6"></h2>
+                            <p id="detail-synopsis" class="reading-font text-xl text-gray-400 mb-10"></p>
+                            <button onclick="startReading()" class="bg-[#d4af37] text-black px-10 py-4 rounded-full font-bold">Read Story</button>
                         </div>
                     </div>
                 </div>
 
                 <div id="reading-view" class="hidden max-w-2xl mx-auto">
                     <h2 id="reading-title" class="serif text-5xl text-center mb-16 text-[#d4af37]"></h2>
-                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8 first-letter:text-6xl first-letter:serif first-letter:text-[#d4af37] first-letter:mr-3 first-letter:float-left"></div>
+                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8 first-letter:text-6xl first-letter:text-[#d4af37] first-letter:mr-3 first-letter:float-left"></div>
                     
-                    <div class="mt-32 pt-16 border-t border-white/10">
-                        <h3 class="serif text-2xl mb-8 text-[#d4af37]">Thoughts?</h3>
-                        <div class="bg-[#161618] p-6 rounded-lg mb-8">
-                            <textarea id="comment-input" class="w-full bg-transparent border-b border-white/10 focus:border-[#d4af37] outline-none py-2 mb-4 transition reading-font" placeholder="Write a comment..."></textarea>
-                            <div class="flex justify-end">
-                                <button onclick="addComment()" class="text-xs uppercase tracking-widest bg-white text-black px-6 py-2 rounded hover:bg-[#d4af37] transition">Post Comment</button>
+                    <div class="mt-20 py-10 border-y border-white/5 flex flex-col items-center">
+                        <button onclick="handleLike()" id="like-btn" class="text-4xl hover:scale-110 transition">♡</button>
+                        <span id="like-count" class="text-xs tracking-widest mt-2 text-[#d4af37]">0 LIKES</span>
+                    </div>
+
+                    <div class="mt-20">
+                        <h3 class="serif text-2xl mb-8 text-[#d4af37]">Discussion</h3>
+                        <div class="bg-[#161618] p-6 rounded mb-10">
+                            <div class="flex gap-3 mb-4">
+                                <button onclick="addEmoji('✨')" class="hover:scale-125 transition">✨</button>
+                                <button onclick="addEmoji('🖤')" class="hover:scale-125 transition">🖤</button>
+                                <button onclick="addEmoji('🥀')" class="hover:scale-125 transition">🥀</button>
                             </div>
+                            <textarea id="comment-input" class="w-full bg-transparent border-b border-white/10 outline-none py-2 mb-4 text-sm" placeholder="Leave a thought..."></textarea>
+                            <button onclick="postComment()" class="bg-[#d4af37] text-black px-6 py-2 text-xs uppercase font-bold rounded">Post</button>
                         </div>
-                        <div id="comment-list" class="space-y-6">
-                            </div>
+                        <div id="comment-list" class="space-y-8"></div>
                     </div>
                 </div>
             </div>
@@ -103,84 +81,116 @@
     </div>
 
     <script>
-        const stories = [
+       const stories = [
+
             { 
+
                 id: 1, 
+
                 title: "Horizon", 
+
                 synopsis: "The perfect son is a masterpiece of a lie, and the cracks are starting to scream.", 
+
                 text: "He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it. <br><br>They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked, and he eats the cake, smiles at the photographs, listens to the stories, applauds with steady hands, and inside him the stillness lingers, the echo of being seen and not seen at the same time, the ache of being loved as an accessory to love, the soft exhaustion of existing fully and being noticed only partly, a quiet knowing of absence in abundance, a slow weight that presses against the ribs and folds itself into his bones, and he walks through the day like this, through all the care and all the light, holding the impossible understanding that being looked after is not always being held.",
+
                 cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg" 
+
             },
+
             { 
+
                 id: 2, 
+
                 title: "Dance of the 2 Empires", 
+
                 synopsis: "Two crowns, one dance, and a shared history.", 
+
                 text: "The crown didn’t feel any heavier today — but something beneath it did.<br><br>Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign? Or maybe it was her body — weary and still waiting for the warmth she had once been promised.<br><br>She shook the feeling off as best she could. The court watched her. The sound that finally broke through the tension wasn’t the music — it was the voice she knew best.<br><br>Her only true friend — now the Emperor of the South — stood before her, asking for her hand. Not for a game in the palace garden this time, but for a dance in the ballroom. A dance between two powerful nations, under the eyes of a hundred watching nobles.<br><br>She took his hand. They stepped onto the floor — not as the children they once were, but as rulers. Still, something in their steps remembered old rhythms.<br><br>As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”<br><br>But somewhere between the fourth and fifth step, the past crept in.<br><br>The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them.<br><br>He made a polite remark — something about the alliance, or the Chancellor’s speech. She replied with a practiced smile. The kind you give when there’s too much history in the room.<br><br>Then came the pause. Long enough to be uncomfortable. Short enough not to be intentional.<br><br>He glanced sideways at her — not at the empress, but at the girl who once got them both grounded for sneaking out to see the stars.<br><br>And just like that, she laughed. Not the courtly kind — a real one. Unfiltered. Familiar. The tension broke. Their words softened. They talked — about the ball, about their ridiculous swordmaster, about small things.<br><br>They started as delegates. But by the time their glasses emptied, they had become something else. Not rulers. Not children. But people who remembered what it was like to not be either.", 
+
                 cover: "https://i.pinimg.com/736x/b5/34/43/b53443eaeed068570e1084f73bebeaf5.jpg" 
+
             },
+
             { 
+
                 id: 3, 
+
                 title: "Anamnesis", 
+
                 synopsis: "The archives are hungry, and the curiosity that led him to the file is the very thing that wrote him into it.", 
+
                 text: "<div class='font-mono bg-black/40 p-8 rounded border border-[#d4af37]/20 text-sm'><p class='text-[#d4af37] mb-6'>INT. MEDICAL COLLEGE – RESEARCH LAB – NIGHT</p>...[Content Loaded]...<br><br><span class='text-red-500 font-bold'>ANAMNESIS_004 – FILE READY FOR NEXT SUBJECT</span></div>", 
+
                 cover: "https://i.pinimg.com/1200x/dc/0d/c1/dc0dc15c13dcfe322b098796162b2a39.jpg" 
+
             },
+
               { 
+
                 id: 4, 
+
                 title: "Empathodexterity", 
+
                 synopsis: "Same tool, different hands.", 
+
                 text: "<div class='reading-font text-gray-300 leading-relaxed'><p class='mb-6'>The old woman’s bangles sang a sharp, glass melody as she worked, a rhythmic percussion that cut through the humid air of the bazaar. To the passing crowds, she was just the \"Guava Lady,\" a fixture of the pavement, but to the young girl sitting at her feet, she was a surgeon of the streets.</p><p class='mb-6 italic text-[#d4af37] border-l border-[#d4af37]/30 pl-4'>\"Watch the wrist, Meena,\" her mother would say, never once looking up from her work.</p><p class='mb-6'>With a swift, silver flash of her paring knife, a firm guava was transformed into perfect, bite-sized pieces of hospitality. Meena watched those hands every day, stained with the nectar of the fruit and the rust-coloured dust of chilli powder, weathered by the relentless sun, yet moving with the grace of a conductor leading a symphony.</p><p class='mb-6'>The cuts seemed effortless yet precise to the millimeter, and in that precision, she honored the fruit by wasting nothing.</p><p class='mb-6 italic text-[#d4af37] border-l border-[#d4af37]/30 pl-4'>\"The hand must be steady, Meena, but the heart must be soft,\" her mother whispered as she handed a newspaper cone to a hungry child. \"That is how you truly serve.\"</p><div class='my-12 py-8 border-y border-white/5 text-center text-xs tracking-[0.5em] text-gray-500'>TWO DECADES LATER</div><p class='mb-6'>The golden sun has been replaced by the sterile, unwavering glare of overhead surgical lamps. The chaotic symphony of the marketplace, the honking rickshaws and shouting vendors has faded into a heavy, clinical silence.</p><p class='mb-6'>Meena looks down at her own hands. They are no longer stained with fruit and chilli powder; instead, they are encased in pale, sterile latex. The rhythmic clinking of glass bangles has been traded for the steady, digital pulse of a heart monitor, a neon green line marking the boundary between life and the unknown.</p><p class='mb-6'>She picks up the scalpel. It is significantly smaller and lighter than her mother’s worn paring knife, but as she touches the silver edge to the patient’s skin, she feels that same familiar weight of responsibility.</p><p class='mb-6'>She makes the first incision, a clean, decisive arc. It is the same motion she observed on a street corner years ago, the same unwavering precision once used to quarter a guava. Only now, the \"sweetness\" she is trying to reach isn't a snack for a child; it is the rhythmic thrum of a human life struggling to continue.</p><p class='mb-12 font-bold text-white'>The street vendor fed the body, and the daughter mended the life. It was a shared legacy of the wrist. As Meena's scalpel moved, the distinction vanished – different tools, different worlds, but the same sacred precision. She was her mother's daughter, with a quiet inheritance of discipline; proving that every cut, when guided by a soft heart, is an altar where life is honored.</p></div>",
+
                 cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" 
+
             },
+
         ];
 
-        let activeStoryId = null;
+        // SUPABASE CONFIG
+        const _url = 'https://iakkxwghbczalryylqzg.supabase.co';
+        const _key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc';
+        const supabase = _url !== 'https://iakkxwghbczalryylqzg.supabase.co' ? supabase.createClient(_url, _key) : null;
+
+        let activeStory = null;
+        let localComments = [];
 
         window.addEventListener('load', () => {
             setTimeout(() => {
-                document.getElementById('loading-screen').style.opacity = '0';
+                document.getElementById('loading-screen').style.opacity = 0;
                 setTimeout(() => {
                     document.getElementById('loading-screen').style.display = 'none';
                     document.getElementById('main-content').classList.remove('hidden');
                     renderStories();
                 }, 1000);
-            }, 2000);
+            }, 1500);
         });
 
         function renderStories() {
             const grid = document.getElementById('story-grid');
-            grid.innerHTML = stories.map(story => `
-                <div onclick="showStory(${story.id})" class="group cursor-pointer">
-                    <div class="aspect-[2/3] overflow-hidden rounded-sm mb-6 bg-zinc-900 shadow-2xl border border-white/5 relative">
-                        <img src="${story.cover}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition duration-1000">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-500"></div>
+            grid.innerHTML = stories.map(s => `
+                <div onclick="showStory(${s.id})" class="group cursor-pointer">
+                    <div class="aspect-[2/3] overflow-hidden bg-zinc-900 border border-white/5 relative">
+                        <img src="${s.cover}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-1000">
                     </div>
-                    <h4 class="serif text-xl tracking-wide group-hover:text-[#d4af37] transition duration-500">${story.title}</h4>
-                    <div class="h-[1px] w-0 group-hover:w-full bg-[#d4af37] transition-all duration-700 mt-2"></div>
+                    <h4 class="serif text-lg mt-4 group-hover:text-[#d4af37] transition">${s.title}</h4>
                 </div>
             `).join('');
         }
 
         function showStory(id) {
-            const story = stories.find(s => s.id === id);
-            activeStoryId = id;
+            activeStory = stories.find(s => s.id === id);
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('detail-page').classList.remove('hidden');
             document.getElementById('synopsis-view').classList.remove('hidden');
             document.getElementById('reading-view').classList.add('hidden');
-            document.getElementById('detail-title').innerText = story.title;
-            document.getElementById('detail-synopsis').innerText = story.synopsis;
-            document.getElementById('detail-cover').style.backgroundImage = `url(${story.cover})`;
+            document.getElementById('detail-title').innerText = activeStory.title;
+            document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
+            document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
             window.scrollTo(0,0);
         }
 
         function startReading() {
-            const story = stories.find(s => s.id === activeStoryId);
             document.getElementById('synopsis-view').classList.add('hidden');
             document.getElementById('reading-view').classList.remove('hidden');
-            document.getElementById('reading-title').innerText = story.title;
-            document.getElementById('full-text').innerHTML = story.text;
-            window.scrollTo(0,0);
+            document.getElementById('reading-title').innerText = activeStory.title;
+            document.getElementById('full-text').innerHTML = activeStory.text;
+            document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
+            renderComments();
         }
 
         function showHome() {
@@ -188,22 +198,49 @@
             document.getElementById('home-page').classList.remove('hidden');
         }
 
-        function toggleLike() {
-            const btn = document.getElementById('like-btn');
-            btn.innerHTML = btn.innerHTML === '♡' ? '❤️' : '♡';
-            btn.classList.toggle('text-red-500');
+        function addEmoji(emoji) { document.getElementById('comment-input').value += emoji; }
+
+        function postComment(parentId = null) {
+            const input = document.getElementById('comment-input');
+            const val = parentId ? prompt("Reply:") : input.value;
+            if(!val) return;
+            
+            const newComment = { id: Date.now(), story_id: activeStory.id, parent_id: parentId, content: val };
+            localComments.push(newComment);
+            if(!parentId) input.value = "";
+            renderComments();
         }
 
-        function addComment() {
-            const input = document.getElementById('comment-input');
-            if(!input.value) return;
+        function deleteComment(id) {
+            localComments = localComments.filter(c => c.id !== id && c.parent_id !== id);
+            renderComments();
+        }
+
+        function renderComments() {
             const list = document.getElementById('comment-list');
-            const div = document.createElement('div');
-            div.className = "bg-white/5 p-4 rounded border-l-2 border-[#d4af37] fade-in";
-            div.innerHTML = `<p class='text-xs uppercase tracking-widest text-[#d4af37] mb-2'>Reader</p>
-                             <p class='text-gray-300 italic'>${input.value}</p>`;
-            list.prepend(div);
-            input.value = "";
+            const topLevel = localComments.filter(c => c.story_id === activeStory.id && !c.parent_id);
+            
+            list.innerHTML = topLevel.map(c => {
+                const replies = localComments.filter(r => r.parent_id === c.id);
+                return `
+                    <div class="border-l border-[#d4af37]/30 pl-4 py-2 fade-in">
+                        <p class="text-sm text-gray-300 italic mb-2">${c.content}</p>
+                        <div class="flex gap-4">
+                            <button onclick="postComment(${c.id})" class="text-[10px] text-[#d4af37] uppercase tracking-widest">Reply</button>
+                            <button onclick="deleteComment(${c.id})" class="text-[10px] text-red-900 uppercase tracking-widest">Delete</button>
+                        </div>
+                        <div class="ml-6 mt-4 space-y-4 border-l border-white/5 pl-4">
+                            ${replies.map(r => `<p class="text-xs text-gray-500 italic"><span class="text-[#d4af37]">↳</span> ${r.content}</p>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleLike() {
+            activeStory.likes++;
+            document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
+            document.getElementById('like-btn').innerText = '❤️';
         }
     </script>
 </body>
