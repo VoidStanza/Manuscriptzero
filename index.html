@@ -1,22 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ManuscriptZero</title>
-  <link rel="stylesheet" href="style.css">
+    <title>Story</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <h1>ManuscriptZero</h1>
-  <p>A private archive of original works.</p>
-</header>
+<div class="story-container">
 
-<section class="library">
-  <a href="stories/empire.html" class="book">
-    <h2>The Dance of Two Empires</h2>
-    <p>Political tension. Silence. A crown that listens.</p>
-  </a>
-</section>
+    <h1 id="story-title"></h1>
 
+    <div class="synopsis" id="synopsis"></div>
+
+    <button onclick="startReading()">Read Story</button>
+
+    <div id="story-content" style="display:none;">
+        <p id="actual-story"></p>
+    </div>
+
+    <div id="finished-message" style="display:none;">
+        <h3>Finished</h3>
+    </div>
+
+    <hr>
+
+    <button onclick="likeStory()">❤️ Like</button>
+    <span id="like-count">0</span>
+
+    <h3>Comments</h3>
+    <textarea id="comment-input" placeholder="Write comment..."></textarea>
+    <br>
+    <button onclick="addComment()">Post</button>
+
+    <div id="comment-section"></div>
+
+    <br>
+    <a href="index.html">Back to Home</a>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
