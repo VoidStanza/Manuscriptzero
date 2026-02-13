@@ -141,13 +141,13 @@
 
         ];
 
-        // SUPABASE CONFIG
+        // SUPABASE CONFIG - FIX 1: Correct Initialization
         const _url = 'https://iakkxwghbczalryylqzg.supabase.co';
         const _key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc';
-        const supabase = _url !== 'https://iakkxwghbczalryylqzg.supabase.co' ? supabase.createClient(_url, _key) : null;
+        const sbClient = supabase.createClient(_url, _key); // Renamed to avoid conflict
 
         let activeStory = null;
-        let localComments = [];
+        let dbComments = [];
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -184,13 +184,13 @@
             window.scrollTo(0,0);
         }
 
-        function startReading() {
+        async function startReading() {
             document.getElementById('synopsis-view').classList.add('hidden');
             document.getElementById('reading-view').classList.remove('hidden');
             document.getElementById('reading-title').innerText = activeStory.title;
             document.getElementById('full-text').innerHTML = activeStory.text;
             document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
-            renderComments();
+            await fetchComments(); // FIX 2: Load real comments from DB
         }
 
         function showHome() {
@@ -200,34 +200,52 @@
 
         function addEmoji(emoji) { document.getElementById('comment-input').value += emoji; }
 
-        function postComment(parentId = null) {
+        // FIX 3: Actually send data to Supabase
+        async function postComment(parentId = null) {
             const input = document.getElementById('comment-input');
-            const val = parentId ? prompt("Reply:") : input.value;
-            if(!val) return;
+            const content = parentId ? prompt("Reply:") : input.value;
+            if(!content) return;
             
-            const newComment = { id: Date.now(), story_id: activeStory.id, parent_id: parentId, content: val };
-            localComments.push(newComment);
-            if(!parentId) input.value = "";
-            renderComments();
+            const { error } = await sbClient
+                .from('comments')
+                .insert([{ 
+                    story_id: activeStory.id, 
+                    parent_id: parentId, 
+                    content: content 
+                }]);
+
+            if (error) {
+                alert("Error posting comment. Check if your 'comments' table exists!");
+            } else {
+                if(!parentId) input.value = "";
+                await fetchComments(); 
+            }
         }
 
-        function deleteComment(id) {
-            localComments = localComments.filter(c => c.id !== id && c.parent_id !== id);
-            renderComments();
+        async function fetchComments() {
+            const { data, error } = await sbClient
+                .from('comments')
+                .select('*')
+                .eq('story_id', activeStory.id)
+                .order('created_at', { ascending: true });
+
+            if (!error) {
+                dbComments = data;
+                renderComments();
+            }
         }
 
         function renderComments() {
             const list = document.getElementById('comment-list');
-            const topLevel = localComments.filter(c => c.story_id === activeStory.id && !c.parent_id);
+            const topLevel = dbComments.filter(c => !c.parent_id);
             
             list.innerHTML = topLevel.map(c => {
-                const replies = localComments.filter(r => r.parent_id === c.id);
+                const replies = dbComments.filter(r => r.parent_id === c.id);
                 return `
                     <div class="border-l border-[#d4af37]/30 pl-4 py-2 fade-in">
                         <p class="text-sm text-gray-300 italic mb-2">${c.content}</p>
                         <div class="flex gap-4">
                             <button onclick="postComment(${c.id})" class="text-[10px] text-[#d4af37] uppercase tracking-widest">Reply</button>
-                            <button onclick="deleteComment(${c.id})" class="text-[10px] text-red-900 uppercase tracking-widest">Delete</button>
                         </div>
                         <div class="ml-6 mt-4 space-y-4 border-l border-white/5 pl-4">
                             ${replies.map(r => `<p class="text-xs text-gray-500 italic"><span class="text-[#d4af37]">↳</span> ${r.content}</p>`).join('')}
@@ -243,5 +261,3 @@
             document.getElementById('like-btn').innerText = '❤️';
         }
     </script>
-</body>
-</html>
