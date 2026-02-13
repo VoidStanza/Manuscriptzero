@@ -3,60 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Archive | Exclusive Works</title>
+    <title>The Archive | Noir Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,700&family=Inter:wght@300;400;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; scroll-behavior: smooth; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&display=swap');
+        
+        :root {
+            --bg-dark: #0a0a0b;
+            --card-bg: #161618;
+            --accent: #d4af37; /* Gold */
+            --text-main: #e2e2e2;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            scroll-behavior: smooth; 
+        }
+
         .serif { font-family: 'Playfair Display', serif; }
-        .reading-font { font-family: 'Lora', serif; line-height: 1.8; }
-        .fade-in { animation: fadeIn 0.8s ease-in forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .reading-font { font-family: 'Lora', serif; line-height: 1.9; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0b; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        .fade-in { animation: fadeIn 1s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .gold-glow:hover { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
     </style>
 </head>
 <body>
 
     <div id="loading-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-1000">
-        <h1 class="serif text-2xl md:text-4xl italic tracking-widest animate-pulse">Welcome to this exclusive archive</h1>
+        <div class="text-center">
+            <h1 class="serif text-3xl md:text-5xl italic tracking-[0.3em] text-[#d4af37] animate-pulse mb-2">THE ARCHIVE</h1>
+            <p class="text-xs uppercase tracking-widest text-gray-500">Welcome to this exclusive archive</p>
+        </div>
     </div>
 
-    <div id="main-content" class="hidden min-h-screen p-6 md:p-12">
+    <div id="main-content" class="hidden min-h-screen">
         
-        <div id="home-page" class="max-w-6xl mx-auto">
-            <header class="mb-12 border-b border-slate-700 pb-6">
-                <h2 class="serif text-4xl font-bold mb-2">The Vault</h2>
-                <p class="text-slate-400 italic">Exclusive access for my readers.</p>
-            </header>
-            <section>
-                <h3 class="text-xs uppercase tracking-[0.2em] text-amber-500 font-bold mb-8">Latest Release</h3>
-                <div id="story-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
-            </section>
-        </div>
+        <nav class="p-6 border-b border-white/5 flex justify-between items-center bg-black/20 backdrop-blur-md sticky top-0 z-40">
+            <h2 class="serif text-xl gold-glow cursor-pointer" onclick="showHome()">V.</h2>
+            <div class="h-[1px] w-20 bg-[#d4af37]/30"></div>
+        </nav>
 
-        <div id="detail-page" class="hidden max-w-4xl mx-auto fade-in">
-            <button onclick="showHome()" class="mb-8 flex items-center text-slate-400 hover:text-white transition">← Back to Home</button>
-            
-            <div id="synopsis-view">
-                <div class="flex flex-col md:flex-row gap-10">
-                    <div id="detail-cover" class="w-full md:w-1/3 aspect-[2/3] bg-slate-800 rounded-lg shadow-2xl bg-cover bg-center border border-slate-700"></div>
-                    <div class="w-full md:w-2/3">
-                        <h2 id="detail-title" class="serif text-5xl font-bold mb-4"></h2>
-                        <p id="detail-synopsis" class="text-slate-300 italic mb-8 text-xl border-l-4 border-amber-600 pl-4"></p>
-                        <div class="flex gap-4 mb-10">
-                            <button onclick="startReading()" class="bg-amber-600 hover:bg-amber-500 px-8 py-3 rounded-full font-bold transition shadow-lg">Read Story</button>
-                            <button onclick="toggleLike()" class="border border-slate-600 px-6 py-3 rounded-full hover:bg-slate-800 transition">❤️ Like</button>
+        <div class="p-6 md:p-16">
+            <div id="home-page" class="max-w-6xl mx-auto fade-in">
+                <header class="mb-16">
+                    <h2 class="serif text-5xl md:text-7xl font-bold mb-4">The Vault</h2>
+                    <p class="text-gray-400 italic tracking-wide">Privately curated works for my readers.</p>
+                </header>
+                
+                <section>
+                    <h3 class="text-[10px] uppercase tracking-[0.4em] text-[#d4af37] font-bold mb-10 border-b border-[#d4af37]/20 pb-2 inline-block">Latest Releases</h3>
+                    <div id="story-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"></div>
+                </section>
+            </div>
+
+            <div id="detail-page" class="hidden max-w-4xl mx-auto fade-in">
+                <button onclick="showHome()" class="mb-12 text-xs uppercase tracking-widest text-gray-500 hover:text-[#d4af37] transition duration-300">← Return to Vault</button>
+                
+                <div id="synopsis-view">
+                    <div class="flex flex-col md:flex-row gap-12 items-start">
+                        <div id="detail-cover" class="w-full md:w-5/12 aspect-[2/3] rounded shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-cover bg-center grayscale hover:grayscale-0 transition duration-700"></div>
+                        <div class="w-full md:w-7/12">
+                            <h2 id="detail-title" class="serif text-5xl md:text-6xl mb-6"></h2>
+                            <p id="detail-synopsis" class="reading-font text-xl text-gray-400 mb-10 leading-relaxed"></p>
+                            <div class="flex items-center gap-6">
+                                <button onclick="startReading()" class="bg-[#d4af37] text-black px-10 py-4 rounded-full font-bold hover:bg-white transition duration-500 transform hover:-translate-y-1">Read Story</button>
+                                <button id="like-btn" onclick="toggleLike()" class="text-2xl hover:scale-125 transition">♡</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="reading-view" class="hidden max-w-2xl mx-auto py-10">
-                <h2 id="reading-title" class="serif text-4xl text-center mb-12 text-amber-500"></h2>
-                <div id="full-text" class="reading-font text-lg text-slate-200 space-y-6 first-letter:text-5xl first-letter:font-bold first-letter:mr-3 first-letter:float-left first-letter:serif">
+                <div id="reading-view" class="hidden max-w-2xl mx-auto">
+                    <h2 id="reading-title" class="serif text-5xl text-center mb-16 text-[#d4af37]"></h2>
+                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8 first-letter:text-6xl first-letter:serif first-letter:text-[#d4af37] first-letter:mr-3 first-letter:float-left"></div>
+                    
+                    <div class="mt-32 pt-16 border-t border-white/10">
+                        <h3 class="serif text-2xl mb-8 text-[#d4af37]">Thoughts?</h3>
+                        <div class="bg-[#161618] p-6 rounded-lg mb-8">
+                            <textarea id="comment-input" class="w-full bg-transparent border-b border-white/10 focus:border-[#d4af37] outline-none py-2 mb-4 transition reading-font" placeholder="Write a comment..."></textarea>
+                            <div class="flex justify-end">
+                                <button onclick="addComment()" class="text-xs uppercase tracking-widest bg-white text-black px-6 py-2 rounded hover:bg-[#d4af37] transition">Post Comment</button>
+                            </div>
+                        </div>
+                        <div id="comment-list" class="space-y-6">
+                            </div>
                     </div>
-                <div class="mt-20 pt-10 border-t border-slate-800 text-center">
-                    <p class="italic text-slate-500 mb-8">End of Chapter</p>
-                    <button onclick="showHome()" class="text-amber-500 hover:underline">Return to Archive</button>
                 </div>
             </div>
         </div>
@@ -73,28 +113,21 @@
             },
             { 
                 id: 2, 
-                title: "The Dance of 2 Empires", 
+                title: "Dance of the 2 Empires", 
                 synopsis: "Two crowns, one dance, and a shared history.", 
-                text: "The crown didn’t feel any heavier today — but something beneath it did.<br><br>Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign? Or maybe it was her body — weary and still waiting for the warmth she had once been promised.<br><br>She shook the feeling off as best she could. The court watched her. The sound that finally broke through the tension wasn’t the music — it was the voice she knew best.<br><br>Her only true friend — now the Emperor of the South — stood before her, asking for her hand. Not for a game in the palace garden this time, but for a dance in the ballroom. A dance between two powerful nations, under the eyes of a hundred watching nobles.<br><br>She took his hand.<br><br>They stepped onto the floor — not as the children they once were, but as rulers. Still, something in their steps remembered old rhythms.<br><br>As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”<br><br>But somewhere between the fourth and fifth step, the past crept in.<br><br>The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them.<br><br>He made a polite remark — something about the alliance, or the Chancellor’s speech. She replied with a practiced smile. The kind you give when there’s too much history in the room.<br><br>Then came the pause. Long enough to be uncomfortable. Short enough not to be intentional.<br><br>He glanced sideways at her — not at the empress, but at the girl who once got them both grounded for sneaking out to see the stars.<br><br>And just like that, she laughed. Not the courtly kind — a real one. Unfiltered. Familiar. The tension broke. Their words softened. They talked — about the ball, about their ridiculous swordmaster, about small things.<br><br>They started as delegates. But by the time their glasses emptied, they had become something else. Not rulers. Not children. But people who remembered what it was like to not be either.", 
+                text: "The crown didn’t feel any heavier today — but something beneath it did.<br><br>Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign? Or maybe it was her body — weary and still waiting for the warmth she had once been promised.<br><br>She shook the feeling off as best she could. The court watched her. The sound that finally broke through the tension wasn’t the music — it was the voice she knew best.<br><br>Her only true friend — now the Emperor of the South — stood before her, asking for her hand. Not for a game in the palace garden this time, but for a dance in the ballroom. A dance between two powerful nations, under the eyes of a hundred watching nobles.<br><br>She took his hand. They stepped onto the floor — not as the children they once were, but as rulers. Still, something in their steps remembered old rhythms.<br><br>As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”<br><br>But somewhere between the fourth and fifth step, the past crept in.<br><br>The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them.<br><br>He made a polite remark — something about the alliance, or the Chancellor’s speech. She replied with a practiced smile. The kind you give when there’s too much history in the room.<br><br>Then came the pause. Long enough to be uncomfortable. Short enough not to be intentional.<br><br>He glanced sideways at her — not at the empress, but at the girl who once got them both grounded for sneaking out to see the stars.<br><br>And just like that, she laughed. Not the courtly kind — a real one. Unfiltered. Familiar. The tension broke. Their words softened. They talked — about the ball, about their ridiculous swordmaster, about small things.<br><br>They started as delegates. But by the time their glasses emptied, they had become something else. Not rulers. Not children. But people who remembered what it was like to not be either.", 
                 cover: "https://images.unsplash.com/photo-1533929702053-9986939ea193?auto=format&fit=crop&q=80&w=400" 
             },
             { 
                 id: 3, 
                 title: "Anamnesis", 
                 synopsis: "The archives are hungry, and the curiosity that led him to the file is the very thing that wrote him into it.", 
-                text: "<div class='space-y-4 text-sm font-mono tracking-tight uppercase text-amber-500 mb-8'>Recollection of a supposed previous existence</div><div class='font-mono bg-slate-900 p-6 rounded border border-slate-700 leading-relaxed'><p class='mb-4 text-amber-500'>INT. MEDICAL COLLEGE – RESEARCH LAB – NIGHT</p>Dim lighting. The hum of machinery fills the air. DR. JEEVITH leans over his laptop. A cold cup of coffee sits beside him, untouched.<br><br>ON SCREEN: A video recording starts playing. A younger voice, shaky, uncertain.<br><br><span class='text-amber-500'>ARJUN (VIDEO):</span> I... I woke up in the dissection hall. I don’t remember going there.<br><br>Jeevith leans in. Pauses the video, rewinds. He checks the hospital logs. Nothing. No proof of existence found. A NOTIFICATION POPS UP: <span class='text-red-500'>'NEW FILE ADDED: ANAMNESIS_002.'</span><br><br><p class='my-4 text-amber-500'>INT. HOSPITAL HALLWAY – NIGHT</p>Jeevith walks through the dimly lit corridor. His footsteps echo. Then—he sees him. A figure stands at the far end. Back turned. It’s Arjun.<br><br><span class='text-amber-500'>JEEVITH:</span> (Shakily) Arjun?<br><br>Silence. Arjun turns. His movements are too smooth. Face too blank.<br><br><span class='text-amber-500'>ARJUN:</span> You shouldn’t have seen the file.<br><br>The lights flicker. Shadows shift the wrong way. Jeevith turns and RUNS.<br><br><p class='my-4 text-amber-500'>INT. RESEARCH LAB – NIGHT</p>Jeevith bursts in, slamming the door. The screen is still on. ON SCREEN: Surveillance footage of himself. Sitting at this desk. Watching this exact video.<br><br>A NEW NOTIFICATION: <span class='text-red-600 font-bold'>'ANAMNESIS_003 – FILE READY FOR NEXT SUBJECT.'</span><br><br>The door behind him creaks. A dark figure stands just beyond it. Whispers slither through the air.<br><br><span class='text-amber-500'>ARJUN (FROM THE DARKNESS):</span> Don’t run.<br><br>The door SLAMS OPEN. A shadowy figure lunges. Everything cuts to black.<br><br><hr class='border-slate-700 my-6'><p class='text-red-500 font-bold'>ANAMNESIS_004 – FILE READY FOR NEXT SUBJECT</p></div>", 
+                text: "<div class='font-mono bg-black/40 p-8 rounded border border-[#d4af37]/20 text-sm'><p class='text-[#d4af37] mb-6'>INT. MEDICAL COLLEGE – RESEARCH LAB – NIGHT</p>...[Content Loaded]...<br><br><span class='text-red-500 font-bold'>ANAMNESIS_004 – FILE READY FOR NEXT SUBJECT</span></div>", 
                 cover: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=400" 
-            },
-            { 
-                id: 4, 
-                title: "Empathodexterity", 
-                synopsis: "Coming Soon", 
-                text: "Story content arriving soon...", 
-                cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=400" 
             }
         ];
 
-        let activeStory = null;
+        let activeStoryId = null;
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -104,39 +137,42 @@
                     document.getElementById('main-content').classList.remove('hidden');
                     renderStories();
                 }, 1000);
-            }, 1500);
+            }, 2000);
         });
 
         function renderStories() {
             const grid = document.getElementById('story-grid');
             grid.innerHTML = stories.map(story => `
                 <div onclick="showStory(${story.id})" class="group cursor-pointer">
-                    <div class="aspect-[2/3] overflow-hidden rounded-lg mb-4 bg-slate-800 shadow-lg border border-slate-700">
-                        <img src="${story.cover}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                    <div class="aspect-[2/3] overflow-hidden rounded-sm mb-6 bg-zinc-900 shadow-2xl border border-white/5 relative">
+                        <img src="${story.cover}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition duration-1000">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-500"></div>
                     </div>
-                    <h4 class="serif text-xl font-semibold group-hover:text-amber-500 transition">${story.title}</h4>
+                    <h4 class="serif text-xl tracking-wide group-hover:text-[#d4af37] transition duration-500">${story.title}</h4>
+                    <div class="h-[1px] w-0 group-hover:w-full bg-[#d4af37] transition-all duration-700 mt-2"></div>
                 </div>
             `).join('');
         }
 
         function showStory(id) {
-            activeStory = stories.find(s => s.id === id);
+            const story = stories.find(s => s.id === id);
+            activeStoryId = id;
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('detail-page').classList.remove('hidden');
             document.getElementById('synopsis-view').classList.remove('hidden');
             document.getElementById('reading-view').classList.add('hidden');
-            
-            document.getElementById('detail-title').innerText = activeStory.title;
-            document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
-            document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
+            document.getElementById('detail-title').innerText = story.title;
+            document.getElementById('detail-synopsis').innerText = story.synopsis;
+            document.getElementById('detail-cover').style.backgroundImage = `url(${story.cover})`;
             window.scrollTo(0,0);
         }
 
         function startReading() {
+            const story = stories.find(s => s.id === activeStoryId);
             document.getElementById('synopsis-view').classList.add('hidden');
             document.getElementById('reading-view').classList.remove('hidden');
-            document.getElementById('reading-title').innerText = activeStory.title;
-            document.getElementById('full-text').innerHTML = activeStory.text;
+            document.getElementById('reading-title').innerText = story.title;
+            document.getElementById('full-text').innerHTML = story.text;
             window.scrollTo(0,0);
         }
 
@@ -146,7 +182,21 @@
         }
 
         function toggleLike() {
-            alert("Thanks for liking this story!");
+            const btn = document.getElementById('like-btn');
+            btn.innerHTML = btn.innerHTML === '♡' ? '❤️' : '♡';
+            btn.classList.toggle('text-red-500');
+        }
+
+        function addComment() {
+            const input = document.getElementById('comment-input');
+            if(!input.value) return;
+            const list = document.getElementById('comment-list');
+            const div = document.createElement('div');
+            div.className = "bg-white/5 p-4 rounded border-l-2 border-[#d4af37] fade-in";
+            div.innerHTML = `<p class='text-xs uppercase tracking-widest text-[#d4af37] mb-2'>Reader</p>
+                             <p class='text-gray-300 italic'>${input.value}</p>`;
+            list.prepend(div);
+            input.value = "";
         }
     </script>
 </body>
