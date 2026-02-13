@@ -73,5 +73,59 @@
             },
             { id: 2, title: "Anamnesis", synopsis: "Coming Soon", text: "Story content arriving soon...", cover: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=400" },
             { id: 3, title: "Dance of the 2 Empires", synopsis: "Coming Soon", text: "Story content arriving soon...", cover: "https://images.unsplash.com/photo-1533929702053-9986939ea193?auto=format&fit=crop&q=80&w=400" },
-            { id: 4, title: "Empathodexterity", synopsis: "Coming Soon", text: "Story content arriving soon...", cover: "
-                
+            { id: 4, title: "Empathodexterity", synopsis: "Coming Soon", text: "Story content arriving soon...", cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=400" }
+        ];
+
+        let activeStory = null;
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('main-content').classList.remove('hidden');
+                    renderStories();
+                }, 1000);
+            }, 1500);
+        });
+
+        function renderStories() {
+            const grid = document.getElementById('story-grid');
+            grid.innerHTML = stories.map(story => `
+                <div onclick="showStory(${story.id})" class="group cursor-pointer">
+                    <div class="aspect-[2/3] overflow-hidden rounded-lg mb-4 bg-slate-800 shadow-lg border border-slate-700">
+                        <img src="${story.cover}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                    </div>
+                    <h4 class="serif text-xl font-semibold group-hover:text-amber-500 transition">${story.title}</h4>
+                </div>
+            `).join('');
+        }
+
+        function showStory(id) {
+            activeStory = stories.find(s => s.id === id);
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('detail-page').classList.remove('hidden');
+            document.getElementById('synopsis-view').classList.remove('hidden');
+            document.getElementById('reading-view').classList.add('hidden');
+            
+            document.getElementById('detail-title').innerText = activeStory.title;
+            document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
+            document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
+            window.scrollTo(0,0);
+        }
+
+        function startReading() {
+            document.getElementById('synopsis-view').classList.add('hidden');
+            document.getElementById('reading-view').classList.remove('hidden');
+            document.getElementById('reading-title').innerText = activeStory.title;
+            document.getElementById('full-text').innerHTML = activeStory.text;
+            window.scrollTo(0,0);
+        }
+
+        function showHome() {
+            document.getElementById('detail-page').classList.add('hidden');
+            document.getElementById('home-page').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
