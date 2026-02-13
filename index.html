@@ -141,13 +141,14 @@
 
         ];
 
-        // SUPABASE CONFIG - FIX 1: Correct Initialization
-        const _url = 'https://iakkxwghbczalryylqzg.supabase.co';
+       const _url = 'https://iakkxwghbczalryylqzg.supabase.co';
         const _key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc';
-        const sbClient = supabase.createClient(_url, _key); // Renamed to avoid conflict
+        const sbClient = supabase.createClient(_url, _key);
 
         let activeStory = null;
         let dbComments = [];
+        let likedStories = new Set(); // Tracks which stories the user has liked in this session
+        let myComments = JSON.parse(localStorage.getItem('myComments') || '[]'); // Remembers user's own comments
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -181,6 +182,11 @@
             document.getElementById('detail-title').innerText = activeStory.title;
             document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
             document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
+            
+            // Set correct heart icon
+            const heart = document.getElementById('like-btn');
+            heart.innerText = likedStories.has(activeStory.id) ? '❤️' : '♡';
+            
             window.scrollTo(0,0);
         }
 
@@ -190,7 +196,7 @@
             document.getElementById('reading-title').innerText = activeStory.title;
             document.getElementById('full-text').innerHTML = activeStory.text;
             document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
-            await fetchComments(); // FIX 2: Load real comments from DB
+            await fetchComments();
         }
 
         function showHome() {
@@ -200,25 +206,44 @@
 
         function addEmoji(emoji) { document.getElementById('comment-input').value += emoji; }
 
-        // FIX 3: Actually send data to Supabase
+        // POST COMMENT WITH OWNERSHIP TRACKING
         async function postComment(parentId = null) {
             const input = document.getElementById('comment-input');
             const content = parentId ? prompt("Reply:") : input.value;
             if(!content) return;
             
-            const { error } = await sbClient
+            const { data, error } = await sbClient
                 .from('comments')
                 .insert([{ 
                     story_id: activeStory.id, 
                     parent_id: parentId, 
                     content: content 
-                }]);
+                }])
+                .select(); // Get the ID back from Supabase
 
-            if (error) {
-                alert("Error posting comment. Check if your 'comments' table exists!");
-            } else {
+            if (!error) {
+                // Save the ID of the new comment to local storage so the user can delete it later
+                myComments.push(data[0].id);
+                localStorage.setItem('myComments', JSON.stringify(myComments));
+                
                 if(!parentId) input.value = "";
                 await fetchComments(); 
+            }
+        }
+
+        // DELETE COMMENT LOGIC
+        async function deleteComment(id) {
+            if(!confirm("Are you sure you want to delete your thought?")) return;
+
+            const { error } = await sbClient
+                .from('comments')
+                .delete()
+                .eq('id', id);
+
+            if (!error) {
+                myComments = myComments.filter(cid => cid !== id);
+                localStorage.setItem('myComments', JSON.stringify(myComments));
+                await fetchComments();
             }
         }
 
@@ -241,23 +266,49 @@
             
             list.innerHTML = topLevel.map(c => {
                 const replies = dbComments.filter(r => r.parent_id === c.id);
+                const isMine = myComments.includes(c.id); // Check if the comment is the user's
+                
                 return `
                     <div class="border-l border-[#d4af37]/30 pl-4 py-2 fade-in">
                         <p class="text-sm text-gray-300 italic mb-2">${c.content}</p>
                         <div class="flex gap-4">
                             <button onclick="postComment(${c.id})" class="text-[10px] text-[#d4af37] uppercase tracking-widest">Reply</button>
+                            ${isMine ? `<button onclick="deleteComment(${c.id})" class="text-[10px] text-red-900 uppercase tracking-widest">Delete</button>` : ''}
                         </div>
                         <div class="ml-6 mt-4 space-y-4 border-l border-white/5 pl-4">
-                            ${replies.map(r => `<p class="text-xs text-gray-500 italic"><span class="text-[#d4af37]">↳</span> ${r.content}</p>`).join('')}
+                            ${replies.map(r => {
+                                const replyIsMine = myComments.includes(r.id);
+                                return `
+                                    <div class="group">
+                                        <p class="text-xs text-gray-500 italic"><span class="text-[#d4af37]">↳</span> ${r.content}</p>
+                                        ${replyIsMine ? `<button onclick="deleteComment(${r.id})" class="text-[8px] text-red-900/50 hover:text-red-600 uppercase mt-1">Delete Reply</button>` : ''}
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
+        // LIKE & UNDO LOGIC
         function handleLike() {
-            activeStory.likes++;
+            const btn = document.getElementById('like-btn');
+            
+            if (likedStories.has(activeStory.id)) {
+                // UNDO LIKE
+                activeStory.likes--;
+                likedStories.delete(activeStory.id);
+                btn.innerText = '♡';
+                btn.classList.remove('text-red-500');
+            } else {
+                // DO LIKE
+                activeStory.likes++;
+                likedStories.add(activeStory.id);
+                btn.innerText = '❤️';
+                btn.classList.add('text-red-500');
+            }
+            
             document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
-            document.getElementById('like-btn').innerText = '❤️';
         }
     </script>
