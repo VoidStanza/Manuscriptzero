@@ -100,7 +100,8 @@
 
     <script>
         const stories = [
-            { id: 1, title: "Horizon", synopsis: "The perfect son is a masterpiece of a lie.", text: "He sits at the edge of the living room, a statue of filial piety.", cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg" },
+            { id: 1, title: "Horizon", synopsis: "The perfect son is a masterpiece of a lie.", text:"He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it. They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked, and he eats the cake, smiles at the photographs, listens to the stories, applauds with steady hands, and inside him the stillness lingers, the echo of being seen and not seen at the same time, the ache of being loved as an accessory to love, the soft exhaustion of existing fully and being noticed only partly, a quiet knowing of absence in abundance, a slow weight that presses against the ribs and folds itself into his bones, and he walks through the day like this, through all the care and all the light, holding the impossible understanding that being looked after is not always being held.",
+            cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg" },
             { id: 2, title: "Anamnesis", synopsis: "The archives are hungry.", text: `<div class='font-mono bg-black/40 p-8 rounded border border-[#d4af37]/20 text-sm'><p class='text-[#d4af37] mb-6'>INT. MEDICAL COLLEGE - RESEARCH LAB - NIGHT</p>...[Content Loaded]...<br><br><span class='text-red-500 font-bold'>ANAMNESIS_004 - FILE READY FOR NEXT SUBJECT</span></div>`, cover: "https://i.pinimg.com/1200x/dc/0d/c1/dc0dc15c13dcfe322b098796162b2a39.jpg" }
         ];
 
@@ -180,73 +181,134 @@
             document.getElementById('full-text').innerHTML = activeStory.text;
             window.scrollTo(0,0);
         }
+// --- DATABASE OPS: LIKES ---
+    async function handleLike() {
+        if (!activeStory) return;
 
-        async function handleLike() {
-            const { data: cur } = await sbClient.from('stories_meta').select('likes').eq('story_id', activeStory.id).single();
-            let newCount = (cur ? cur.likes : 0) + 1;
-            await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
+        try {
+            // 1. Fetch current likes
+            const { data, error } = await sbClient
+                .from('stories_meta')
+                .select('likes')
+                .eq('story_id', activeStory.id)
+                .maybeSingle(); // maybeSingle prevents errors if row doesn't exist yet
+
+            if (error) throw error;
+
+            const newCount = (data ? data.likes : 0) + 1;
+
+            // 2. Update with upsert
+            const { error: upsertError } = await sbClient
+                .from('stories_meta')
+                .upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
+
+            if (upsertError) throw upsertError;
+
+            // 3. Update UI
             document.getElementById('like-count').innerText = `${newCount} LIKES`;
-        }
+            document.getElementById('like-btn').innerText = '❤️'; 
 
-        async function postComment() {
-            const input = document.getElementById('comment-input');
-            const val = input.value.trim();
-            if(!val) return;
-            
-            const { error } = await sbClient.from('comments').insert([{ story_id: activeStory.id, content: val }]);
-            if(!error) {
-                input.value = "";
-                await fetchComments(); // Reload history after posting
-            }
+        } catch (err) {
+            console.error("Like System Error:", err.message);
         }
+    }
 
-        async function fetchComments() {
-            // Fetch everything for the active story ID
+    // --- DATABASE OPS: COMMENTS ---
+    async function postComment() {
+        const input = document.getElementById('comment-input');
+        const val = input.value.trim();
+        if (!val || !activeStory) return;
+        
+        // Visual feedback
+        const originalBtnText = "TRANSMIT";
+        
+        try {
+            const { error } = await sbClient
+                .from('comments')
+                .insert([{ story_id: activeStory.id, content: val }]);
+
+            if (error) throw error;
+
+            input.value = "";
+            await fetchComments(); // Reload the history
+        } catch (err) {
+            alert("Transmission Failed: Check Connection");
+            console.error("Comment Error:", err.message);
+        }
+    }
+
+    async function fetchComments() {
+        if (!activeStory) return;
+
+        const list = document.getElementById('comment-list');
+        
+        try {
             const { data, error } = await sbClient
                 .from('comments')
                 .select('*')
                 .eq('story_id', activeStory.id)
                 .order('created_at', { ascending: false });
 
-            const list = document.getElementById('comment-list');
-            
             if (error) {
-                list.innerHTML = "<p class='text-red-900 text-[8px]'>HISTORY ACCESS DENIED</p>";
+                list.innerHTML = "<p class='text-red-900 text-[8px] font-mono'>ENCRYPTION ERROR: ACCESS DENIED</p>";
                 return;
             }
 
             if (data && data.length > 0) {
                 list.innerHTML = data.map(c => `
-                    <div class="border-l border-[#d4af37]/20 pl-6 py-4 fade-in">
+                    <div class="border-l border-[#d4af37]/20 pl-6 py-4 mb-6 fade-in">
                         <div class="flex justify-between items-start mb-2">
-                            <p class="text-[8px] text-gray-600 uppercase tracking-[0.3em] font-mono">Ref: ARCHIVE_ID_${c.id.toString().slice(-3)}</p>
-                            <p class="text-[8px] text-gray-700 font-mono">${new Date(c.created_at).toLocaleDateString()}</p>
+                            <p class="text-[8px] text-gray-600 uppercase tracking-[0.3em] font-mono">
+                                Ref: ARCHIVE_ID_${String(c.id).slice(-3)}
+                            </p>
+                            <p class="text-[8px] text-gray-700 font-mono">
+                                ${new Date(c.created_at).toLocaleDateString()}
+                            </p>
                         </div>
                         <p class="reading-font text-gray-300 text-sm leading-relaxed">${c.content}</p>
                     </div>
                 `).join('');
             } else {
-                list.innerHTML = "<p class='text-gray-700 text-[8px] uppercase tracking-widest'>No prior transmissions found.</p>";
+                list.innerHTML = "<p class='text-gray-700 text-[8px] uppercase tracking-widest'>No prior transmissions found in this sector.</p>";
             }
+        } catch (err) {
+            console.error("Fetch Error:", err.message);
         }
+    }
 
-        window.onscroll = () => {
-            const cur = window.scrollY;
-            const nav = document.getElementById('top-nav');
-            cur > lastScroll && cur > 100 ? nav.classList.add('nav-hidden') : nav.classList.remove('nav-hidden');
-            lastScroll = cur;
-            const h = document.documentElement.scrollHeight - window.innerHeight;
-            if(h > 0) document.getElementById('progress-bar').style.width = `${(cur / h) * 100}%`;
-        };
+    // --- WINDOW & SCROLL EVENTS ---
+    window.onscroll = () => {
+        const cur = window.scrollY;
+        const nav = document.getElementById('top-nav');
+        const progressBar = document.getElementById('progress-bar');
 
-        window.onload = () => { 
-            if (sessionStorage.getItem('vault_authorized') === 'true') { 
-                isAuthorized = true; 
-                document.getElementById('loading-screen').style.display = 'none'; 
-                document.getElementById('main-content').classList.remove('hidden'); 
-                renderStories(); 
-            } 
-        };
+        // Hide/Show Nav on Scroll
+        if (cur > lastScroll && cur > 100) {
+            nav.classList.add('nav-hidden');
+        } else {
+            nav.classList.remove('nav-hidden');
+        }
+        lastScroll = cur;
+
+        // Progress Bar Calculation
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (totalHeight > 0) {
+            const progress = (cur / totalHeight) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+    };
+
+    window.onload = () => { 
+        // Force state check
+        const authStatus = sessionStorage.getItem('vault_authorized');
+        
+        if (authStatus === 'true') { 
+            isAuthorized = true; 
+            document.getElementById('loading-screen').style.display = 'none'; 
+            document.getElementById('main-content').classList.remove('hidden'); 
+            renderStories(); 
+        } 
+    };
     </script>
 </body>
 </html>
