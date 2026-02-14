@@ -281,12 +281,20 @@
             }
         }
 
-        function startReading() {
-            document.getElementById('synopsis-view').classList.add('hidden');
-            document.getElementById('reading-view').classList.remove('hidden');
-            document.getElementById('reading-title').innerText = activeStory.title;
-            document.getElementById('full-text').innerHTML = activeStory.text;
-            window.scrollTo(0,0);
+        async function startReading() { // Add 'async' here
+    document.getElementById('synopsis-view').classList.add('hidden');
+    document.getElementById('reading-view').classList.remove('hidden');
+    
+    // Set text content
+    document.getElementById('reading-title').innerText = activeStory.title;
+    document.getElementById('full-text').innerHTML = activeStory.text;
+    
+    // THE HANDSHAKE: This pulls the data from Supabase
+    await fetchComments(); 
+    
+    window.scrollTo(0,0);
+}
+
         }
 
         function showHome() {
