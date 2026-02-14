@@ -232,41 +232,63 @@
         let activeStory = null, scanTimer, scanProgress = 0, likedStories = new Set();
         let myComments = JSON.parse(localStorage.getItem('myComments') || '[]');
         let lastScroll = 0;
+// Ensure these variables are at the top of your script
+let scanTimer;
+let scanProgress = 0;
 
-        // BIOMETRIC SCANNER LOGIC
-        function startScan(e) {
-            e.preventDefault();
-            document.body.classList.add('scanning');
-            document.getElementById('scan-status').innerText = "VERIFYING IDENTITY";
-            scanTimer = setInterval(() => {
-                scanProgress += 2;
-                document.getElementById('progress-text').innerText = `ENCRYPTION: ${scanProgress}%`;
-                if (scanProgress >= 100) completeAuth();
-            }, 30);
-        }
+function startScan(e) {
+    // 1. STOP THE FREEZE: Prevent iPad/iPhone from opening 'copy/paste' menus
+    if (e) e.preventDefault(); 
+    
+    // 2. RESET: Clear any old stuck timers before starting a new one
+    clearInterval(scanTimer);
+    
+    const laser = document.getElementById('laser');
+    const status = document.getElementById('scan-status');
+    const wrapper = document.getElementById('scanner-wrapper');
 
-        function stopScan() {
+    // Visual start
+    document.body.classList.add('scanning');
+    status.innerText = "VERIFYING IDENTITY...";
+
+    // 3. THE LOOP: Update progress every 30ms
+    scanTimer = setInterval(() => {
+        scanProgress += 2; // Speed of the scan
+        document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
+        
+        if (scanProgress >= 100) {
             clearInterval(scanTimer);
-            if (scanProgress < 100) {
-                scanProgress = 0;
-                document.body.classList.remove('scanning');
-                document.getElementById('scan-status').innerText = "HOLD TO INITIALIZE";
-                document.getElementById('progress-text').innerText = "VAULT SECURITY: ACTIVE";
-            }
+            completeAuth(); // Proceed to the Vault
         }
+    }, 30);
+}
 
-        function completeAuth() {
-            clearInterval(scanTimer);
-            document.getElementById('scan-status').innerText = "IDENTITY CONFIRMED";
-            setTimeout(() => {
-                document.getElementById('loading-screen').classList.add('access-granted');
-                setTimeout(() => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('main-content').classList.remove('hidden');
-                    renderStories();
-                }, 800);
-            }, 300);
-        }
+function stopScan() {
+    // If the user lets go before 100%, reset everything to prevent freezing
+    clearInterval(scanTimer);
+    if (scanProgress < 100) {
+        scanProgress = 0;
+        document.body.classList.remove('scanning');
+        document.getElementById('scan-status').innerText = "HOLD TO INITIALIZE";
+        document.getElementById('progress-text').innerText = "VAULT SECURITY: ACTIVE";
+    }
+}
+
+function completeAuth() {
+    const status = document.getElementById('scan-status');
+    status.innerText = "ACCESS GRANTED";
+    
+    // Smooth transition to the main content
+    setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('access-granted');
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('main-content').classList.remove('hidden');
+            // Ensure the grid renders
+            if (typeof renderStories === "function") renderStories();
+        }, 600);
+    }, 300);
+}
 
         // HELPERS
         function getReadTime(text) {
