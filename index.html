@@ -21,13 +21,42 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .cursor-pointer-effect { cursor: pointer; }
+        @keyframes sweep {
+    0% { top: 0%; }
+    100% { top: 100%; }
+}
+.laser-active {
+    animation: sweep 1.5s infinite alternate ease-in-out;
+    opacity: 1 !important;
+}
+.access-granted {
+    animation: irisOut 1s forwards cubic-bezier(0.77, 0, 0.175, 1);
+}
+@keyframes irisOut {
+    to { transform: scale(4); opacity: 0; filter: blur(20px); }
+}
     </style>
 </head>
 <body>
 
     <div id="progress-container"><div id="progress-bar"></div></div>
 
-    <div id="loading-screen" onclick="enterArchive()" class="fixed inset-0 z-50 flex items-center justify-center bg-black cursor-pointer group">
+    <<div id="loading-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black overflow-hidden">
+    <div id="scanner-container" class="relative flex flex-col items-center group">
+        <div id="laser" class="absolute w-64 h-[2px] bg-[#d4af37] shadow-[0_0_15px_#d4af37] opacity-0 z-10"></div>
+        
+        <div id="fingerprint" class="w-32 h-32 mb-6 opacity-40 transition-all duration-500 cursor-pointer active:scale-95 active:opacity-100" 
+             onmousedown="startScan()" onmouseup="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1" stroke-linecap="round">
+                <path d="M12 11c0-1.657-1.343-3-3-3s-3 1.343-3 3v2c0 1.657 1.343 3 3 3s3-1.343 3-3v-2zM15 11c0-3.314-2.686-6-6-6S3 7.686 3 11v2c0 3.314 2.686 6 6 6s6-2.686 6-6v-2zM18 11c0-4.97-4.03-9-9-9S0 6.03 0 11v2c0 4.97 4.03 9 9 9s9-4.03 9-9v-2z"/>
+            </svg>
+        </div>
+
+        <div id="scan-status" class="serif text-[#d4af37] tracking-[0.4em] text-xs uppercase">Hold to Authenticate</div>
+        <div id="progress-text" class="text-[8px] text-gray-600 mt-2 font-mono">ID: ARCHIVE_V5_SECURE</div>
+    </div>
+    </div>
+        ">
         <div class="text-center">
             <h1 class="serif text-3xl md:text-5xl italic tracking-[0.3em] text-[#d4af37] animate-pulse group-hover:scale-105 transition-transform">THE ARCHIVE</h1>
             <p class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mt-4 group-hover:text-gray-400">Click to Enter the Vault</p>
@@ -163,13 +192,53 @@
 
         // ENTER ARCHIVE LOGIC
         function enterArchive() {
-            const screen = document.getElementById('loading-screen');
-            screen.style.opacity = '0';
-            setTimeout(() => {
-                screen.style.display = 'none';
-                document.getElementById('main-content').classList.remove('hidden');
-                renderStories();
-            }, 800);
+            let scanTimer;
+let scanProgress = 0;
+
+function startScan() {
+    const laser = document.getElementById('laser');
+    const status = document.getElementById('scan-status');
+    const finger = document.getElementById('fingerprint');
+    
+    laser.classList.add('laser-active');
+    finger.style.filter = "drop-shadow(0 0 10px #d4af37)";
+    status.innerText = "Scanning DNA...";
+    
+    scanTimer = setInterval(() => {
+        scanProgress += 2;
+        document.getElementById('progress-text').innerText = `PROGRESS: ${scanProgress}%`;
+        
+        if (scanProgress >= 100) {
+            completeAuthentication();
+        }
+    }, 40);
+}
+
+function stopScan() {
+    if (scanProgress < 100) {
+        clearInterval(scanTimer);
+        scanProgress = 0;
+        document.getElementById('laser').classList.remove('laser-active');
+        document.getElementById('scan-status').innerText = "Scan Interrupted";
+        document.getElementById('fingerprint').style.filter = "none";
+    }
+}
+
+function completeAuthentication() {
+    clearInterval(scanTimer);
+    const status = document.getElementById('scan-status');
+    status.innerText = "Access Granted";
+    status.style.color = "#fff";
+    
+    setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('access-granted');
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('main-content').classList.remove('hidden');
+            renderStories();
+        }, 800);
+    }, 500);
+}
         }
 
         // READING TIME CALCULATION
