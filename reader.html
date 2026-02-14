@@ -5,46 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE VAULT | RECORD</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@300;400;600&display=swap');
         
         body { background: #0a0a0b; color: #e2e2e2; font-family: 'Montserrat', sans-serif; margin: 0; }
         .serif { font-family: 'Playfair Display', serif; }
         .reading-font { font-family: 'Lora', serif; line-height: 1.9; }
         
         #scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: #d4af37; z-index: 100; transition: width 0.1s; }
-        .content-fade { animation: fadeIn 1s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Specific highlights for your stories */
-        .glitch-red { color: #ef4444; font-weight: bold; text-shadow: 0 0 8px rgba(239, 68, 68, 0.3); }
-        .monitor-green { color: #4ade80; font-weight: bold; text-shadow: 0 0 8px rgba(74, 222, 128, 0.3); }
+        /* Highlight styles for Anamnesis and Empathodexterity */
+        .glitch-red { color: #ef4444; font-weight: bold; text-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
+        .monitor-green { color: #4ade80; font-weight: bold; text-shadow: 0 0 8px rgba(74, 222, 128, 0.4); }
+
+        textarea { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; resize: none; transition: 0.3s; }
+        textarea:focus { border-color: #d4af37; outline: none; }
+        .comment-item { border-left: 1px solid rgba(212, 175, 55, 0.2); padding-left: 1.5rem; margin-bottom: 2.5rem; }
     </style>
 </head>
 <body>
 
-    <div id="scroll-progress"></div>
+    <div id="scroll-progress" style="width: 0%"></div>
 
     <nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/90 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
         <h2 class="serif text-2xl text-[#d4af37] cursor-pointer" onclick="location.href='gallery.html'">V.</h2>
-        <button onclick="location.href='gallery.html'" class="text-[9px] uppercase tracking-[0.4em] text-gray-600 hover:text-white transition-colors">Archive</button>
+        <span class="text-[9px] uppercase tracking-[0.4em] text-gray-700">Record Decrypted</span>
     </nav>
 
-    <main class="max-w-2xl mx-auto px-6 pt-40 pb-24 content-fade">
-        <header class="mb-16 text-center">
+    <main class="max-w-2xl mx-auto px-6 pt-40 pb-24">
+        <header class="mb-20 text-center">
             <h1 id="title" class="serif text-5xl text-[#d4af37] mb-6"></h1>
             <p id="synopsis" class="reading-font italic text-gray-500 text-lg"></p>
         </header>
 
-        <div id="content" class="reading-font text-gray-300 text-lg">
+        <article id="content" class="reading-font text-gray-300 text-lg mb-32"></article>
+
+        <section class="border-t border-white/5 pt-16">
+            <div class="flex flex-col items-center mb-20">
+                <button onclick="handleLike()" id="like-btn" class="text-4xl hover:scale-110 transition-transform duration-300 text-[#d4af37]">♡</button>
+                <span id="like-count" class="text-[10px] text-[#d4af37] mt-4 tracking-[0.3em] uppercase">0 Likes</span>
             </div>
 
-        <footer class="mt-24 pt-12 border-t border-white/5 text-center">
-            <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="text-[9px] uppercase tracking-widest text-gray-700 hover:text-[#d4af37]">End of File</button>
+            <div class="space-y-10">
+                <h3 class="serif text-2xl text-[#d4af37]">Marginalia</h3>
+                <textarea id="comment-input" class="w-full p-5 text-sm" rows="4" placeholder="Leave a trace in the archive..."></textarea>
+                <button onclick="postComment()" class="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition-all">Preserve Message</button>
+                
+                <div id="comment-list" class="mt-16 pt-8">
+                    </div>
+            </div>
+        </section>
+
+        <footer class="mt-24 text-center">
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-[8px] uppercase tracking-[0.5em] text-gray-800 hover:text-[#d4af37]">Top</button>
         </footer>
     </main>
 
     <script>
+        const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
         const stories = [
             {
                 id: 1,
@@ -85,32 +104,64 @@
                     <p>The rhythmic clinking of glass bangles has been traded for the steady, digital pulse of a heart monitor, a <span class="monitor-green">neon green line</span> marking the boundary between life and the unknown.</p>
                 </div>`
             }
-        ];
+      ];
 
-        function loadStory() {
+        let currentId = null;
+
+        function init() {
             const params = new URLSearchParams(window.location.search);
-            const storyId = parseInt(params.get('id'));
-            
-            const story = stories.find(s => s.id === storyId);
+            currentId = parseInt(params.get('id'));
+            const story = stories.find(s => s.id === currentId);
 
             if (story) {
                 document.getElementById('title').innerText = story.title;
                 document.getElementById('synopsis').innerText = story.synopsis;
                 document.getElementById('content').innerHTML = story.text;
-                document.title = "V. | " + story.title;
-            } else {
-                document.getElementById('content').innerHTML = "<p class='text-center text-gray-600 uppercase tracking-widest'>Data Corrupted: Story not found.</p>";
+                fetchMetadata();
+                fetchComments();
             }
         }
 
+        async function fetchMetadata() {
+            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', currentId).maybeSingle();
+            if (data) document.getElementById('like-count').innerText = `${data.likes} LIKES`;
+        }
+
+        async function handleLike() {
+            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', currentId).maybeSingle();
+            const newCount = (data ? data.likes : 0) + 1;
+            await sbClient.from('stories_meta').upsert({ story_id: currentId, likes: newCount });
+            document.getElementById('like-count').innerText = `${newCount} LIKES`;
+            document.getElementById('like-btn').innerText = '♥';
+        }
+
+        async function postComment() {
+            const input = document.getElementById('comment-input');
+            if (!input.value.trim()) return;
+            await sbClient.from('comments').insert([{ story_id: currentId, content: input.value }]);
+            input.value = "";
+            fetchComments();
+        }
+
+        async function fetchComments() {
+            const list = document.getElementById('comment-list');
+            const { data } = await sbClient.from('comments').select('*').eq('story_id', currentId).order('created_at', { ascending: false });
+            
+            list.innerHTML = data && data.length ? data.map(c => `
+                <div class="comment-item">
+                    <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">${new Date(c.created_at).toLocaleDateString()}</p>
+                    <p class="reading-font text-gray-300 text-sm leading-relaxed">${c.content}</p>
+                </div>
+            `).join('') : "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>No marginalia recorded.</p>";
+        }
+
         window.onscroll = () => {
-            const winScroll = document.documentElement.scrollTop;
+            const scroll = document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById("scroll-progress").style.width = scrolled + "%";
+            document.getElementById('scroll-progress').style.width = (scroll / height * 100) + "%";
         };
 
-        window.onload = loadStory;
+        window.onload = init;
     </script>
 </body>
 </html>
