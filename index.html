@@ -142,7 +142,13 @@
 
                 <div id="reading-view" class="hidden">
                     <h2 id="reading-title" class="serif text-3xl text-center mb-16 text-[#d4af37]"></h2>
-                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8 first-letter:text-5xl first-letter:text-[#d4af37] first-letter:mr-2"></div>
+                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8 first-letter:text-5xl first-letter:text-[#d4af37] first-letter:mr-2">
+                        <div class="my-16 flex flex-col items-center">
+    <button onclick="handleLike()" id="like-btn" class="text-4xl transition-transform active:scale-125">♡</button>
+    <span id="like-count" class="text-[9px] mt-2 text-[#d4af37] tracking-widest uppercase">0 LIKES</span>
+                        </div>
+                        
+                    </div>
                     
                     <div class="my-20 flex flex-col items-center">
                         <button onclick="handleLike()" id="like-btn" class="text-4xl transition-transform active:scale-125">♡</button>
@@ -301,6 +307,24 @@
             
             document.getElementById('like-btn').innerText = likedStories.has(id) ? '❤️' : '♡';
             window.scrollTo(0,0);
+            // Inside showStory(id) ...
+    
+    // Fetch real-time data from Supabase
+    const { data: meta } = await sbClient
+        .from('stories_meta')
+        .select('likes')
+        .eq('story_id', id)
+        .single();
+
+    // Display the count (defaults to 0 if no data exists yet)
+    activeStory.likes = meta ? meta.likes : 0;
+    document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
+    
+    // Set the heart icon state
+    document.getElementById('like-btn').innerText = likedStories.has(id) ? '❤️' : '♡';
+    
+    window.scrollTo(0,0);
+        }
         }
 
         // HEADER & PROGRESS LOGIC
@@ -375,6 +399,38 @@
                 likedStories.add(activeStory.id);
                 btn.innerText = '❤️';
             }
+            async function handleLike() {
+    const btn = document.getElementById('like-btn');
+    const countLabel = document.getElementById('like-count');
+    
+    // 1. Determine if we are adding or removing a like
+    let change = likedStories.has(activeStory.id) ? -1 : 1;
+    let newCount = (activeStory.likes || 0) + change;
+
+    // 2. Update the Database (Supabase)
+    const { error } = await sbClient
+        .from('stories_meta') // This must match your table name in Supabase
+        .upsert({ 
+            story_id: activeStory.id, 
+            likes: newCount 
+        }, { onConflict: 'story_id' });
+
+    // 3. Update the UI only if the database move was successful
+    if (!error) {
+        activeStory.likes = newCount;
+        if (change === 1) {
+            likedStories.add(activeStory.id);
+            btn.innerText = '❤️';
+        } else {
+            likedStories.delete(activeStory.id);
+            btn.innerText = '♡';
+        }
+        countLabel.innerText = `${newCount} LIKES`;
+    } else {
+        console.error("Archive Error: Could not sync likes", error);
+    }
+            }
+            
         }
 
         async function deleteComment(id) {
