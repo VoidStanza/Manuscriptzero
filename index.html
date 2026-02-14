@@ -65,7 +65,132 @@
         .access-granted { animation: portalExit 0.8s forwards; }
         @keyframes portalExit { to { opacity: 0; transform: scale(1.2); filter: blur(20px); } }
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transfor<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>THE ARCHIVE | SECURE ACCESS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&display=swap');
+        
+        :root { --bg-dark: #0a0a0b; --accent: #d4af37; }
+
+        * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: #e2e2e2; 
+            margin: 0; padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .serif { font-family: 'Playfair Display', serif; }
+        .reading-font { font-family: 'Lora', serif; line-height: 1.8; }
+
+        /* THE ELONGATED CARDS */
+        .story-card-container {
+            aspect-ratio: 2 / 3;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #111;
+            transition: all 0.5s ease;
+        }
+        .story-card-container img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(100%); transition: 0.8s ease;
+        }
+        .group:hover .story-card-container img { filter: grayscale(0%); transform: scale(1.05); }
+
+        /* SCANNER MECHANICS */
+        #scanner-core {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; z-index: 10; cursor: pointer;
+        }
+        #laser {
+            position: absolute; width: 120px; height: 1px;
+            background: var(--accent); box-shadow: 0 0 10px var(--accent);
+            opacity: 0; pointer-events: none; left: -10px;
+        }
+        .scanning #laser { opacity: 1; animation: scanLine 2s infinite ease-in-out; }
+        @keyframes scanLine { 0% { top: 0%; } 100% { top: 100%; } }
+
+        /* UI TRANSITIONS */
+        .nav-hidden { transform: translateY(-110%); }
+        #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); z-index: 100; width: 0%; transition: width 0.1s; }
+        .access-granted { animation: portalExit 0.8s forwards; }
+        @keyframes portalExit { to { opacity: 0; transform: scale(1.2); filter: blur(20px); } }
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="progress-bar"></div>
+
+    <div id="loading-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black">
+        <div id="scanner-wrapper" class="relative flex flex-col items-center">
+            <div id="scanner-core" 
+                 onmousedown="startScan(event)" onmouseup="stopScan()" 
+                 ontouchstart="startScan(event)" ontouchend="stopScan()">
+                <div id="laser"></div>
+                <div class="w-3 h-3 bg-[#d4af37] rounded-full animate-pulse"></div>
+            </div>
+            <div id="scan-status" class="serif text-[#d4af37] tracking-[0.4em] text-[10px] uppercase mt-10 text-center">Hold to Initialize</div>
+            <div id="progress-text" class="text-[8px] text-gray-700 mt-2 font-mono uppercase tracking-[0.3em]">Identity Check Required</div>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <nav id="top-nav" class="fixed top-0 left-0 right-0 p-5 flex justify-between items-center bg-black/90 backdrop-blur-md z-50 border-b border-white/5 transition-transform duration-300">
+            <h2 class="serif text-xl cursor-pointer" onclick="showHome()">V.</h2>
+            <div class="h-[1px] w-12 bg-[#d4af37]/40"></div>
+        </nav>
+
+        <main class="p-6 pt-24 max-w-4xl mx-auto">
+            <section id="home-page" class="fade-in">
+                <h1 class="serif text-4xl font-bold mb-2 text-[#d4af37]">The Vault</h1>
+                <p class="text-gray-500 text-[10px] uppercase tracking-[0.3em] mb-12">Authorized Personnel Only</p>
+                <div id="story-grid" class="grid grid-cols-2 md:grid-cols-3 gap-8"></div>
+            </section>
+
+            <section id="detail-page" class="hidden fade-in">
+                <button onclick="showHome()" class="mb-10 text-[9px] uppercase tracking-widest text-gray-500 border-b border-gray-800 pb-1">← Return to Archives</button>
+                <div id="synopsis-view">
+                    <div id="detail-cover" class="w-full aspect-[2/3] bg-cover bg-center mb-8 border border-white/5 grayscale max-w-sm mx-auto"></div>
+                    <h2 id="detail-title" class="serif text-4xl mb-4"></h2>
+                    <p id="detail-read-time" class="text-[9px] text-[#d4af37] tracking-widest mb-6 uppercase"></p>
+                    <p id="detail-synopsis" class="reading-font text-lg text-gray-400 mb-10 italic"></p>
+                    <button onclick="startReading()" class="w-full py-5 bg-[#d4af37] text-black font-bold uppercase text-[10px] tracking-[0.2em]">Unseal the record</button>
+                </div>
+
+                <div id="reading-view" class="hidden">
+                    <h2 id="reading-title" class="serif text-3xl text-center mb-16 text-[#d4af37]"></h2>
+                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8"></div>
+                    
+                    <div class="my-20 flex flex-col items-center border-t border-white/5 pt-10">
+                        <button onclick="handleLike()" id="like-btn" class="text-4xl transition-transform active:scale-125">♡</button>
+                        <span id="like-count" class="text-[9px] mt-2 text-[#d4af37] tracking-widest">0 LIKES</span>
+                    </div>
+
+                    <div class="mt-20 pt-10 border-t border-white/5">
+                        <h3 class="serif text-xl mb-6 text-[#d4af37]">Archive Transmissions</h3>
+                        <textarea id="comment-input" class="w-full bg-transparent border border-white/10 p-4 text-sm focus:border-[#d4af37] transition-colors outline-none text-white reading-font" rows="3" placeholder="Enter transmission..."></textarea>
+                        <button onclick="postComment()" class="w-full py-4 bg-[#d4af37] text-black text-[10px] font-bold uppercase mt-4 tracking-widest">Transmit</button>
+                        <div id="comment-list" class="mt-16 space-y-10 pb-20"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+m: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -82,63 +207,7 @@
             </div>
             <div id="scan-status" class="serif text-[#d4af37] tracking-[0.4em] text-[10px] uppercase mt-10">Hold to Initialize</div>
             <div id="progress-text" class="text-[7px] text-gray-700 mt-2 font-mono uppercase tracking-[0.3em]">Vault Security: Active</div>
-        </div>
-    </div>
 
-    <div id="main-content" class="hidden">
-        <nav id="top-nav" class="p-5 border-b border-white/5 flex justify-between items-center bg-black/90 backdrop-blur-md">
-            <h2 class="serif text-xl" onclick="showHome()">V.</h2>
-            <div class="h-[1px] w-12 bg-[#d4af37]/40"></div>
-        </nav>
-
-        <main class="p-6 max-w-4xl mx-auto">
-            <section id="home-page" class="fade-in">
-                <h1 class="serif text-4xl font-bold mb-2 text-[#d4af37]">The Vault</h1>
-                <p class="text-gray-500 text-[10px] uppercase tracking-[0.3em] mb-12">Authorized Personnel Only</p>
-                <div id="story-grid" class="grid grid-cols-2 md:grid-cols-3 gap-8"></div>
-            </section>
-
-            <section id="detail-page" class="hidden fade-in">
-                <button onclick="showHome()" class="mb-10 text-[9px] uppercase tracking-widest text-gray-500 border-b border-gray-800 pb-1">← Return to Archives</button>
-                <div id="synopsis-view">
-                    <div id="detail-cover" class="w-full aspect-[2/3] bg-cover bg-center mb-8 border border-white/5 grayscale max-w-sm mx-auto"></div>
-                    <h2 id="detail-title" class="serif text-4xl mb-4"></h2>
-                    <p id="detail-read-time" class="text-[9px] text-[#d4af37] tracking-widest mb-6 uppercase"></p>
-                    <p id="detail-synopsis" class="reading-font text-lg text-gray-400 mb-10 italic"></p>
-                    <button onclick="startReading()" class="w-full py-5 bg-[#d4af37] text-black font-bold uppercase text-[10px] tracking-[0.2em]">Open Data Stream</button>
-                </div>
-
-                <div id="reading-view" class="hidden">
-    <h2 id="reading-title" class="serif text-3xl text-center mb-16 text-[#d4af37]"></h2>
-    
-    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8"></div>
-    
-    <div class="my-20 flex flex-col items-center border-t border-white/5 pt-10">
-        <button onclick="handleLike()" id="like-btn" class="text-4xl">♡</button>
-        <span id="like-count" class="text-[9px] mt-2 text-[#d4af37] tracking-widest">0 LIKES</span>
-    </div>
-
-    <div id="comment-section" class="mt-20 pt-10 border-t border-white/5">
-        <h3 class="serif text-xl mb-6 text-[#d4af37]">Archive Transmissions</h3>
-        
-        <textarea id="comment-input" 
-                  class="w-full bg-[#0a0a0b] border border-white/10 p-4 text-sm focus:border-[#d4af37] transition-colors outline-none text-white reading-font" 
-                  rows="3" 
-                  placeholder="Enter transmission..."></textarea>
-        
-        <button onclick="postComment()" 
-                class="w-full py-4 bg-[#d4af37] text-black text-[10px] font-bold uppercase mt-4 tracking-widest">
-            Preserved in the margins
-        </button>
-
-        <div id="comment-list" class="mt-16 space-y-10 pb-20">
-            </div>
-    </div>
-</div>
-
-            </section>
-        </main>
-    </div>
     <script>
        const stories = [
 
@@ -200,11 +269,10 @@
 
         ];
 
-            const _url = 'https://iakkxwghbczalryylqzg.supabase.co';
-        const _key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc';
-        const sbClient = supabase.createClient(_url, _key);
+const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
 
         let activeStory = null, scanTimer, scanProgress = 0, likedStories = new Set(), lastScroll = 0;
+        let myComments = JSON.parse(localStorage.getItem('myComments') || '[]');
 
         function startScan(e) {
             if (e) e.preventDefault();
@@ -238,8 +306,6 @@
             }, 300);
         }
 
-        function getReadTime(t) { return `${Math.ceil(t.length / 500)} min read`; }
-
         function renderStories() {
             const grid = document.getElementById('story-grid');
             grid.innerHTML = stories.map(s => `
@@ -260,7 +326,7 @@
             document.getElementById('detail-title').innerText = activeStory.title;
             document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
             document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
-            document.getElementById('detail-read-time').innerText = getReadTime(activeStory.text);
+            document.getElementById('detail-read-time').innerText = `${Math.ceil(activeStory.text.length / 500)} min read`;
 
             const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
             activeStory.likes = data ? data.likes : 0;
@@ -269,186 +335,65 @@
             window.scrollTo(0,0);
         }
 
+        async function startReading() {
+            document.getElementById('synopsis-view').classList.add('hidden');
+            document.getElementById('reading-view').classList.remove('hidden');
+            document.getElementById('reading-title').innerText = activeStory.title;
+            document.getElementById('full-text').innerText = activeStory.text;
+            await fetchComments();
+            window.scrollTo(0,0);
+        }
+
         async function handleLike() {
             let change = likedStories.has(activeStory.id) ? -1 : 1;
-const _url = 'https://iakkxwghbczalryylqzg.supabase.co';
-    const _key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc';
-    const sbClient = supabase.createClient(_url, _key);
-
-    // GLOBAL VARIABLES
-    let activeStory = null;
-    let scanTimer;
-    let scanProgress = 0;
-    let likedStories = new Set();
-    let lastScroll = 0;
-    let myComments = JSON.parse(localStorage.getItem('myComments') || '[]');
-
-    // --- INITIALIZATION / SCANNER ---
-    function startScan(e) {
-        if (e) e.preventDefault();
-        clearInterval(scanTimer);
-        document.body.classList.add('scanning');
-        scanTimer = setInterval(() => {
-            scanProgress += 2;
-            document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
-            if (scanProgress >= 100) { 
-                clearInterval(scanTimer); 
-                completeAuth(); 
+            let newCount = (activeStory.likes || 0) + change;
+            const { error } = await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
+            if (!error) {
+                activeStory.likes = newCount;
+                change === 1 ? likedStories.add(activeStory.id) : likedStories.delete(activeStory.id);
+                document.getElementById('like-btn').innerText = likedStories.has(activeStory.id) ? '❤️' : '♡';
+                document.getElementById('like-count').innerText = `${newCount} LIKES`;
             }
-        }, 30);
-    }
-
-    function stopScan() {
-        clearInterval(scanTimer);
-        if (scanProgress < 100) {
-            scanProgress = 0;
-            document.body.classList.remove('scanning');
-            document.getElementById('progress-text').innerText = "SYSTEM: LOCKED";
         }
-    }
 
-    function completeAuth() {
-        document.getElementById('scan-status').innerText = "ACCESS GRANTED";
-        setTimeout(() => {
-            document.getElementById('loading-screen').classList.add('access-granted');
-            setTimeout(() => {
-                document.getElementById('loading-screen').style.display = 'none';
-                document.getElementById('main-content').classList.remove('hidden');
-                renderStories();
-            }, 600);
-        }, 300);
-    }
-
-    // --- NAVIGATION & RENDERING ---
-    function renderStories() {
-        const grid = document.getElementById('story-grid');
-        grid.innerHTML = stories.map(s => `
-            <div onclick="showStory(${s.id})" class="group cursor-pointer">
-                <div class="story-card-container"><img src="${s.cover}"></div>
-                <h4 class="serif text-sm mt-3 uppercase tracking-tighter">${s.title}</h4>
-            </div>
-        `).join('');
-    }
-
-    function getReadTime(t) { return `${Math.ceil(t.length / 500)} min read`; }
-
-    async function showStory(id) {
-        activeStory = stories.find(s => s.id === id);
-        document.getElementById('home-page').classList.add('hidden');
-        document.getElementById('detail-page').classList.remove('hidden');
-        document.getElementById('synopsis-view').classList.remove('hidden');
-        document.getElementById('reading-view').classList.add('hidden');
-        
-        document.getElementById('detail-title').innerText = activeStory.title;
-        document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
-        document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
-        document.getElementById('detail-read-time').innerText = getReadTime(activeStory.text);
-
-        try {
-            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
-            activeStory.likes = data ? data.likes : 0;
-            document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
-            document.getElementById('like-btn').innerText = likedStories.has(id) ? '❤️' : '♡';
-        } catch(e) { console.log("Meta not found"); }
-        
-        window.scrollTo(0,0);
-    }
-
-    function showHome() {
-        document.getElementById('detail-page').classList.add('hidden');
-        document.getElementById('home-page').classList.remove('hidden');
-        window.scrollTo(0,0);
-    }
-
-    async function startReading() {
-        document.getElementById('synopsis-view').classList.add('hidden');
-        document.getElementById('reading-view').classList.remove('hidden');
-        document.getElementById('reading-title').innerText = activeStory.title;
-        document.getElementById('full-text').innerHTML = activeStory.text;
-        
-        await fetchComments(); 
-        window.scrollTo(0,0);
-    }
-
-    // --- INTERACTION (LIKES & COMMENTS) ---
-    async function handleLike() {
-        let change = likedStories.has(activeStory.id) ? -1 : 1;
-        let newCount = (activeStory.likes || 0) + change;
-        const { error } = await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
-        if (!error) {
-            activeStory.likes = newCount;
-            change === 1 ? likedStories.add(activeStory.id) : likedStories.delete(activeStory.id);
-            document.getElementById('like-btn').innerText = likedStories.has(activeStory.id) ? '❤️' : '♡';
-            document.getElementById('like-count').innerText = `${newCount} LIKES`;
+        async function postComment() {
+            const content = document.getElementById('comment-input').value.trim();
+            if(!content || !activeStory) return;
+            const { data, error } = await sbClient.from('comments').insert([{ story_id: activeStory.id, content: content }]).select();
+            if (!error) {
+                myComments.push(data[0].id);
+                localStorage.setItem('myComments', JSON.stringify(myComments));
+                document.getElementById('comment-input').value = "";
+                await fetchComments();
+            }
         }
-    }
 
-    async function postComment() {
-        const input = document.getElementById('comment-input');
-        const content = input.value.trim();
-        if(!content || !activeStory) return;
-
-        const { data, error } = await sbClient
-            .from('comments')
-            .insert([{ story_id: activeStory.id, content: content }])
-            .select();
-
-        if (!error) {
-            myComments.push(data[0].id);
-            localStorage.setItem('myComments', JSON.stringify(myComments));
-            input.value = ""; 
-            await fetchComments(); 
+        async function fetchComments() {
+            const { data, error } = await sbClient.from('comments').select('*').eq('story_id', activeStory.id).order('created_at', { ascending: false });
+            if (!error) {
+                document.getElementById('comment-list').innerHTML = data.map(c => `
+                    <div class="border-l border-[#d4af37]/20 pl-6 py-2">
+                        <p class="text-[8px] text-gray-600 uppercase tracking-widest mb-1">REF: ${c.id.toString().slice(-4)}</p>
+                        <p class="reading-font text-gray-300 text-sm">${c.content}</p>
+                    </div>
+                `).join('');
+            }
         }
-    }
 
-    async function fetchComments() {
-        if (!activeStory) return;
-        const { data, error } = await sbClient
-            .from('comments')
-            .select('*')
-            .eq('story_id', activeStory.id)
-            .order('created_at', { ascending: false });
-
-        if (!error) {
-            const list = document.getElementById('comment-list');
-            list.innerHTML = data.map(c => `
-                <div class="border-l border-[#d4af37]/20 pl-6 py-2 fade-in">
-                    <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-2 font-mono">
-                        ID: ${c.id.toString().slice(-4)} | ${new Date(c.created_at).toLocaleDateString()}
-                    </p>
-                    <p class="reading-font text-gray-300 leading-relaxed text-sm">${c.content}</p>
-                    ${myComments.includes(c.id) ? `
-                        <button onclick="deleteComment(${c.id})" class="text-[8px] text-red-900/50 hover:text-red-700 uppercase mt-4 tracking-tighter">
-                            [ Erase ]
-                        </button>
-                    ` : ''}
-                </div>
-            `).join('');
+        function showHome() {
+            document.getElementById('detail-page').classList.add('hidden');
+            document.getElementById('home-page').classList.remove('hidden');
         }
-    }
 
-    async function deleteComment(id) {
-        if(!confirm("Erase this transmission?")) return;
-        const { error } = await sbClient.from('comments').delete().eq('id', id);
-        if (!error) {
-            myComments = myComments.filter(cid => cid !== id);
-            localStorage.setItem('myComments', JSON.stringify(myComments));
-            await fetchComments();
-        }
-    }
-
-    // --- SCROLL EFFECTS ---
-    window.onscroll = () => {
-        const cur = window.scrollY;
-        const nav = document.getElementById('top-nav');
-        cur > lastScroll && cur > 80 ? nav.classList.add('nav-hidden') : nav.classList.remove('nav-hidden');
-        lastScroll = cur;
-        
-        if (!document.getElementById('reading-view').classList.contains('hidden')) {
+        window.onscroll = () => {
+            const cur = window.scrollY;
+            const nav = document.getElementById('top-nav');
+            cur > lastScroll && cur > 80 ? nav.classList.add('nav-hidden') : nav.classList.remove('nav-hidden');
+            lastScroll = cur;
             const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             document.getElementById("progress-bar").style.width = (cur / h * 100) + "%";
-        }
-    };
-</script>
+        };
+    </script>
 </body>
 </html>
+    
