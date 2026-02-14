@@ -4,67 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>THE VAULT | ARCHIVE</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@300;400;600&display=swap');
         
         :root { --bg: #0a0a0b; --accent: #d4af37; }
-
         * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; box-sizing: border-box; }
         
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            background: var(--bg); 
-            color: #e2e2e2; 
-            margin: 0; 
-            overflow-x: hidden; 
-        }
-
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: #e2e2e2; margin: 0; overflow-x: hidden; }
         .serif { font-family: 'Playfair Display', serif; }
         .reading-font { font-family: 'Lora', serif; line-height: 1.9; }
 
-        /* ELONGATED BOXES (Story Cards) */
-        .story-card-container {
-            aspect-ratio: 2 / 3;
-            width: 100%;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background: #111;
-            transition: all 0.5s ease;
-        }
-        .story-card-container img {
-            width: 100%; height: 100%; object-fit: cover;
-            filter: grayscale(100%); transition: 0.8s ease;
-        }
+        /* ELONGATED BOXES */
+        .story-card-container { aspect-ratio: 2 / 3; width: 100%; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); background: #111; transition: all 0.5s ease; }
+        .story-card-container img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.8s ease; }
         .group:hover .story-card-container img { filter: grayscale(0%); transform: scale(1.05); }
 
-        /* SCANNER MECHANICS */
-        #scanner-core {
-            width: 120px; height: 120px; border-radius: 50%;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            display: flex; align-items: center; justify-content: center;
-            position: relative; cursor: pointer;
-        }
-        #laser {
-            position: absolute; width: 140px; height: 1px;
-            background: var(--accent); box-shadow: 0 0 12px var(--accent);
-            opacity: 0; top: 0; pointer-events: none;
-        }
+        /* SCANNER */
+        #scanner-core { width: 120px; height: 120px; border-radius: 50%; border: 1px solid rgba(212, 175, 55, 0.2); display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+        #laser { position: absolute; width: 140px; height: 1px; background: var(--accent); box-shadow: 0 0 12px var(--accent); opacity: 0; top: 0; pointer-events: none; }
         .scanning #laser { opacity: 1; animation: scanLine 2s infinite ease-in-out; }
         @keyframes scanLine { 0% { top: 0%; } 100% { top: 100%; } }
 
-        /* UI TRANSITIONS */
         .hidden { display: none !important; }
-        .nav-hidden { transform: translateY(-100%); }
         .access-granted-anim { animation: portalExit 0.8s forwards; }
         @keyframes portalExit { to { opacity: 0; transform: scale(1.1); filter: blur(20px); } }
-        
         #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 100; transition: width 0.2s; }
-        
-        textarea { resize: none; }
+
+        /* FADE IN FOR COMMENTS */
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -72,9 +42,7 @@
     <div id="progress-bar" style="width: 0%"></div>
 
     <div id="loading-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black">
-        <div id="scanner-core" 
-             onmousedown="startScan(event)" onmouseup="stopScan()" 
-             ontouchstart="startScan(event)" ontouchend="stopScan()">
+        <div id="scanner-core" onmousedown="startScan(event)" onmouseup="stopScan()" ontouchstart="startScan(event)" ontouchend="stopScan()">
             <div id="laser"></div>
             <div class="w-4 h-4 bg-[#d4af37] rounded-full animate-pulse shadow-[0_0_15px_#d4af37]"></div>
         </div>
@@ -85,30 +53,27 @@
     <div id="main-content" class="hidden">
         <nav id="top-nav" class="fixed top-0 left-0 right-0 p-6 flex justify-between items-center bg-black/80 backdrop-blur-lg z-50 border-b border-white/5 transition-transform duration-500">
             <h2 class="serif text-2xl cursor-pointer text-[#d4af37]" onclick="showHome()">V.</h2>
-            <div class="text-[9px] tracking-[0.4em] text-gray-500 uppercase">Archive Secure</div>
         </nav>
 
         <main class="p-6 pt-32 max-w-5xl mx-auto">
-            
             <section id="home-page">
                 <div class="mb-16">
                     <h1 class="serif text-5xl mb-2 text-[#d4af37]">The Vault</h1>
                     <p class="text-[10px] uppercase tracking-[0.4em] text-gray-600">Authorized Personnel Only</p>
                 </div>
-                <div id="story-grid" class="grid grid-cols-2 md:grid-cols-3 gap-10">
-                    </div>
+                <div id="story-grid" class="grid grid-cols-2 md:grid-cols-3 gap-10"></div>
             </section>
 
             <section id="detail-page" class="hidden">
-                <button onclick="showHome()" class="text-[9px] uppercase tracking-[0.3em] text-gray-500 mb-12 border-b border-gray-800 pb-1 hover:text-white transition-colors">← Return to Gallery</button>
+                <button onclick="showHome()" class="text-[9px] uppercase tracking-[0.3em] text-gray-500 mb-12 border-b border-gray-800 pb-1">← Return to Gallery</button>
                 
                 <div id="detail-view">
                     <div class="flex flex-col md:flex-row gap-12">
                         <div id="detail-cover" class="w-full md:w-1/3 aspect-[2/3] bg-cover bg-center border border-white/10 grayscale"></div>
                         <div class="flex-1">
                             <h2 id="detail-title" class="serif text-5xl mb-6 text-[#d4af37]"></h2>
-                            <p id="detail-synopsis" class="reading-font text-xl text-gray-400 italic mb-10 leading-relaxed"></p>
-                            <button onclick="startReading()" class="w-full py-5 bg-[#d4af37] text-black font-bold uppercase text-[11px] tracking-[0.3em] hover:bg-white transition-all">Open Data Stream</button>
+                            <p id="detail-synopsis" class="reading-font text-xl text-gray-400 italic mb-10"></p>
+                            <button onclick="startReading()" class="w-full py-5 bg-[#d4af37] text-black font-bold uppercase text-[11px] tracking-[0.3em]">Open Data Stream</button>
                         </div>
                     </div>
                 </div>
@@ -124,11 +89,10 @@
 
                     <div class="pt-16 border-t border-white/5">
                         <h3 class="serif text-2xl text-[#d4af37] mb-8">Transmissions</h3>
-                        <textarea id="comment-input" class="w-full bg-[#111] border border-white/10 p-5 text-white mb-4 focus:border-[#d4af37] outline-none transition-colors" rows="4" placeholder="Enter encrypted message..."></textarea>
-                        <button onclick="postComment()" class="w-full py-4 bg-transparent border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition-all">Transmit to Archive</button>
+                        <textarea id="comment-input" class="w-full bg-[#111] border border-white/10 p-5 text-white mb-4 focus:border-[#d4af37] outline-none" rows="4" placeholder="Enter encrypted message..."></textarea>
+                        <button onclick="postComment()" class="w-full py-4 bg-transparent border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition-all">Transmit</button>
                         
-                        <div id="comment-list" class="mt-20 space-y-12 pb-32">
-                            </div>
+                        <div id="comment-list" class="mt-20 space-y-12 pb-32"></div>
                     </div>
                 </div>
             </section>
@@ -137,71 +101,14 @@
 
     <script>
         const stories = [
+            { id: 1, title: "Horizon", synopsis: "The perfect son is a masterpiece of a lie.", text: "He sits at the edge of the living room, a statue of filial piety.", cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg" },
+            { id: 2, title: "Anamnesis", synopsis: "The archives are hungry.", text: `<div class='font-mono bg-black/40 p-8 rounded border border-[#d4af37]/20 text-sm'><p class='text-[#d4af37] mb-6'>INT. MEDICAL COLLEGE - RESEARCH LAB - NIGHT</p>...[Content Loaded]...<br><br><span class='text-red-500 font-bold'>ANAMNESIS_004 - FILE READY FOR NEXT SUBJECT</span></div>`, cover: "https://i.pinimg.com/1200x/dc/0d/c1/dc0dc15c13dcfe322b098796162b2a39.jpg" }
+        ];
 
-            { 
-
-                id: 1, 
-
-                title: "Horizon", 
-
-                synopsis: "The perfect son is a masterpiece of a lie, and the cracks are starting to scream.", 
-
-                text: "He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it. <br><br>They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked, and he eats the cake, smiles at the photographs, listens to the stories, applauds with steady hands, and inside him the stillness lingers, the echo of being seen and not seen at the same time, the ache of being loved as an accessory to love, the soft exhaustion of existing fully and being noticed only partly, a quiet knowing of absence in abundance, a slow weight that presses against the ribs and folds itself into his bones, and he walks through the day like this, through all the care and all the light, holding the impossible understanding that being looked after is not always being held.",
-
-                cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg" 
-
-            },
-
-            { 
-
-                id: 2, 
-
-                title: "Dance of the 2 Empires", 
-
-                synopsis: "Two crowns, one dance, and a shared history.", 
-
-                text: "The crown didn’t feel any heavier today — but something beneath it did.<br><br>Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign? Or maybe it was her body — weary and still waiting for the warmth she had once been promised.<br><br>She shook the feeling off as best she could. The court watched her. The sound that finally broke through the tension wasn’t the music — it was the voice she knew best.<br><br>Her only true friend — now the Emperor of the South — stood before her, asking for her hand. Not for a game in the palace garden this time, but for a dance in the ballroom. A dance between two powerful nations, under the eyes of a hundred watching nobles.<br><br>She took his hand. They stepped onto the floor — not as the children they once were, but as rulers. Still, something in their steps remembered old rhythms.<br><br>As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”<br><br>But somewhere between the fourth and fifth step, the past crept in.<br><br>The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them.<br><br>He made a polite remark — something about the alliance, or the Chancellor’s speech. She replied with a practiced smile. The kind you give when there’s too much history in the room.<br><br>Then came the pause. Long enough to be uncomfortable. Short enough not to be intentional.<br><br>He glanced sideways at her — not at the empress, but at the girl who once got them both grounded for sneaking out to see the stars.<br><br>And just like that, she laughed. Not the courtly kind — a real one. Unfiltered. Familiar. The tension broke. Their words softened. They talked — about the ball, about their ridiculous swordmaster, about small things.<br><br>They started as delegates. But by the time their glasses emptied, they had become something else. Not rulers. Not children. But people who remembered what it was like to not be either.", 
-
-                cover: "https://i.pinimg.com/736x/b5/34/43/b53443eaeed068570e1084f73bebeaf5.jpg" 
-
-            },
-
-            { 
-
-                id: 3, 
-
-                title: "Anamnesis", 
-
-                synopsis: "The archives are hungry, and the curiosity that led him to the file is the very thing that wrote him into it.", 
-
-                text: "<div class='font-mono bg-black/40 p-8 rounded border border-[#d4af37]/20 text-sm'><p class='text-[#d4af37] mb-6'>INT. MEDICAL COLLEGE – RESEARCH LAB – NIGHT</p>...[Content Loaded]...<br><br><span class='text-red-500 font-bold'>ANAMNESIS_004 – FILE READY FOR NEXT SUBJECT</span></div>", 
-
-                cover: "https://i.pinimg.com/1200x/dc/0d/c1/dc0dc15c13dcfe322b098796162b2a39.jpg" 
-
-            },
-
-              { 
-
-                id: 4, 
-
-                title: "Empathodexterity", 
-
-                synopsis: "Same tool, different hands.", 
-
-                text: "<div class='reading-font text-gray-300 leading-relaxed'><p class='mb-6'>The old woman’s bangles sang a sharp, glass melody as she worked, a rhythmic percussion that cut through the humid air of the bazaar. To the passing crowds, she was just the \"Guava Lady,\" a fixture of the pavement, but to the young girl sitting at her feet, she was a surgeon of the streets.</p><p class='mb-6 italic text-[#d4af37] border-l border-[#d4af37]/30 pl-4'>\"Watch the wrist, Meena,\" her mother would say, never once looking up from her work.</p><p class='mb-6'>With a swift, silver flash of her paring knife, a firm guava was transformed into perfect, bite-sized pieces of hospitality. Meena watched those hands every day, stained with the nectar of the fruit and the rust-coloured dust of chilli powder, weathered by the relentless sun, yet moving with the grace of a conductor leading a symphony.</p><p class='mb-6'>The cuts seemed effortless yet precise to the millimeter, and in that precision, she honored the fruit by wasting nothing.</p><p class='mb-6 italic text-[#d4af37] border-l border-[#d4af37]/30 pl-4'>\"The hand must be steady, Meena, but the heart must be soft,\" her mother whispered as she handed a newspaper cone to a hungry child. \"That is how you truly serve.\"</p><div class='my-12 py-8 border-y border-white/5 text-center text-xs tracking-[0.5em] text-gray-500'>TWO DECADES LATER</div><p class='mb-6'>The golden sun has been replaced by the sterile, unwavering glare of overhead surgical lamps. The chaotic symphony of the marketplace, the honking rickshaws and shouting vendors has faded into a heavy, clinical silence.</p><p class='mb-6'>Meena looks down at her own hands. They are no longer stained with fruit and chilli powder; instead, they are encased in pale, sterile latex. The rhythmic clinking of glass bangles has been traded for the steady, digital pulse of a heart monitor, a neon green line marking the boundary between life and the unknown.</p><p class='mb-6'>She picks up the scalpel. It is significantly smaller and lighter than her mother’s worn paring knife, but as she touches the silver edge to the patient’s skin, she feels that same familiar weight of responsibility.</p><p class='mb-6'>She makes the first incision, a clean, decisive arc. It is the same motion she observed on a street corner years ago, the same unwavering precision once used to quarter a guava. Only now, the \"sweetness\" she is trying to reach isn't a snack for a child; it is the rhythmic thrum of a human life struggling to continue.</p><p class='mb-12 font-bold text-white'>The street vendor fed the body, and the daughter mended the life. It was a shared legacy of the wrist. As Meena's scalpel moved, the distinction vanished – different tools, different worlds, but the same sacred precision. She was her mother's daughter, with a quiet inheritance of discipline; proving that every cut, when guided by a soft heart, is an altar where life is honored.</p></div>",
-
-                cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" 
-
-            },
-
-        ];
-
-        // SUPABASE CONFIG
         const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
 
         let activeStory = null, scanTimer = null, scanProgress = 0, isAuthorized = false, lastScroll = 0;
 
-        // --- SCANNER LOGIC ---
         function startScan(e) {
             if (e) e.preventDefault();
             if (isAuthorized) return;
@@ -210,12 +117,7 @@
             scanTimer = setInterval(() => {
                 scanProgress += 2;
                 document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
-                if (scanProgress >= 100) {
-                    clearInterval(scanTimer);
-                    isAuthorized = true;
-                    sessionStorage.setItem('vault_authorized', 'true');
-                    completeAuth();
-                }
+                if (scanProgress >= 100) { clearInterval(scanTimer); isAuthorized = true; sessionStorage.setItem('vault_authorized', 'true'); completeAuth(); }
             }, 30);
         }
 
@@ -232,15 +134,10 @@
             setTimeout(() => {
                 const loader = document.getElementById('loading-screen');
                 loader.classList.add('access-granted-anim');
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                    document.getElementById('main-content').classList.remove('hidden');
-                    renderStories();
-                }, 600);
+                setTimeout(() => { loader.style.display = 'none'; document.getElementById('main-content').classList.remove('hidden'); renderStories(); }, 600);
             }, 400);
         }
 
-        // --- NAVIGATION ---
         function renderStories() {
             document.getElementById('story-grid').innerHTML = stories.map(s => `
                 <div onclick="showStory(${s.id})" class="group cursor-pointer">
@@ -256,43 +153,31 @@
             document.getElementById('detail-page').classList.remove('hidden');
             document.getElementById('detail-view').classList.remove('hidden');
             document.getElementById('reading-view').classList.add('hidden');
-            
             document.getElementById('detail-title').innerText = activeStory.title;
             document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
             document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
-
             const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
             document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
             window.scrollTo(0,0);
         }
 
-        function showHome() {
-            document.getElementById('detail-page').classList.add('hidden');
-            document.getElementById('home-page').classList.remove('hidden');
+        function showHome() { document.getElementById('detail-page').classList.add('hidden'); document.getElementById('home-page').classList.remove('hidden'); window.scrollTo(0,0); }
+
+        async function startReading() {
+            document.getElementById('detail-view').classList.add('hidden');
+            document.getElementById('reading-view').classList.remove('hidden');
+            document.getElementById('reading-title').innerText = activeStory.title;
+            // FIXED: use innerHTML to render story boxes correctly
+            document.getElementById('full-text').innerHTML = activeStory.text;
+            await fetchComments();
             window.scrollTo(0,0);
         }
 
-        async function startReading() {
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('detail-view').classList.add('hidden');
-    document.getElementById('reading-view').classList.remove('hidden');
-    
-    // CHANGE THIS LINE: use innerHTML to render the code blocks properly
-    document.getElementById('full-text').innerHTML = activeStory.text;
-    
-    await fetchComments();
-    window.scrollTo(0,0);
-}
-
-        }
-
-        // --- DATABASE OPS ---
         async function handleLike() {
             const { data: cur } = await sbClient.from('stories_meta').select('likes').eq('story_id', activeStory.id).single();
             let newCount = (cur ? cur.likes : 0) + 1;
             await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
             document.getElementById('like-count').innerText = `${newCount} LIKES`;
-            document.getElementById('like-btn').innerText = '❤️';
         }
 
         async function postComment() {
@@ -304,55 +189,31 @@
         }
 
         async function fetchComments() {
-    const { data, error } = await sbClient
-        .from('comments')
-        .select('*')
-        .eq('story_id', activeStory.id)
-        .order('created_at', { ascending: false });
-
-    if (!error && data) {
-        const list = document.getElementById('comment-list');
-        list.innerHTML = data.map(c => `
-            <div class="border-l border-[#d4af37]/20 pl-6 py-4 mb-8 fade-in">
-                <div class="flex justify-between items-start mb-2">
-                    <p class="text-[8px] text-gray-600 uppercase tracking-[0.3em] font-mono">
-                        Ref: ARCHIVE_ID_${c.id.toString().padStart(3, '0')}
-                    </p>
-                    <p class="text-[8px] text-gray-700 font-mono">
-                        ${new Date(c.created_at).toLocaleDateString()}
-                    </p>
-                </div>
-                <p class="reading-font text-gray-300 text-sm leading-relaxed">
-                    ${c.content}
-                </p>
-            </div>
-        `).join('');
-    }
-}
-
+            const { data } = await sbClient.from('comments').select('*').eq('story_id', activeStory.id).order('created_at', { ascending: false });
+            if(data) {
+                // FIXED: Adding structured transmission containers for each comment
+                document.getElementById('comment-list').innerHTML = data.map(c => `
+                    <div class="border-l border-[#d4af37]/20 pl-6 py-4 fade-in">
+                        <div class="flex justify-between items-start mb-2">
+                            <p class="text-[8px] text-gray-600 uppercase tracking-[0.3em] font-mono">Ref: ARCHIVE_ID_${c.id.toString().padStart(3, '0')}</p>
+                            <p class="text-[8px] text-gray-700 font-mono">${new Date(c.created_at).toLocaleDateString()}</p>
+                        </div>
+                        <p class="reading-font text-gray-300 text-sm leading-relaxed">${c.content}</p>
+                    </div>
+                `).join('');
             }
         }
 
-        // --- UTILS ---
         window.onscroll = () => {
             const cur = window.scrollY;
             const nav = document.getElementById('top-nav');
             cur > lastScroll && cur > 100 ? nav.classList.add('nav-hidden') : nav.classList.remove('nav-hidden');
             lastScroll = cur;
-
             const h = document.documentElement.scrollHeight - window.innerHeight;
             if(h > 0) document.getElementById('progress-bar').style.width = `${(cur / h) * 100}%`;
         };
 
-        window.onload = () => {
-            if (sessionStorage.getItem('vault_authorized') === 'true') {
-                isAuthorized = true;
-                document.getElementById('loading-screen').style.display = 'none';
-                document.getElementById('main-content').classList.remove('hidden');
-                renderStories();
-            }
-        };
+        window.onload = () => { if (sessionStorage.getItem('vault_authorized') === 'true') { isAuthorized = true; document.getElementById('loading-screen').style.display = 'none'; document.getElementById('main-content').classList.remove('hidden'); renderStories(); } };
     </script>
 </body>
 </html>
-
