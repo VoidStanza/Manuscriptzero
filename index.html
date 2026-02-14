@@ -2,41 +2,116 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>THE VAULT | ENTRY</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #0a0a0b; color: #d4af37; overflow: hidden; }
-        #gear-container { width: 220px; height: 220px; cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .unlock-glow { animation: glow 0.8s forwards; }
-        @keyframes glow { to { filter: brightness(2) drop-shadow(0 0 40px #d4af37); transform: scale(1.1); } }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300&display=swap');
+        
+        body { 
+            background: #0a0a0b; 
+            color: #d4af37; 
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+
+        #gear-container { 
+            width: 240px; 
+            height: 240px; 
+            cursor: pointer; 
+            position: relative;
+        }
+
+        #vault-gear { 
+            width: 100%; 
+            height: 100%; 
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); 
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2));
+        }
+
+        .unlock-glow { 
+            animation: gearGlow 0.8s ease-out forwards; 
+        }
+
+        @keyframes gearGlow {
+            0% { filter: brightness(1) drop-shadow(0 0 15px #d4af37); }
+            100% { filter: brightness(2) drop-shadow(0 0 60px #d4af37); transform: scale(1.1); }
+        }
+
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center h-screen">
-    <div class="mb-12 text-center">
-        <h2 class="tracking-[0.6em] text-[10px] uppercase mb-2">Vault Mechanism</h2>
-        <p id="unlock-progress" class="font-mono text-[10px]">SYSTEM: LOCKED</p>
-    </div>
+<body>
 
-    <div id="gear-container" onclick="rotate()">
-        <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
-            <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
-        </svg>
+    <div id="ui-wrapper" class="flex flex-col items-center">
+        <div class="mb-12 text-center">
+            <h2 class="serif tracking-[0.6em] text-[10px] uppercase mb-2">Vault Mechanism</h2>
+            <p id="unlock-progress" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">
+                Two-Phase Verification Required
+            </p>
+        </div>
+
+        <div id="gear-container" onclick="rotateGear()">
+            <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
+                <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
+                <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
+            </svg>
+        </div>
+
+        <div id="status-text" class="mt-12 text-[#d4af37] font-mono text-[10px] tracking-[0.2em]">
+            STATUS: SECURED
+        </div>
     </div>
 
     <script>
-        let deg = 0;
-        function rotate() {
-            deg += 45;
-            document.getElementById('vault-gear').style.transform = `rotate(${deg}deg)`;
-            let p = Math.min(Math.round((deg/360)*100), 100);
-            document.getElementById('unlock-progress').innerText = `DISENGAGING: ${p}%`;
+        let currentRotation = 0;
+        const unlockThreshold = 360;
+
+        function rotateGear() {
+            // INCREMENT BY 180 DEGREES
+            currentRotation += 180; 
             
-            if (deg >= 360) {
-                document.getElementById('vault-gear').classList.add('unlock-glow');
-                setTimeout(() => { window.location.href = 'gallery.html'; }, 800);
+            const gear = document.getElementById('vault-gear');
+            const statusText = document.getElementById('status-text');
+            const progressHint = document.getElementById('unlock-progress');
+            
+            // Apply rotation
+            gear.style.transform = `rotate(${currentRotation}deg)`;
+            
+            if (currentRotation === 180) {
+                statusText.innerText = "STATUS: HALF-LOCKED";
+                progressHint.innerText = "One Final Turn";
+            }
+
+            if (currentRotation >= unlockThreshold) {
+                // Disable further clicks
+                document.getElementById('gear-container').onclick = null;
+                
+                // Visual feedback
+                statusText.innerText = "ACCESS GRANTED";
+                gear.classList.add('unlock-glow');
+                
+                // Transition to next page
+                setTimeout(() => {
+                    document.body.classList.add('fade-out');
+                    setTimeout(() => {
+                        window.location.href = 'gallery.html'; // Direct to your gallery page
+                    }, 800);
+                }, 1000);
             }
         }
     </script>
