@@ -109,6 +109,23 @@
                 </div>
 
                 <div id="reading-view" class="hidden">
+                    <div class="mt-20 pt-10 border-t border-white/5">
+    <h3 class="serif text-xl mb-6 text-[#d4af37]">Archive Transmissions</h3>
+    
+    <textarea id="comment-input" 
+              class="w-full bg-transparent border border-white/10 p-4 text-sm focus:border-[#d4af37] transition-colors outline-none text-white reading-font" 
+              rows="3" 
+              placeholder="Enter transmission..."></textarea>
+    
+    <button onclick="postComment()" 
+            class="w-full py-4 bg-[#d4af37] text-black text-[10px] font-bold uppercase mt-4 tracking-widest active:scale-[0.98] transition-transform">
+        Preserved in the margins
+    </button>
+
+    <div id="comment-list" class="mt-16 space-y-10 pb-20">
+        </div>
+                    </div>
+                
                     <h2 id="reading-title" class="serif text-3xl text-center mb-16 text-[#d4af37]"></h2>
                     <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8"></div>
                     <div class="my-20 flex flex-col items-center">
@@ -285,6 +302,74 @@
                 const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
                 document.getElementById("progress-bar").style.width = (cur / h * 100) + "%";
             }
+            // Add this variable at the top with your other lets
+let myComments = JSON.parse(localStorage.getItem('myComments') || '[]');
+
+async function postComment() {
+    const input = document.getElementById('comment-input');
+    const content = input.value.trim();
+    
+    if(!content) return;
+
+    const { data, error } = await sbClient
+        .from('comments')
+        .insert([{ 
+            story_id: activeStory.id, 
+            content: content 
+        }])
+        .select();
+
+    if (!error) {
+        // Save comment ID locally so the user can delete their own messages
+        myComments.push(data[0].id);
+        localStorage.setItem('myComments', JSON.stringify(myComments));
+        
+        input.value = ""; // Clear input
+        await fetchComments(); // Refresh list
+    } else {
+        console.error("Transmission failed:", error);
+    }
+}
+
+async function fetchComments() {
+    const { data, error } = await sbClient
+        .from('comments')
+        .select('*')
+        .eq('story_id', activeStory.id)
+        .order('created_at', { ascending: false });
+
+    if (!error) {
+        const list = document.getElementById('comment-list');
+        list.innerHTML = data.map(c => `
+            <div class="border-l border-[#d4af37]/20 pl-6 py-2 fade-in">
+                <p class="text-xs text-gray-500 uppercase tracking-widest mb-2 font-mono">
+                    ID: ${c.id.toString().slice(-4)} | ${new Date(c.created_at).toLocaleDateString()}
+                </p>
+                <p class="reading-font text-gray-300 leading-relaxed">${c.content}</p>
+                ${myComments.includes(c.id) ? `
+                    <button onclick="deleteComment(${c.id})" class="text-[8px] text-red-900/50 hover:text-red-700 uppercase mt-4 tracking-tighter transition-colors">
+                        [ Erase Transmission ]
+                    </button>
+                ` : ''}
+            </div>
+        `).join('');
+    }
+}
+
+async function deleteComment(id) {
+    if(!confirm("Erase this transmission from the archive?")) return;
+    
+    const { error } = await sbClient
+        .from('comments')
+        .delete()
+        .eq('id', id);
+
+    if (!error) {
+        myComments = myComments.filter(cid => cid !== id);
+        localStorage.setItem('myComments', JSON.stringify(myComments));
+        await fetchComments();
+    }
+}
         };
     </script>
 </body>
