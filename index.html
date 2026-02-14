@@ -318,10 +318,11 @@
 
     let activeStory = null, scanTimer = null, scanProgress = 0, isAuthorized = false;
 
-    // --- SCANNER LOGIC ---
+        // --- SCANNER LOGIC ---
     function startScan(e) {
         if (e) e.preventDefault();
-        if (isAuthorized) return;
+        if (isAuthorized) return; // Vital: stop if already inside
+        
         document.body.classList.add('scanning');
         clearInterval(scanTimer);
         scanTimer = setInterval(() => {
@@ -329,14 +330,14 @@
             document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
             if (scanProgress >= 100) {
                 clearInterval(scanTimer);
-                isAuthorized = true;
+                isAuthorized = true; // Lock the authorized state
                 completeAuth();
             }
         }, 40);
     }
 
     function stopScan() {
-        if (isAuthorized) return;
+        if (isAuthorized) return; // Prevent reset if 100% reached
         clearInterval(scanTimer);
         scanProgress = 0;
         document.body.classList.remove('scanning');
@@ -344,12 +345,18 @@
     }
 
     function completeAuth() {
+        const loader = document.getElementById('loading-screen');
+        const main = document.getElementById('main-content');
+        
         document.getElementById('scan-status').innerText = "ACCESS GRANTED";
+        
         setTimeout(() => {
-            document.getElementById('loading-screen').classList.add('access-granted-anim');
+            loader.classList.add('access-granted-anim');
             setTimeout(() => {
-                document.getElementById('loading-screen').classList.add('hidden');
-                document.getElementById('main-content').classList.remove('hidden');
+                // FORCE: Physically hide the loader so it can't come back
+                loader.style.display = 'none'; 
+                main.classList.remove('hidden');
+                main.style.display = 'block'; 
                 renderStories();
             }, 600);
         }, 400);
@@ -367,30 +374,47 @@
 
     async function showStory(id) {
         activeStory = stories.find(s => s.id === id);
+        
+        // Navigation Logic
         document.getElementById('home-page').classList.add('hidden');
         document.getElementById('detail-page').classList.remove('hidden');
         document.getElementById('reading-view').classList.add('hidden');
         document.getElementById('detail-view').classList.remove('hidden');
         
+        // Content Population
         document.getElementById('detail-title').innerText = activeStory.title;
         document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
         document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
 
-        const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
-        document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
+        // Database Fetch
+        try {
+            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
+            document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
+        } catch (err) {
+            document.getElementById('like-count').innerText = "0 LIKES";
+        }
+        
         window.scrollTo(0,0);
     }
 
     function showHome() {
         document.getElementById('detail-page').classList.add('hidden');
         document.getElementById('home-page').classList.remove('hidden');
+        window.scrollTo(0,0);
     }
 
     async function startReading() {
+        // Ensure the scanner screen is DEFINITELY gone
+        document.getElementById('loading-screen').style.display = 'none';
+        
         document.getElementById('detail-view').classList.add('hidden');
         document.getElementById('reading-view').classList.remove('hidden');
+        
+        // Use innerHTML if you have formatted text, or innerText for plain text
         document.getElementById('full-text').innerText = activeStory.text;
+        
         await fetchComments();
+        window.scrollTo(0,0);
     }
 
     // --- SUPABASE INTERACTION ---
