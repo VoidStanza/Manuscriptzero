@@ -1,125 +1,118 @@
-<!DOCTYPE html>
+
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Archive | Noir Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>THE ARCHIVE | MOBILE PORTAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&display=swap');
-        :root { --bg-dark: #0a0a0b; --accent: #d4af37; --text-main: #e2e2e2; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); color: var(--text-main); scroll-behavior: smooth; overflow-x: hidden; }
-        .serif { font-family: 'Playfair Display', serif; }
-        .reading-font { font-family: 'Lora', serif; line-height: 1.9; }
         
-        /* Progress Bar Style */
-        #progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 3px; z-index: 100; background: transparent; }
+        :root { --bg-dark: #0a0a0b; --accent: #d4af37; }
+
+        /* MOBILE FIXES: Prevents text selection and blue highlights on tap */
+        * { 
+            -webkit-tap-highlight-color: transparent; 
+            -webkit-touch-callout: none; 
+            -webkit-user-select: none; 
+            user-select: none; 
+        }
+        /* Allow selection only for reading and typing */
+        #full-text, #comment-input, #comment-list p { 
+            -webkit-user-select: text; 
+            user-select: text; 
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: #e2e2e2; 
+            overflow-x: hidden;
+            overscroll-behavior-y: contain; /* Prevents pull-to-refresh on mobile */
+        }
+        
+        .serif { font-family: 'Playfair Display', serif; }
+        .reading-font { font-family: 'Lora', serif; line-height: 1.8; }
+
+        /* Progress Bar */
+        #progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 100; }
         #progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width 0.1s ease; }
 
-        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Biometric Entry Animations */
+        @keyframes sweep { 0% { top: 0%; } 100% { top: 100%; } }
+        .laser-active { animation: sweep 1.5s infinite alternate ease-in-out; opacity: 1 !important; }
         
-        .cursor-pointer-effect { cursor: pointer; }
-        @keyframes sweep {
-    0% { top: 0%; }
-    100% { top: 100%; }
-}
-.laser-active {
-    animation: sweep 1.5s infinite alternate ease-in-out;
-    opacity: 1 !important;
-}
-.access-granted {
-    animation: irisOut 1s forwards cubic-bezier(0.77, 0, 0.175, 1);
-}
-@keyframes irisOut {
-    to { transform: scale(4); opacity: 0; filter: blur(20px); }
-}
+        .access-granted { animation: portalOpen 0.8s forwards ease-in; }
+        @keyframes portalOpen { to { transform: scale(3); opacity: 0; filter: blur(15px); } }
+
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div id="progress-container"><div id="progress-bar"></div></div>
 
-    <<div id="loading-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black overflow-hidden">
-    <div id="scanner-container" class="relative flex flex-col items-center group">
-        <div id="laser" class="absolute w-64 h-[2px] bg-[#d4af37] shadow-[0_0_15px_#d4af37] opacity-0 z-10"></div>
-        
-        <div id="fingerprint" class="w-32 h-32 mb-6 opacity-40 transition-all duration-500 cursor-pointer active:scale-95 active:opacity-100" 
-             onmousedown="startScan()" onmouseup="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1" stroke-linecap="round">
-                <path d="M12 11c0-1.657-1.343-3-3-3s-3 1.343-3 3v2c0 1.657 1.343 3 3 3s3-1.343 3-3v-2zM15 11c0-3.314-2.686-6-6-6S3 7.686 3 11v2c0 3.314 2.686 6 6 6s6-2.686 6-6v-2zM18 11c0-4.97-4.03-9-9-9S0 6.03 0 11v2c0 4.97 4.03 9 9 9s9-4.03 9-9v-2z"/>
-            </svg>
-        </div>
+    <div id="loading-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black">
+        <div class="relative flex flex-col items-center">
+            <div id="laser" class="absolute w-48 h-[2px] bg-[#d4af37] shadow-[0_0_15px_#d4af37] opacity-0 z-10 pointer-events-none"></div>
+            
+            <div id="fingerprint" class="w-24 h-24 mb-8 opacity-50 transition-all active:scale-90" 
+                 ontouchstart="startScan(event)" ontouchend="stopScan()" onmousedown="startScan(event)" onmouseup="stopScan()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1" stroke-linecap="round">
+                    <path d="M12 11c0-1.657-1.343-3-3-3s-3 1.343-3 3v2c0 1.657 1.343 3 3 3s3-1.343 3-3v-2zM15 11c0-3.314-2.686-6-6-6S3 7.686 3 11v2c0 3.314 2.686 6 6 6s6-2.686 6-6v-2zM18 11c0-4.97-4.03-9-9-9S0 6.03 0 11v2c0 4.97 4.03 9 9 9s9-4.03 9-9v-2z"/>
+                </svg>
+            </div>
 
-        <div id="scan-status" class="serif text-[#d4af37] tracking-[0.4em] text-xs uppercase">Hold to Authenticate</div>
-        <div id="progress-text" class="text-[8px] text-gray-600 mt-2 font-mono">ID: ARCHIVE_V5_SECURE</div>
-    </div>
-    </div>
-        ">
-        <div class="text-center">
-            <h1 class="serif text-3xl md:text-5xl italic tracking-[0.3em] text-[#d4af37] animate-pulse group-hover:scale-105 transition-transform">THE ARCHIVE</h1>
-            <p class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mt-4 group-hover:text-gray-400">Click to Enter the Vault</p>
+            <div id="scan-status" class="serif text-[#d4af37] tracking-[0.3em] text-[10px] uppercase">Initialize Scan</div>
+            <div id="progress-text" class="text-[8px] text-gray-700 mt-2 font-mono uppercase tracking-widest">System: Locked</div>
         </div>
     </div>
 
-    <div id="main-content" class="hidden min-h-screen">
-        <nav class="p-6 border-b border-white/5 flex justify-between items-center bg-black/50 backdrop-blur-md sticky top-0 z-40">
-            <h2 class="serif text-xl cursor-pointer hover:text-[#d4af37]" onclick="showHome()">V.</h2>
-            <div class="h-[1px] w-20 bg-[#d4af37]/30"></div>
+    <div id="main-content" class="hidden">
+        <nav class="p-5 border-b border-white/5 flex justify-between items-center bg-black/80 backdrop-blur-lg sticky top-0 z-40">
+            <h2 class="serif text-xl" onclick="showHome()">V.</h2>
+            <div class="h-[1px] w-12 bg-[#d4af37]/40"></div>
         </nav>
 
-        <div class="p-6 md:p-16">
-            <div id="home-page" class="max-w-6xl mx-auto fade-in">
-                <header class="mb-16">
-                    <h1 class="serif text-5xl md:text-7xl font-bold mb-4">The Vault</h1>
-                    <p class="text-gray-400 italic">Curated works for the curious.</p>
-                </header>
-                <div id="story-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"></div>
-            </div>
+        <main class="p-6">
+            <section id="home-page" class="fade-in">
+                <h1 class="serif text-4xl font-bold mb-2">The Vault</h1>
+                <p class="text-gray-500 text-xs uppercase tracking-[0.2em] mb-10">Secure Archives</p>
+                <div id="story-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-8"></div>
+            </section>
 
-            <div id="detail-page" class="hidden max-w-4xl mx-auto fade-in">
-                <button onclick="showHome()" class="mb-12 text-xs uppercase tracking-widest text-gray-500 hover:text-[#d4af37]">← Back</button>
+            <section id="detail-page" class="hidden fade-in">
+                <button onclick="showHome()" class="mb-8 text-[10px] uppercase tracking-widest text-gray-500">← Back to Grid</button>
                 
                 <div id="synopsis-view">
-                    <div class="flex flex-col md:flex-row gap-12 items-start">
-                        <div id="detail-cover" class="w-full md:w-5/12 aspect-[2/3] rounded bg-cover bg-center shadow-2xl"></div>
-                        <div class="w-full md:w-7/12">
-                            <h2 id="detail-title" class="serif text-5xl mb-6"></h2>
-                            <p id="detail-synopsis" class="reading-font text-xl text-gray-400 mb-6"></p>
-                            <p id="detail-read-time" class="text-[10px] tracking-widest text-[#d4af37] mb-10 uppercase"></p>
-                            <button onclick="startReading()" class="bg-[#d4af37] text-black px-10 py-4 rounded-full font-bold hover:bg-white transition-colors">Read Story</button>
-                        </div>
-                    </div>
+                    <div id="detail-cover" class="w-full aspect-[4/5] bg-cover bg-center rounded-sm border border-white/5 mb-8"></div>
+                    <h2 id="detail-title" class="serif text-4xl mb-4"></h2>
+                    <p id="detail-read-time" class="text-[10px] text-[#d4af37] tracking-tighter mb-4 uppercase"></p>
+                    <p id="detail-synopsis" class="reading-font text-lg text-gray-400 mb-8"></p>
+                    <button onclick="startReading()" class="w-full py-4 bg-[#d4af37] text-black font-bold uppercase text-xs tracking-widest">Decipher Entry</button>
                 </div>
 
-                <div id="reading-view" class="hidden max-w-2xl mx-auto">
-                    <h2 id="reading-title" class="serif text-5xl text-center mb-16 text-[#d4af37]"></h2>
-                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8 first-letter:text-6xl first-letter:text-[#d4af37] first-letter:mr-3 first-letter:float-left"></div>
+                <div id="reading-view" class="hidden">
+                    <h2 id="reading-title" class="serif text-3xl text-center mb-12 text-[#d4af37]"></h2>
+                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-6"></div>
                     
-                    <div class="mt-20 py-10 border-y border-white/5 flex flex-col items-center">
-                        <button onclick="handleLike()" id="like-btn" class="text-4xl hover:scale-110 transition">♡</button>
-                        <span id="like-count" class="text-xs tracking-widest mt-2 text-[#d4af37]">0 LIKES</span>
+                    <div class="my-16 flex flex-col items-center">
+                        <button onclick="handleLike()" id="like-btn" class="text-4xl">♡</button>
+                        <span id="like-count" class="text-[10px] mt-2 text-[#d4af37]">0 LIKES</span>
                     </div>
 
-                    <div class="mt-20">
-                        <h3 class="serif text-2xl mb-8 text-[#d4af37]">Discussion</h3>
-                        <div class="bg-[#161618] p-6 rounded mb-10">
-                            <div class="flex gap-3 mb-4">
-                                <button onclick="addEmoji('✨')" class="hover:scale-125 transition">✨</button>
-                                <button onclick="addEmoji('🖤')" class="hover:scale-125 transition">🖤</button>
-                                <button onclick="addEmoji('🥀')" class="hover:scale-125 transition">🥀</button>
-                            </div>
-                            <textarea id="comment-input" class="w-full bg-transparent border-b border-white/10 outline-none py-2 mb-4 text-sm" placeholder="Leave a thought..."></textarea>
-                            <button onclick="postComment()" class="bg-[#d4af37] text-black px-6 py-2 text-xs uppercase font-bold rounded">Post</button>
-                        </div>
-                        <div id="comment-list" class="space-y-8"></div>
+                    <div id="comment-section">
+                        <textarea id="comment-input" class="w-full bg-[#111] border border-white/10 p-4 text-sm rounded-none" placeholder="Transmission..."></textarea>
+                        <button onclick="postComment()" class="w-full py-3 bg-[#d4af37] text-black text-[10px] font-bold uppercase mt-2">Post Transmission</button>
+                        <div id="comment-list" class="mt-12 space-y-6 pb-20"></div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
-
     <script>
        const stories = [
 
@@ -181,86 +174,56 @@
 
         ];
 
-                          const _url = 'https://iakkxwghbczalryylqzg.supabase.co';
+                             const _url = 'https://iakkxwghbczalryylqzg.supabase.co';
         const _key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc';
         const sbClient = supabase.createClient(_url, _key);
 
-        let activeStory = null;
-        let dbComments = [];
-        let likedStories = new Set();
+        let activeStory = null, scanTimer, scanProgress = 0, likedStories = new Set();
         let myComments = JSON.parse(localStorage.getItem('myComments') || '[]');
 
-        // ENTER ARCHIVE LOGIC
-        function enterArchive() {
-            let scanTimer;
-let scanProgress = 0;
-
-function startScan() {
-    const laser = document.getElementById('laser');
-    const status = document.getElementById('scan-status');
-    const finger = document.getElementById('fingerprint');
-    
-    laser.classList.add('laser-active');
-    finger.style.filter = "drop-shadow(0 0 10px #d4af37)";
-    status.innerText = "Scanning DNA...";
-    
-    scanTimer = setInterval(() => {
-        scanProgress += 2;
-        document.getElementById('progress-text').innerText = `PROGRESS: ${scanProgress}%`;
-        
-        if (scanProgress >= 100) {
-            completeAuthentication();
-        }
-    }, 40);
-}
-
-function stopScan() {
-    if (scanProgress < 100) {
-        clearInterval(scanTimer);
-        scanProgress = 0;
-        document.getElementById('laser').classList.remove('laser-active');
-        document.getElementById('scan-status').innerText = "Scan Interrupted";
-        document.getElementById('fingerprint').style.filter = "none";
-    }
-}
-
-function completeAuthentication() {
-    clearInterval(scanTimer);
-    const status = document.getElementById('scan-status');
-    status.innerText = "Access Granted";
-    status.style.color = "#fff";
-    
-    setTimeout(() => {
-        document.getElementById('loading-screen').classList.add('access-granted');
-        setTimeout(() => {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('main-content').classList.remove('hidden');
-            renderStories();
-        }, 800);
-    }, 500);
-}
+        function startScan(e) {
+            e.preventDefault(); // Prevents accidental scrolling
+            const laser = document.getElementById('laser'), status = document.getElementById('scan-status');
+            laser.classList.add('laser-active');
+            status.innerText = "READING DATA...";
+            scanTimer = setInterval(() => {
+                scanProgress += 3;
+                document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
+                if (scanProgress >= 100) completeAuth();
+            }, 50);
         }
 
-        // READING TIME CALCULATION
-        function getReadTime(text) {
-            const wordsPerMinute = 200;
-            const noHtml = text.replace(/<[^>]*>/g, ""); // strip html
-            const words = noHtml.split(/\s+/).length;
-            const minutes = Math.ceil(words / wordsPerMinute);
-            return `${minutes} min read`;
+        function stopScan() {
+            if (scanProgress < 100) {
+                clearInterval(scanTimer);
+                scanProgress = 0;
+                document.getElementById('laser').classList.remove('laser-active');
+                document.getElementById('scan-status').innerText = "HOLD TO AUTHENTICATE";
+                document.getElementById('progress-text').innerText = "SYSTEM: LOCKED";
+            }
+        }
+
+        function completeAuth() {
+            clearInterval(scanTimer);
+            document.getElementById('scan-status').innerText = "ACCESS GRANTED";
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('access-granted');
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('main-content').classList.remove('hidden');
+                    renderStories();
+                }, 600);
+            }, 300);
         }
 
         function renderStories() {
             const grid = document.getElementById('story-grid');
             grid.innerHTML = stories.map(s => `
-                <div onclick="showStory(${s.id})" class="group cursor-pointer">
-                    <div class="aspect-[2/3] overflow-hidden bg-zinc-900 border border-white/5 relative">
-                        <img src="${s.cover}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-1000">
+                <div onclick="showStory(${s.id})" class="mb-4">
+                    <div class="aspect-[16/9] overflow-hidden bg-zinc-900 mb-3 border border-white/5">
+                        <img src="${s.cover}" class="w-full h-full object-cover">
                     </div>
-                    <div class="flex justify-between items-center mt-4">
-                        <h4 class="serif text-lg group-hover:text-[#d4af37] transition">${s.title}</h4>
-                        <span class="text-[8px] text-gray-500 uppercase tracking-widest">${getReadTime(s.text)}</span>
-                    </div>
+                    <h4 class="serif text-xl">${s.title}</h4>
                 </div>
             `).join('');
         }
@@ -273,23 +236,15 @@ function completeAuthentication() {
             document.getElementById('reading-view').classList.add('hidden');
             document.getElementById('detail-title').innerText = activeStory.title;
             document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
-            document.getElementById('detail-read-time').innerText = getReadTime(activeStory.text);
             document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
-            
-            const heart = document.getElementById('like-btn');
-            heart.innerText = likedStories.has(activeStory.id) ? '❤️' : '♡';
+            document.getElementById('detail-read-time').innerText = "CALCULATING ARCHIVE SIZE...";
             window.scrollTo(0,0);
         }
 
-        // SCROLL PROGRESS BAR LOGIC
-        window.onscroll = function() {
+        window.onscroll = () => {
             if (!document.getElementById('reading-view').classList.contains('hidden')) {
-                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                const scrolled = (winScroll / height) * 100;
-                document.getElementById("progress-bar").style.width = scrolled + "%";
-            } else {
-                document.getElementById("progress-bar").style.width = "0%";
+                const s = document.documentElement.scrollTop, h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                document.getElementById("progress-bar").style.width = (s / h * 100) + "%";
             }
         };
 
@@ -308,64 +263,52 @@ function completeAuthentication() {
             document.getElementById("progress-bar").style.width = "0%";
         }
 
-        // REST OF YOUR COMMENT/LIKE LOGIC REMAINS THE SAME
-        function addEmoji(emoji) { document.getElementById('comment-input').value += emoji; }
-
-        async function postComment(parentId = null) {
+        async function postComment() {
             const input = document.getElementById('comment-input');
-            const content = parentId ? prompt("Reply:") : input.value;
-            if(!content) return;
-            const { data, error } = await sbClient.from('comments').insert([{ story_id: activeStory.id, parent_id: parentId, content: content }]).select();
+            if(!input.value) return;
+            const { data, error } = await sbClient.from('comments').insert([{ story_id: activeStory.id, content: input.value }]).select();
             if (!error) {
                 myComments.push(data[0].id);
                 localStorage.setItem('myComments', JSON.stringify(myComments));
-                if(!parentId) input.value = "";
+                input.value = "";
                 await fetchComments(); 
-            }
-        }
-
-        async function deleteComment(id) {
-            if(!confirm("Delete your thought?")) return;
-            const { error } = await sbClient.from('comments').delete().eq('id', id);
-            if (!error) {
-                myComments = myComments.filter(cid => cid !== id);
-                localStorage.setItem('myComments', JSON.stringify(myComments));
-                await fetchComments();
             }
         }
 
         async function fetchComments() {
             const { data, error } = await sbClient.from('comments').select('*').eq('story_id', activeStory.id).order('created_at', { ascending: true });
-            if (!error) { dbComments = data; renderComments(); }
+            if (!error) renderComments(data);
         }
 
-        function renderComments() {
-            const list = document.getElementById('comment-list');
-            const topLevel = dbComments.filter(c => !c.parent_id);
-            list.innerHTML = topLevel.map(c => {
-                const replies = dbComments.filter(r => r.parent_id === c.id);
-                const isMine = myComments.includes(c.id);
-                return `<div class="border-l border-[#d4af37]/30 pl-4 py-2 fade-in">
-                        <p class="text-sm text-gray-300 italic mb-2">${c.content}</p>
-                        <div class="flex gap-4">
-                            <button onclick="postComment(${c.id})" class="text-[10px] text-[#d4af37] uppercase">Reply</button>
-                            ${isMine ? `<button onclick="deleteComment(${c.id})" class="text-[10px] text-red-900 uppercase">Delete</button>` : ''}
-                        </div>
-                        <div class="ml-6 mt-4 space-y-4 border-l border-white/5 pl-4">${replies.map(r => `<p class="text-xs text-gray-500 italic"><span class="text-[#d4af37]">↳</span> ${r.content}</p>`).join('')}</div>
-                    </div>`;
-            }).join('');
+        function renderComments(data) {
+            document.getElementById('comment-list').innerHTML = data.map(c => `
+                <div class="border-l border-[#d4af37]/30 pl-4 py-2">
+                    <p class="text-sm text-gray-400 italic">${c.content}</p>
+                    ${myComments.includes(c.id) ? `<button onclick="deleteComment(${c.id})" class="text-[8px] text-red-900 uppercase mt-2">Erase</button>` : ''}
+                </div>
+            `).join('');
         }
 
         function handleLike() {
             const btn = document.getElementById('like-btn');
             if (likedStories.has(activeStory.id)) {
                 activeStory.likes--; likedStories.delete(activeStory.id);
-                btn.innerText = '♡'; btn.classList.remove('text-red-500');
+                btn.innerText = '♡';
             } else {
                 activeStory.likes++; likedStories.add(activeStory.id);
-                btn.innerText = '❤️'; btn.classList.add('text-red-500');
+                btn.innerText = '❤️';
             }
             document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
+        }
+
+        async function deleteComment(id) {
+            if(!confirm("Erase from archive?")) return;
+            const { error } = await sbClient.from('comments').delete().eq('id', id);
+            if (!error) {
+                myComments = myComments.filter(cid => cid !== id);
+                localStorage.setItem('myComments', JSON.stringify(myComments));
+                await fetchComments();
+            }
         }
     </script>
 </body>
