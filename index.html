@@ -390,32 +390,60 @@
             `).join('');
         }
 
-        function handleLike() {
-            const btn = document.getElementById('like-btn');
-            if (likedStories.has(activeStory.id)) {
-                likedStories.delete(activeStory.id);
-                btn.innerText = '♡';
-            } else {
-                likedStories.add(activeStory.id);
-                btn.innerText = '❤️';
-            }
-            async function handleLike() {
+        // Updated showStory with async to handle Database fetching
+async function showStory(id) {
+    activeStory = stories.find(s => s.id === id);
+    
+    // UI Transitions
+    document.getElementById('home-page').classList.add('hidden');
+    document.getElementById('detail-page').classList.remove('hidden');
+    document.getElementById('synopsis-view').classList.remove('hidden');
+    document.getElementById('reading-view').classList.add('hidden');
+    
+    // Set static data
+    document.getElementById('detail-title').innerText = activeStory.title;
+    document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
+    document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
+    document.getElementById('detail-read-time').innerText = getReadTime(activeStory.text);
+
+    try {
+        // FETCH LIVE LIKES FROM SUPABASE
+        const { data: meta, error } = await sbClient
+            .from('stories_meta')
+            .select('likes')
+            .eq('story_id', id)
+            .single();
+
+        // If a record exists, use it; otherwise, default to 0
+        activeStory.likes = meta ? meta.likes : 0;
+    } catch (err) {
+        console.warn("New entry detected: defaulting to 0 likes.");
+        activeStory.likes = 0;
+    }
+
+    // Update the UI with the result
+    document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
+    document.getElementById('like-btn').innerText = likedStories.has(id) ? '❤️' : '♡';
+    
+    window.scrollTo(0,0);
+}
+
+// Updated handleLike with async to save to Database
+async function handleLike() {
     const btn = document.getElementById('like-btn');
     const countLabel = document.getElementById('like-count');
     
-    // 1. Determine if we are adding or removing a like
     let change = likedStories.has(activeStory.id) ? -1 : 1;
     let newCount = (activeStory.likes || 0) + change;
 
-    // 2. Update the Database (Supabase)
+    // UPDATE SUPABASE
     const { error } = await sbClient
-        .from('stories_meta') // This must match your table name in Supabase
+        .from('stories_meta')
         .upsert({ 
             story_id: activeStory.id, 
             likes: newCount 
         }, { onConflict: 'story_id' });
 
-    // 3. Update the UI only if the database move was successful
     if (!error) {
         activeStory.likes = newCount;
         if (change === 1) {
@@ -426,12 +454,8 @@
             btn.innerText = '♡';
         }
         countLabel.innerText = `${newCount} LIKES`;
-    } else {
-        console.error("Archive Error: Could not sync likes", error);
     }
-            }
-            
-        }
+}
 
         async function deleteComment(id) {
             if(!confirm("Erase transmission?")) return;
