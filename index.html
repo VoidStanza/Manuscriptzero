@@ -30,8 +30,8 @@
         }
 
         #gear-container { width: 220px; height: 220px; cursor: pointer; pointer-events: auto; }
-
         #vault-gear { width: 100%; height: 100%; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.1)); }
+        
         #vault-gear.unlock-glow { animation: gearGlow 0.8s ease-out forwards; }
 
         @keyframes gearGlow {
@@ -43,7 +43,7 @@
         .access-granted-anim { animation: portalExit 0.8s forwards; }
         @keyframes portalExit { to { opacity: 0; transform: scale(1.1); filter: blur(20px); } }
 
-        #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 100; transition: width 0.2s; }
+        #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 300; transition: width 0.2s; }
         .fade-in { animation: fadeIn 0.5s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -114,6 +114,7 @@
             </section>
         </main>
     </div>
+
     <script>
         const stories = [
             { id: 1, title: "Horizon", synopsis: "The perfect son is a masterpiece of a lie.", text:"He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it. They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked, and he eats the cake, smiles at the photographs, listens to the stories, applauds with steady hands, and inside him the stillness lingers, the echo of being seen and not seen at the same time, the ache of being loved as an accessory to love, the soft exhaustion of existing fully and being noticed only partly, a quiet knowing of absence in abundance, a slow weight that presses against the ribs and folds itself into his bones, and he walks through the day like this, through all the care and all the light, holding the impossible understanding that being looked after is not always being held.",
@@ -137,11 +138,8 @@
        text: `
         <div class="space-y-6 font-mono text-sm border-l-2 border-[#d4af37]/30 pl-6 py-4 bg-black/20">
             <p class="text-[#d4af37] font-bold tracking-widest uppercase">RECOLLECTION OF A SUPPOSED PREVIOUS EXISTENCE</p>
-            
             <p class="text-gray-500 italic">INT. MEDICAL COLLEGE – RESEARCH LAB – NIGHT</p>
-            
             <p>Dim lighting. The hum of machinery fills the air. DR. Jeevith (30s, ambitious, sleep-deprived) leans over his laptop, eyes scanning the screen. A cold cup of coffee sits beside him, untouched. His fingers hover over the keyboard. <span class="text-[#d4af37]">-Click.</span></p>
-
             <div class="bg-[#d4af37]/5 p-4 border border-[#d4af37]/10">
                 <p class="text-[10px] text-gray-500 mb-2">ON SCREEN: VIDEO PLAYBACK</p>
                 <p class="italic text-gray-400">ARJUN (VIDEO): I... I woke up in the dissection hall. I don’t remember going there.</p>
@@ -164,7 +162,6 @@
             <p>Jeevith bursts into the lab, slamming the door. He rushes to his laptop. On screen: Surveillance footage of <span class="italic text-white">himself</span> sitting at this desk, watching this exact moment.</p>
 
             <p class="text-red-500 font-bold border-y border-red-900/50 py-2 text-center">"ANAMNESIS_003 – FILE READY FOR NEXT SUBJECT."</p>
-
             <p>A voice from the darkness: <span class="italic text-gray-400">"Don't run."</span></p>
 
             <p>The door SLAMS OPEN. A shadowy figure lunges. The laptop glitches violently. Everything cuts to black.</p>
@@ -196,14 +193,10 @@
 
             <p class="mb-6">She picks up the scalpel. It is significantly smaller and lighter than her mother’s worn paring knife, but as she touches the silver edge to the patient’s skin, she feels that same familiar weight of responsibility. She makes the first incision, a clean, decisive arc. It is the same motion she observed on a street corner years ago, the same unwavering precision once used to quarter a guava.</p>
 
-            <p class="mb-6">The street vendor fed the body, and the daughter mended the life. It was a shared legacy of the wrist. As Meena's scalpel moved, the distinction vanished – different tools, different worlds, but the same sacred precision. She was her mother's daughter, with a quiet inheritance of discipline; proving that every cut, when guided by a soft heart, is an altar where life is honored.</p>
-        </div>
-        `, 
-        cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" 
+            <p class="mb-6">The street vendor fed the body, and the daughter mended the life. It was a shared legacy of the wrist. As Meena's scalpel moved, the distinction vanished – different tools, different worlds, but the same sacred precision. She was her mother's daughter, with a quiet inheritance of discipline; proving that every cut, when guided by a soft heart, is an altar where life is honored.</p> </div>`,cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" 
               }
 ];
-
-        const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
+       const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
 
         let activeStory = null;
         let lastScroll = 0;
@@ -262,9 +255,12 @@
             document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
             document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
             
-            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
-            document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
-            fetchComments();
+            try {
+                const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
+                document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
+                fetchComments();
+            } catch(e) { console.log("Database connection pending..."); }
+            
             window.scrollTo(0,0);
         }
 
@@ -298,13 +294,15 @@
 
         async function fetchComments() {
             const list = document.getElementById('comment-list');
-            const { data } = await sbClient.from('comments').select('*').eq('story_id', activeStory.id).order('created_at', { ascending: false });
-            list.innerHTML = data && data.length ? data.map(c => `
-                <div class="border-l border-[#d4af37]/20 pl-6 py-4 mb-6">
-                    <p class="text-[8px] text-gray-600 font-mono mb-2">Ref: ARCHIVE_ID_${String(c.id).slice(-3)}</p>
-                    <p class="reading-font text-gray-300 text-sm">${c.content}</p>
-                </div>
-            `).join('') : "<p class='text-gray-700 text-[8px] uppercase'>No transmissions.</p>";
+            try {
+                const { data } = await sbClient.from('comments').select('*').eq('story_id', activeStory.id).order('created_at', { ascending: false });
+                list.innerHTML = data && data.length ? data.map(c => `
+                    <div class="border-l border-[#d4af37]/20 pl-6 py-4 mb-6">
+                        <p class="text-[8px] text-gray-600 font-mono mb-2">Ref: ARCHIVE_ID_${String(c.id).slice(-3)}</p>
+                        <p class="reading-font text-gray-300 text-sm">${c.content}</p>
+                    </div>
+                `).join('') : "<p class='text-gray-700 text-[8px] uppercase'>No transmissions.</p>";
+            } catch(e) { list.innerHTML = "<p class='text-gray-700 text-[8px] uppercase'>Archive connection offline.</p>"; }
         }
 
         window.onscroll = () => {
