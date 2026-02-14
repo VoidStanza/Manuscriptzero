@@ -276,52 +276,7 @@ const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co
 
         let isAuthorized = false; // Prevents the scanner from re-firing after 100%
 
-function startScan(e) {
-    if (e) e.preventDefault();
-    if (isAuthorized) return; // Do nothing if already in
 
-    clearInterval(scanTimer);
-    document.body.classList.add('scanning');
-    
-    scanTimer = setInterval(() => {
-        if (scanProgress < 100) {
-            scanProgress += 2;
-            document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
-        } else {
-            // STOP IMMEDIATELY AT 100
-            clearInterval(scanTimer);
-            if (!isAuthorized) {
-                isAuthorized = true;
-                completeAuth();
-            }
-        }
-    }, 30);
-}
-
-function stopScan() {
-    // Only reset if we haven't reached the end
-    if (!isAuthorized) {
-        clearInterval(scanTimer);
-        scanProgress = 0;
-        document.body.classList.remove('scanning');
-        document.getElementById('progress-text').innerText = "SYSTEM: LOCKED";
-    }
-}
-
-function completeAuth() {
-    // Final UI feedback
-    document.getElementById('scan-status').innerText = "ACCESS GRANTED";
-    document.getElementById('progress-text').innerText = "DECRYPTING: 100%";
-    
-    setTimeout(() => {
-        document.getElementById('loading-screen').classList.add('access-granted');
-        setTimeout(() => {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('main-content').classList.remove('hidden');
-            renderStories();
-        }, 600);
-    }, 300);
-}
 
         function renderStories() {
             const grid = document.getElementById('story-grid');
@@ -333,7 +288,62 @@ function completeAuth() {
             `).join('');
         }
 
-        async function showStory(id) {
+        async function showSlet isAuthorized = false; 
+
+function startScan(e) {
+    if (e) e.preventDefault();
+    if (isAuthorized) return; 
+
+    clearInterval(scanTimer);
+    document.body.classList.add('scanning');
+    
+    scanTimer = setInterval(() => {
+        if (scanProgress < 100) {
+            scanProgress += 2;
+            document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
+        } else {
+            clearInterval(scanTimer);
+            if (!isAuthorized) {
+                isAuthorized = true;
+                completeAuth();
+            }
+        }
+    }, 30);
+}
+
+function stopScan() {
+    if (isAuthorized) return; // Don't reset if we already won
+    
+    clearInterval(scanTimer);
+    scanProgress = 0;
+    document.body.classList.remove('scanning');
+    document.getElementById('progress-text').innerText = "SYSTEM: LOCKED";
+    document.getElementById('scan-status').innerText = "HOLD TO INITIALIZE";
+}
+
+function completeAuth() {
+    // 1. Visual Confirmation
+    const status = document.getElementById('scan-status');
+    const loadingScreen = document.getElementById('loading-screen');
+    const mainContent = document.getElementById('main-content');
+    
+    status.innerText = "ACCESS GRANTED";
+    status.style.color = "#00ff00"; // Brief green flash for success
+
+    // 2. Forced UI Swap
+    setTimeout(() => {
+        loadingScreen.classList.add('access-granted'); // Start fade animation
+        
+        // After animation, force visibility
+        setTimeout(() => {
+            loadingScreen.style.display = 'none'; // Physically remove it
+            mainContent.classList.remove('hidden'); // Show the vault
+            mainContent.style.display = 'block';    // Double-check display
+            renderStories(); // Load your elongated boxes
+        }, 600);
+    }, 400);
+}
+story(id) {
             activeStory = stories.find(s => s.id === id);
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('detail-page').classList.remove('hidden');
