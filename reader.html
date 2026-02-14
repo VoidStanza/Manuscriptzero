@@ -2,27 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>THE VAULT | READING</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE VAULT | ARCHIVE RECORD</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@300;600&display=swap');
+        
+        body { background: #0a0a0b; color: #e2e2e2; font-family: 'Montserrat', sans-serif; line-height: 1.8; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .reading-font { font-family: 'Lora', serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0a0a0b; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; }
+
+        .content-fade { animation: fadeIn 1.2s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-<body class="bg-[#0a0a0b] text-gray-300 p-8">
-    <button onclick="history.back()" class="text-[#d4af37] text-[10px] mb-20 uppercase tracking-widest">← Back</button>
-    
-    <article class="max-w-2xl mx-auto">
-        <h1 id="title" class="text-4xl text-[#d4af37] mb-12 font-serif"></h1>
-        <div id="content" class="leading-relaxed text-lg space-y-6"></div>
-    </article>
+<body class="selection:bg-[#d4af37] selection:text-black">
+
+    <div id="scroll-progress" class="fixed top-0 left-0 h-[2px] bg-[#d4af37] z-50 transition-all duration-100"></div>
+
+    <nav class="p-8 flex justify-between items-center fixed top-0 w-full bg-[#0a0a0b]/80 backdrop-blur-md z-40 border-b border-white/5">
+        <button onclick="location.href='gallery.html'" class="text-[10px] uppercase tracking-[0.4em] text-gray-500 hover:text-[#d4af37] transition-colors">← Exit Archive</button>
+        <span class="serif text-[#d4af37] text-xl">V.</span>
+    </nav>
+
+    <main class="max-w-2xl mx-auto px-6 pt-40 pb-32 content-fade">
+        <header class="mb-20 text-center">
+            <h1 id="story-title" class="serif text-5xl md:text-6xl text-[#d4af37] mb-6"></h1>
+            <p id="story-synopsis" class="reading-font italic text-gray-500 text-lg"></p>
+            <div class="mt-10 flex items-center justify-center gap-4">
+                <span class="h-[1px] w-12 bg-gray-800"></span>
+                <span id="record-id" class="text-[9px] uppercase tracking-[0.5em] text-gray-700"></span>
+                <span class="h-[1px] w-12 bg-gray-800"></span>
+            </div>
+        </header>
+
+        <div id="story-content" class="reading-font text-gray-300 text-lg space-y-8 first-letter:text-5xl first-letter:font-serif first-letter:text-[#d4af37] first-letter:mr-3 first-letter:float-left">
+            </div>
+
+        <footer class="mt-32 pt-16 border-t border-white/5 text-center">
+            <p class="serif italic text-gray-600 mb-8">End of Record</p>
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-[9px] uppercase tracking-[0.3em] text-[#d4af37] border border-[#d4af37]/30 px-6 py-3 hover:bg-[#d4af37] hover:text-black transition-all">Return to Top</button>
+        </footer>
+    </main>
 
     <script>
-        // In a real app, you'd fetch this from Supabase. 
-        // For now, it matches the ID from gallery.html
-        const params = new URLSearchParams(window.location.search);
-        const storyId = params.get('id');
+        // DATA OBJECT (Should match your gallery data exactly)
+        const stories = [
+            { id: 1, title: "Horizon", synopsis: "The perfect son is a masterpiece of a lie.", text: "He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it. They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked, and he eats the cake, smiles at the photographs, listens to the stories, applauds with steady hands, and inside him the stillness lingers, the echo of being seen and not seen at the same time, the ache of being loved as an accessory to love, the soft exhaustion of existing fully and being noticed only partly, a quiet knowing of absence in abundance, a slow weight that presses against the ribs and folds itself into his bones, and he walks through the day like this, through all the care and all the light, holding the impossible understanding that being looked after is not always being held.",  cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg" },
+            { id: 2, title: "The Dance of the 2 Empires", synopsis: "Two crowns, one dance, and a shared history.",  text: `The crown didn’t feel any heavier today — but something beneath it did. Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign?<br><br>Or maybe it was her body — weary and still waiting for the warmth she had once been promised. She shook the feeling off as best she could. The court watched her. The sound that finally broke through the tension wasn’t the music — it was the voice she knew best. Her only true friend — now the Emperor of the South — stood before her, asking for her hand.<br><br>Not for a game in the palace garden this time, but for a dance in the ballroom. A dance between two powerful nations, under the eyes of a hundred watching nobles. She took his hand. They stepped onto the floor — not as the children they once were, but as rulers.<br><br>Still, something in their steps remembered old rhythms. As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”<br><br>But somewhere between the fourth and fifth step, the past crept in. They found themselves drifting — their legs in time with the music of the present, their minds slipping back to old memories: Shared camping trips, whispered jokes around a fire, a clumsy first swordfight, the smell of rain on travel cloaks.<br><br>The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them. He made a polite remark — something about the alliance, or the Chancellor’s speech. She replied with a practiced smile. The kind you give when there’s too much history in the room.<br><br>Then came the pause. Long enough to be uncomfortable. Short enough not to be intentional. He glanced sideways at her — not at the empress, but at the girl who once got them both grounded for sneaking out to see the stars. And just like that, she laughed. Not the courtly kind — a real one. Unfiltered. Familiar. The tension broke. Their words softened.<br><br>They talked — about the ball, about their ridiculous swordmaster, about small things. They started as delegates. But by the time their glasses emptied, they had become something else. Not rulers. Not children. But people who remembered what it was like to not be either.`,cover: "https://i.pinimg.com/736x/b5/34/43/b53443eaeed068570e1084f73bebeaf5.jpg"},
+            { id: 3, title: "Anamnesis", synopsis: "The archives are hungry.", text:text: `
+                <div class="space-y-6 font-mono text-sm border-l-2 border-[#d4af37]/30 pl-6 py-4 bg-black/20">
+                    <p class="text-[#d4af37] font-bold tracking-widest uppercase">RECOLLECTION OF A SUPPOSED PREVIOUS EXISTENCE</p>
+                    <p>Jeevith checks the hospital logs. A notification pops up: <span class="text-red-500 font-bold animate-pulse">"NEW FILE ADDED: ANAMNESIS_002."</span></p>
+                    <p class="text-red-500 font-bold border-y border-red-900/50 py-2 text-center uppercase">"ANAMNESIS_003 – FILE READY FOR NEXT SUBJECT."</p>
+                    <div class="pt-8 opacity-60">
+                        <p class="text-[#d4af37] font-bold">"ANAMNESIS_004 – FILE READY FOR NEXT SUBJECT."</p>
+                    </div>
+                </div>`,cover: "https://i.pinimg.com/1200x/dc/0d/c1/dc0dc15c13dcfe322b098796162b2a39.jpg" }
+            { id: 4, title: "Empathodexterity", synopsis: "Silver edges, different worlds: the same inherited precision", id: 4,
+                title: "Empathodexterity",
+                synopsis: "Silver edges, different worlds: the same inherited precision",
+                text: `
+                <div class="reading-font text-gray-300">
+                    <p class="mb-6">The old woman’s bangles sang a sharp, glass melody as she worked...</p>
+                    <blockquote class="border-l-2 border-[#d4af37] pl-4 py-2 my-8 italic text-[#d4af37]/80">
+                        "The hand must be steady, Meena, but the heart must be soft."
+                    </blockquote>
+                    <p class="mb-6">The rhythmic clinking of glass bangles has been traded for the steady, digital pulse of a heart monitor, a <span class="text-green-400 font-bold">neon green line</span> marking the boundary between life and the unknown.</p>
+                </div>`,cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" }];
+        // PAGE LOGIC
+        function loadStory() {
+            const params = new URLSearchParams(window.location.search);
+            const id = parseInt(params.get('id'));
+            
+            const story = stories.find(s => s.id === id);
 
-        // Logic to display the text based on ID would go here.
-        document.getElementById('title').innerText = "STORY " + storyId;
-        document.getElementById('content').innerText = "Your full text content loads here based on the ID...";
+            if (story) {
+                document.title = `THE VAULT | ${story.title.toUpperCase()}`;
+                document.getElementById('story-title').innerText = story.title;
+                document.getElementById('story-synopsis').innerText = story.synopsis;
+                document.getElementById('record-id').innerText = `Record #${id.toString().padStart(3, '0')}`;
+                document.getElementById('story-content').innerHTML = story.text;
+            } else {
+                document.getElementById('story-content').innerHTML = "<p class='text-center text-red-800'>ERROR: Record not found in archives.</p>";
+            }
+        }
+
+        // Scroll Progress Bar Logic
+        window.onscroll = () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+        };
+
+        window.onload = loadStory;
     </script>
 </body>
 </html>
