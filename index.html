@@ -49,6 +49,12 @@
 
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        nav {
+    transition: transform 0.3s ease-in-out;
+}
+.nav-hidden {
+    transform: translateY(-100%);
+}
     </style>
 </head>
 <body>
@@ -229,16 +235,23 @@
         }
 
         function showStory(id) {
-            activeStory = stories.find(s => s.id === id);
-            document.getElementById('home-page').classList.add('hidden');
-            document.getElementById('detail-page').classList.remove('hidden');
-            document.getElementById('synopsis-view').classList.remove('hidden');
-            document.getElementById('reading-view').classList.add('hidden');
-            document.getElementById('detail-title').innerText = activeStory.title;
-            document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
-            document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
-            document.getElementById('detail-read-time').innerText = "CALCULATING ARCHIVE SIZE...";
-            window.scrollTo(0,0);
+    activeStory = stories.find(s => s.id === id);
+    document.getElementById('home-page').classList.add('hidden');
+    document.getElementById('detail-page').classList.remove('hidden');
+    document.getElementById('synopsis-view').classList.remove('hidden');
+    document.getElementById('reading-view').classList.add('hidden');
+    
+    document.getElementById('detail-title').innerText = activeStory.title;
+    document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
+    document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
+
+    // THIS IS THE FIX:
+    document.getElementById('detail-read-time').innerText = getReadTime(activeStory.text);
+
+    document.getElementById('like-btn').innerText = likedStories.has(id) ? '❤️' : '♡';
+    window.scrollTo(0,0);
+}
+
         }
 
         window.onscroll = () => {
@@ -310,6 +323,27 @@
                 await fetchComments();
             }
         }
+        let lastScrollY = window.scrollY;
+
+window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    const currentScrollY = window.scrollY;
+
+    // Hide nav on scroll down, show on scroll up
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        nav.classList.add('nav-hidden');
+    } else {
+        nav.classList.remove('nav-hidden');
+    }
+    lastScrollY = currentScrollY;
+
+    // Keep your existing Progress Bar logic here too
+    if (!document.getElementById('reading-view').classList.contains('hidden')) {
+        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        document.getElementById("progress-bar").style.width = (currentScrollY / h * 100) + "%";
+    }
+});
+    
     </script>
 </body>
 </html>
