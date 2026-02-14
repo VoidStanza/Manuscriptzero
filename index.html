@@ -21,20 +21,23 @@
         .story-card-container img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.8s ease; }
         .group:hover .story-card-container img { filter: grayscale(0%); transform: scale(1.05); }
 /* THE GEAR MECHANISM */
-#gear-container {
-    width: 220px;
-    height: 220px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    touch-action: none; /* Stops iPad scrolling */
-    cursor: grab;
-    /* ARMOR: Prevent selection on the gear itself */
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-}
+<div id="loading-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black">
+    <div class="mb-12 text-center">
+        <h2 class="serif text-[#d4af37] tracking-[0.6em] text-[10px] uppercase mb-2">Vault Mechanism</h2>
+        <p id="gear-hint" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">Tap Gear to Rotate</p>
+    </div>
 
+    <div id="gear-container" onclick="rotateGear()">
+        <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
+            <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
+            <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
+        </svg>
+    </div>
+
+    <div id="unlock-progress" class="mt-12 text-[#d4af37] font-mono text-[10px] tracking-[0.2em]">ENGAGED</div>
+</div> 
 #vault-gear {
     width: 100%;
     height: 100%;
@@ -129,7 +132,10 @@
         <p id="gear-hint" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">Swipe Up to Disengage</p>
     </div>
 
-    <div id="gear-container">
+   <div id="gear-container" onclick="rotateGear()" style="cursor: pointer; pointer-events: auto;">
+    <svg id="vault-gear" ... >
+       </svg>
+</div>
         <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
             <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
@@ -309,35 +315,44 @@
         container.style.cursor = 'grabbing';
     });
 
-    container.addEventListener('touchmove', (e) => {
-        if (!isRotating) return;
-        let currentY = e.touches[0].clientY;
-        let delta = lastY - currentY; 
-        
-        if (delta > 0) {
-            currentRotation += delta * 0.8; 
-            gear.style.transform = `rotate(${currentRotation}deg)`;
-            
-            let percent = Math.min(Math.round((currentRotation / unlockThreshold) * 100), 100);
-            progressText.innerText = `DECRYPTING: ${percent}%`;
+  let currentRotation = 0;
+const unlockThreshold = 90;
 
-            if (currentRotation >= unlockThreshold) {
-                isRotating = false;
-                triggerUnlock();
-            }
-        }
-        lastY = currentY;
-    });
+function rotateGear() {
+    // 1. Each tap turns the gear 45 degrees
+    currentRotation += 45;
+    
+    const gear = document.getElementById('vault-gear');
+    const progressText = document.getElementById('unlock-progress');
+    
+    // 2. Apply the rotation
+    gear.style.transform = `rotate(${currentRotation}deg)`;
+    
+    // 3. Update Progress UI
+    let percent = Math.min(Math.round((currentRotation / unlockThreshold) * 100), 100);
+    progressText.innerText = `DISENGAGING: ${percent}%`;
 
-    container.addEventListener('touchend', () => {
-        isRotating = false;
-        container.style.cursor = 'grab';
-        if (currentRotation < unlockThreshold) {
-            currentRotation = 0;
-            gear.style.transform = `rotate(0deg)`;
-            progressText.innerText = `SYSTEM: LOCKED`;
-        }
-    });
+    // 4. Haptic feedback for iPad (if enabled)
+    if (window.navigator.vibrate) window.navigator.vibrate(10);
+
+    // 5. Trigger unlock at 360 degrees
+    if (currentRotation >= unlockThreshold) {
+        document.getElementById('gear-container').onclick = null; // Prevent double-clicking
+        triggerUnlock();
+    }
+}
+
+function triggerUnlock() {
+    const gear = document.getElementById('vault-gear');
+    const progressText = document.getElementById('unlock-progress');
+    
+    gear.classList.add('unlock-glow');
+    progressText.innerText = "ACCESS GRANTED";
+    
+    setTimeout(() => {
+        completeAuth();
+    }, 800);
+}
 
     function triggerUnlock() {
         gear.classList.add('unlock-glow');
