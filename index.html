@@ -274,37 +274,54 @@ const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co
         let activeStory = null, scanTimer, scanProgress = 0, likedStories = new Set(), lastScroll = 0;
         let myComments = JSON.parse(localStorage.getItem('myComments') || '[]');
 
-        function startScan(e) {
-            if (e) e.preventDefault();
-            clearInterval(scanTimer);
-            document.body.classList.add('scanning');
-            scanTimer = setInterval(() => {
-                scanProgress += 2;
-                document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
-                if (scanProgress >= 100) { clearInterval(scanTimer); completeAuth(); }
-            }, 30);
-        }
+        let isAuthorized = false; // Prevents the scanner from re-firing after 100%
 
-        function stopScan() {
+function startScan(e) {
+    if (e) e.preventDefault();
+    if (isAuthorized) return; // Do nothing if already in
+
+    clearInterval(scanTimer);
+    document.body.classList.add('scanning');
+    
+    scanTimer = setInterval(() => {
+        if (scanProgress < 100) {
+            scanProgress += 2;
+            document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
+        } else {
+            // STOP IMMEDIATELY AT 100
             clearInterval(scanTimer);
-            if (scanProgress < 100) {
-                scanProgress = 0;
-                document.body.classList.remove('scanning');
-                document.getElementById('progress-text').innerText = "SYSTEM: LOCKED";
+            if (!isAuthorized) {
+                isAuthorized = true;
+                completeAuth();
             }
         }
+    }, 30);
+}
 
-        function completeAuth() {
-            document.getElementById('scan-status').innerText = "ACCESS GRANTED";
-            setTimeout(() => {
-                document.getElementById('loading-screen').classList.add('access-granted');
-                setTimeout(() => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('main-content').classList.remove('hidden');
-                    renderStories();
-                }, 600);
-            }, 300);
-        }
+function stopScan() {
+    // Only reset if we haven't reached the end
+    if (!isAuthorized) {
+        clearInterval(scanTimer);
+        scanProgress = 0;
+        document.body.classList.remove('scanning');
+        document.getElementById('progress-text').innerText = "SYSTEM: LOCKED";
+    }
+}
+
+function completeAuth() {
+    // Final UI feedback
+    document.getElementById('scan-status').innerText = "ACCESS GRANTED";
+    document.getElementById('progress-text').innerText = "DECRYPTING: 100%";
+    
+    setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('access-granted');
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('main-content').classList.remove('hidden');
+            renderStories();
+        }, 600);
+    }, 300);
+}
 
         function renderStories() {
             const grid = document.getElementById('story-grid');
