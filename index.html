@@ -109,31 +109,33 @@
                 </div>
 
                 <div id="reading-view" class="hidden">
-                    <div class="mt-20 pt-10 border-t border-white/5">
-    <h3 class="serif text-xl mb-6 text-[#d4af37]">Archive Transmissions</h3>
+    <h2 id="reading-title" class="serif text-3xl text-center mb-16 text-[#d4af37]"></h2>
     
-    <textarea id="comment-input" 
-              class="w-full bg-transparent border border-white/10 p-4 text-sm focus:border-[#d4af37] transition-colors outline-none text-white reading-font" 
-              rows="3" 
-              placeholder="Enter transmission..."></textarea>
+    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8"></div>
     
-    <button onclick="postComment()" 
-            class="w-full py-4 bg-[#d4af37] text-black text-[10px] font-bold uppercase mt-4 tracking-widest active:scale-[0.98] transition-transform">
-        Preserved in the margins
-    </button>
+    <div class="my-20 flex flex-col items-center border-t border-white/5 pt-10">
+        <button onclick="handleLike()" id="like-btn" class="text-4xl">♡</button>
+        <span id="like-count" class="text-[9px] mt-2 text-[#d4af37] tracking-widest">0 LIKES</span>
+    </div>
 
-    <div id="comment-list" class="mt-16 space-y-10 pb-20">
-        </div>
-                    </div>
-                
-                    <h2 id="reading-title" class="serif text-3xl text-center mb-16 text-[#d4af37]"></h2>
-                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-8"></div>
-                    <div class="my-20 flex flex-col items-center">
-                        <button onclick="handleLike()" id="like-btn" class="text-4xl">♡</button>
-                        <span id="like-count" class="text-[9px] mt-2 text-[#d4af37] tracking-widest">0 LIKES</span>
-                    </div>
-                    <div id="comment-list" class="mt-16 space-y-10 pb-20"></div>
-                </div>
+    <div id="comment-section" class="mt-20 pt-10 border-t border-white/5">
+        <h3 class="serif text-xl mb-6 text-[#d4af37]">Archive Transmissions</h3>
+        
+        <textarea id="comment-input" 
+                  class="w-full bg-[#0a0a0b] border border-white/10 p-4 text-sm focus:border-[#d4af37] transition-colors outline-none text-white reading-font" 
+                  rows="3" 
+                  placeholder="Enter transmission..."></textarea>
+        
+        <button onclick="postComment()" 
+                class="w-full py-4 bg-[#d4af37] text-black text-[10px] font-bold uppercase mt-4 tracking-widest">
+            Preserved in the margins
+        </button>
+
+        <div id="comment-list" class="mt-16 space-y-10 pb-20">
+            </div>
+    </div>
+</div>
+
             </section>
         </main>
     </div>
