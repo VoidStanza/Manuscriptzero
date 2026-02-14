@@ -1,0 +1,110 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>THE VAULT | GALLERY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0a0a0b; color: #e2e2e2; font-family: serif; }
+        .card { border: 1px solid rgba(255,255,255,0.05); transition: 0.5s; overflow: hidden; }
+        .card:hover img { filter: grayscale(0); transform: scale(1.05); }
+        img { filter: grayscale(100%); transition: 0.8s; }
+    </style>
+</head>
+<body class="p-8">
+    <nav class="mb-20"><h1 class="text-[#d4af37] text-2xl">V. ARCHIVE</h1></nav>
+    
+    <div id="grid" class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+        </div>
+
+    <script>
+        // Story Data (Could be moved to a separate stories.js file later)
+        const stories = [
+            { id: 1, title: "Horizon", synopsis: "The perfect son is a masterpiece of a lie.", text:"He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it. They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked, and he eats the cake, smiles at the photographs, listens to the stories, applauds with steady hands, and inside him the stillness lingers, the echo of being seen and not seen at the same time, the ache of being loved as an accessory to love, the soft exhaustion of existing fully and being noticed only partly, a quiet knowing of absence in abundance, a slow weight that presses against the ribs and folds itself into his bones, and he walks through the day like this, through all the care and all the light, holding the impossible understanding that being looked after is not always being held.",
+            cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg" },
+            { id: 2, 
+        title: "The Dance of the 2 Empires", 
+        synopsis: "Two crowns, one dance, and a shared history.", 
+        text: `The crown didn’t feel any heavier today — but something beneath it did. Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign?<br><br>
+        Or maybe it was her body — weary and still waiting for the warmth she had once been promised. She shook the feeling off as best she could. The court watched her. The sound that finally broke through the tension wasn’t the music — it was the voice she knew best. Her only true friend — now the Emperor of the South — stood before her, asking for her hand.<br><br>
+        Not for a game in the palace garden this time, but for a dance in the ballroom. A dance between two powerful nations, under the eyes of a hundred watching nobles. She took his hand. They stepped onto the floor — not as the children they once were, but as rulers.<br><br>
+        Still, something in their steps remembered old rhythms. As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”<br><br>
+        But somewhere between the fourth and fifth step, the past crept in. They found themselves drifting — their legs in time with the music of the present, their minds slipping back to old memories: Shared camping trips, whispered jokes around a fire, a clumsy first swordfight, the smell of rain on travel cloaks.<br><br>
+        The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them. He made a polite remark — something about the alliance, or the Chancellor’s speech. She replied with a practiced smile. The kind you give when there’s too much history in the room.<br><br>
+        Then came the pause. Long enough to be uncomfortable. Short enough not to be intentional. He glanced sideways at her — not at the empress, but at the girl who once got them both grounded for sneaking out to see the stars. And just like that, she laughed. Not the courtly kind — a real one. Unfiltered. Familiar. The tension broke. Their words softened.<br><br>
+        They talked — about the ball, about their ridiculous swordmaster, about small things. They started as delegates. But by the time their glasses emptied, they had become something else. Not rulers. Not children. But people who remembered what it was like to not be either.`, 
+        cover: "https://i.pinimg.com/736x/b5/34/43/b53443eaeed068570e1084f73bebeaf5.jpg" 
+    },
+             { id: 3, 
+        title: "Anamnesis", 
+        synopsis: "The archives are hungry.", 
+       text: `
+        <div class="space-y-6 font-mono text-sm border-l-2 border-[#d4af37]/30 pl-6 py-4 bg-black/20">
+            <p class="text-[#d4af37] font-bold tracking-widest uppercase">RECOLLECTION OF A SUPPOSED PREVIOUS EXISTENCE</p>
+            <p class="text-gray-500 italic">INT. MEDICAL COLLEGE – RESEARCH LAB – NIGHT</p>
+            <p>Dim lighting. The hum of machinery fills the air. DR. Jeevith (30s, ambitious, sleep-deprived) leans over his laptop, eyes scanning the screen. A cold cup of coffee sits beside him, untouched. His fingers hover over the keyboard. <span class="text-[#d4af37]">-Click.</span></p>
+            <div class="bg-[#d4af37]/5 p-4 border border-[#d4af37]/10">
+                <p class="text-[10px] text-gray-500 mb-2">ON SCREEN: VIDEO PLAYBACK</p>
+                <p class="italic text-gray-400">ARJUN (VIDEO): I... I woke up in the dissection hall. I don’t remember going there.</p>
+            </div>
+
+            <p>Jeevith leans in. Pauses the video, rewinds. He checks the hospital logs. Nothing. No record of Arjun’s admission. No proof of his existence was found. A notification pops up: <span class="text-red-500 font-bold animate-pulse">"NEW FILE ADDED: ANAMNESIS_002."</span></p>
+
+            <p class="text-gray-500 italic">INT. HOSPITAL HALLWAY – NIGHT</p>
+
+            <p>Jeevith’s footsteps echo. Too loud. He sees a figure at the far end of the hallway. Back turned. It’s Arjun.</p>
+
+            <p><span class="text-[#d4af37]">JEEVITH:</span> [Shakily] Arjun? What are you doing here?</p>
+
+            <p>Arjun turns. His movements are too smooth. His face too blank. His shadow does not move.</p>
+
+            <p><span class="text-[#d4af37]">ARJUN (FLAT TONE):</span> You shouldn’t have seen the file.</p>
+
+            <p class="text-gray-500 italic">INT. RESEARCH LAB – NIGHT</p>
+
+            <p>Jeevith bursts into the lab, slamming the door. He rushes to his laptop. On screen: Surveillance footage of <span class="italic text-white">himself</span> sitting at this desk, watching this exact moment.</p>
+
+            <p class="text-red-500 font-bold border-y border-red-900/50 py-2 text-center">"ANAMNESIS_003 – FILE READY FOR NEXT SUBJECT."</p>
+            <p>A voice from the darkness: <span class="italic text-gray-400">"Don't run."</span></p>
+
+            <p>The door SLAMS OPEN. A shadowy figure lunges. The laptop glitches violently. Everything cuts to black.</p>
+
+            <div class="pt-8 opacity-60">
+                <p class="text-xs">TEXT APPEARS ON SCREEN:</p>
+                <p class="text-[#d4af37] font-bold">"ANAMNESIS_004 – FILE READY FOR NEXT SUBJECT."</p>
+            </div>
+        </div>
+        `, 
+        cover: "https://i.pinimg.com/1200x/dc/0d/c1/dc0dc15c13dcfe322b098796162b2a39.jpg" 
+    }
+              { id: 4, 
+        title: "Empathodexterity", 
+        synopsis: "Silver edges, different worlds: the same inherited precision", 
+       text: `
+        <div class="reading-font text-gray-300">
+            <p class="mb-6">The old woman’s bangles sang a sharp, glass melody as she worked, a rhythmic percussion that cut through the humid air of the bazaar. To the passing crowds, she was just the "Guava Lady," a fixture of the pavement, but to the young girl sitting at her feet, she was a surgeon of the streets.</p>
+            
+            <p class="mb-6">"Watch the wrist, Meena," her mother would say, never once looking up from her work. With a swift, silver flash of her paring knife, a firm guava was transformed into perfect, bite-sized pieces of hospitality. Meena watched those hands every day, stained with the nectar of the fruit and the rust-coloured dust of chilli powder, weathered by the relentless sun, yet moving with the grace of a conductor leading a symphony.</p>
+
+            <blockquote class="border-l-2 border-[#d4af37] pl-4 py-2 my-8 italic text-[#d4af37]/80">
+                "The hand must be steady, Meena, but the heart must be soft. That is how you truly serve."
+            </blockquote>
+
+            <p class="mb-6">Two decades later, the golden sun has been replaced by the sterile, unwavering glare of overhead surgical lamps. The chaotic symphony of the marketplace has faded into a heavy, clinical silence.</p>
+            
+            <p class="mb-6">Meena looks down at her own hands. They are no longer stained with fruit and chilli powder; instead, they are encased in pale, sterile latex. The rhythmic clinking of glass bangles has been traded for the steady, digital pulse of a heart monitor, a neon green line marking the boundary between life and the unknown.</p>
+
+            <p class="mb-6">She picks up the scalpel. It is significantly smaller and lighter than her mother’s worn paring knife, but as she touches the silver edge to the patient’s skin, she feels that same familiar weight of responsibility. She makes the first incision, a clean, decisive arc. It is the same motion she observed on a street corner years ago, the same unwavering precision once used to quarter a guava.</p>
+
+            <p class="mb-6">The street vendor fed the body, and the daughter mended the life. It was a shared legacy of the wrist. As Meena's scalpel moved, the distinction vanished – different tools, different worlds, but the same sacred precision. She was her mother's daughter, with a quiet inheritance of discipline; proving that every cut, when guided by a soft heart, is an altar where life is honored.</p> </div>`,cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" 
+              }
+];
+      document.getElementById('grid').innerHTML = stories.map(s => `
+            <div onclick="location.href='reader.html?id=${s.id}'" class="card cursor-pointer group">
+                <div class="aspect-[2/3]"><img src="${s.cover}" class="w-full h-full object-cover"></div>
+                <h3 class="mt-4 text-[10px] tracking-widest uppercase text-gray-500 group-hover:text-[#d4af37]">${s.title}</h3>
+            </div>
+        `).join('');
+    </script>
+</body>
+</html>
