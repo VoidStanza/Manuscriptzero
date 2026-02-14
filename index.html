@@ -16,142 +16,58 @@
         .serif { font-family: 'Playfair Display', serif; }
         .reading-font { font-family: 'Lora', serif; line-height: 1.9; }
 
-        /* ELONGATED BOXES */
+        /* CARDS */
         .story-card-container { aspect-ratio: 2 / 3; width: 100%; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); background: #111; transition: all 0.5s ease; }
         .story-card-container img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.8s ease; }
         .group:hover .story-card-container img { filter: grayscale(0%); transform: scale(1.05); }
-/* THE GEAR MECHANISM */
-<div id="loading-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black">
-    <div class="mb-12 text-center">
-        <h2 class="serif text-[#d4af37] tracking-[0.6em] text-[10px] uppercase mb-2">Vault Mechanism</h2>
-        <p id="gear-hint" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">Tap Gear to Rotate</p>
-    </div>
 
-    <div id="gear-container" onclick="rotateGear()">
-        <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-            <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
-            <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
-            <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
-        </svg>
-    </div>
+        /* VAULT UI */
+        #loading-screen { 
+            user-select: none; -webkit-user-select: none; 
+            position: fixed; inset: 0; z-index: 200; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            background: black; 
+        }
 
-    <div id="unlock-progress" class="mt-12 text-[#d4af37] font-mono text-[10px] tracking-[0.2em]">ENGAGED</div>
-</div> 
-#vault-gear {
-    width: 100%;
-    height: 100%;
-    transition: transform 0.1s linear;
-    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.1));
-    pointer-events: none; /* Let the container handle the touch */
-}
+        #gear-container { width: 220px; height: 220px; cursor: pointer; pointer-events: auto; }
 
-#vault-gear.unlock-glow {
-    animation: gearGlow 0.8s ease-out forwards;
-}
+        #vault-gear { width: 100%; height: 100%; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.1)); }
+        #vault-gear.unlock-glow { animation: gearGlow 0.8s ease-out forwards; }
 
-@keyframes gearGlow {
-    0% { filter: brightness(1) drop-shadow(0 0 15px var(--accent)); }
-    100% { filter: brightness(2) drop-shadow(0 0 60px var(--accent)); transform: scale(1.1) rotate(360deg); }
-}
+        @keyframes gearGlow {
+            0% { filter: brightness(1) drop-shadow(0 0 15px var(--accent)); }
+            100% { filter: brightness(2) drop-shadow(0 0 60px var(--accent)); transform: scale(1.1); }
+        }
 
-/* LOADING SCREEN ARMOR */
-#loading-screen {
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    overflow: hidden;
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: black;
-}
+        .hidden { display: none !important; }
+        .access-granted-anim { animation: portalExit 0.8s forwards; }
+        @keyframes portalExit { to { opacity: 0; transform: scale(1.1); filter: blur(20px); } }
 
-#laser { 
-    position: absolute; 
-    width: 140px; 
-    height: 1px; 
-    background: var(--accent); 
-    box-shadow: 0 0 12px var(--accent); 
-    opacity: 0; 
-    top: 0; 
-    pointer-events: none; 
-}
-
-.scanning #laser { 
-    opacity: 1; 
-    animation: scanLine 2s infinite ease-in-out; 
-}
-
-@keyframes scanLine { 
-    0% { top: 0%; } 
-    100% { top: 100%; } 
-}
-
-.hidden { display: none !important; }
-
-.access-granted-anim { 
-    animation: portalExit 0.8s forwards; 
-}
-
-@keyframes portalExit { 
-    to { opacity: 0; transform: scale(1.1); filter: blur(20px); } 
-}
-
-#progress-bar { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    height: 2px; 
-    background: var(--accent); 
-    z-index: 100; 
-    transition: width 0.2s; 
-}
-
-.fade-in { 
-    animation: fadeIn 0.5s ease forwards; 
-}
-
-@keyframes fadeIn { 
-    from { opacity: 0; transform: translateY(10px); } 
-    to { opacity: 1; transform: translateY(0); } 
-}
-        </style>
+        #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 100; transition: width 0.2s; }
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 <body>
 
-    <div id="progress-bar" style="width: 0%"></div>
+    <div id="progress-bar"></div>
 
-    <<div id="loading-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black">
-    <div class="mb-12 text-center">
-        <h2 class="serif text-[#d4af37] tracking-[0.6em] text-[10px] uppercase mb-2">Vault Mechanism</h2>
-        <p id="gear-hint" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">Swipe Up to Disengage</p>
-    </div>
-
-   <div id="gear-container" onclick="rotateGear()" style="cursor: pointer; pointer-events: auto;">
-    <svg id="vault-gear" ... >
-       </svg>
-</div>
-        <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
-            <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
-            <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
-        </svg>
-    </div>
-
-    <div id="unlock-progress" class="mt-12 text-[#d4af37] font-mono text-[10px] tracking-[0.2em]">SYSTEM: LOCKED</div>
-</div>>
-        <div id="scanner-core" onmousedown="startScan(event)" onmouseup="stopScan()" ontouchstart="startScan(event)" ontouchend="stopScan()">
-            <div id="laser"></div>
-            <div class="w-4 h-4 bg-[#d4af37] rounded-full animate-pulse shadow-[0_0_15px_#d4af37]"></div>
+    <div id="loading-screen">
+        <div class="mb-12 text-center">
+            <h2 class="serif text-[#d4af37] tracking-[0.6em] text-[10px] uppercase mb-2">Vault Mechanism</h2>
+            <p id="gear-hint" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">Tap Gear to Rotate</p>
         </div>
-        <div id="scan-status" class="serif text-[#d4af37] tracking-[0.5em] text-[10px] uppercase mt-12">Hold to Initialize</div>
-        <div id="progress-text" class="text-[8px] text-gray-700 mt-3 font-mono uppercase tracking-[0.3em]">Identity Check Required</div>
+
+        <div id="gear-container" onclick="rotateGear()">
+            <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
+                <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
+                <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
+            </svg>
+        </div>
+
+        <div id="unlock-progress" class="mt-12 text-[#d4af37] font-mono text-[10px] tracking-[0.2em]">SYSTEM: LOCKED</div>
     </div>
 
     <div id="main-content" class="hidden">
@@ -170,7 +86,6 @@
 
             <section id="detail-page" class="hidden">
                 <button onclick="showHome()" class="text-[9px] uppercase tracking-[0.3em] text-gray-500 mb-12 border-b border-gray-800 pb-1">← Return to Gallery</button>
-                
                 <div id="detail-view">
                     <div class="flex flex-col md:flex-row gap-12">
                         <div id="detail-cover" class="w-full md:w-1/3 aspect-[2/3] bg-cover bg-center border border-white/10 grayscale"></div>
@@ -185,24 +100,20 @@
                 <div id="reading-view" class="hidden max-w-2xl mx-auto">
                     <h2 id="reading-title" class="serif text-3xl text-center mb-20 text-[#d4af37]"></h2>
                     <div id="full-text" class="reading-font text-lg text-gray-300 space-y-10 mb-20"></div>
-                    
                     <div class="py-16 border-t border-white/5 flex flex-col items-center">
-                        <button onclick="handleLike()" id="like-btn" class="text-5xl transition-transform active:scale-150">♡</button>
+                        <button onclick="handleLike()" id="like-btn" class="text-5xl">♡</button>
                         <span id="like-count" class="text-[10px] text-[#d4af37] mt-4 tracking-[0.3em] uppercase">0 Likes</span>
                     </div>
-
                     <div class="pt-16 border-t border-white/5">
                         <h3 class="serif text-2xl text-[#d4af37] mb-8">Marginalia</h3>
-                        <textarea id="comment-input" class="w-full bg-[#111] border border-white/10 p-5 text-white mb-4 focus:border-[#d4af37] outline-none" rows="4" placeholder="Enter encrypted message..."></textarea>
-                        <button onclick="postComment()" class="w-full py-4 bg-transparent border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition-all">Preserved in the margins</button>
-                        
+                        <textarea id="comment-input" class="w-full bg-[#111] border border-white/10 p-5 text-white mb-4 outline-none" rows="4" placeholder="Enter message..."></textarea>
+                        <button onclick="postComment()" class="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest">Preserve</button>
                         <div id="comment-list" class="mt-20 space-y-12 pb-32"></div>
                     </div>
                 </div>
             </section>
         </main>
     </div>
-
     <script>
         const stories = [
             { id: 1, title: "Horizon", synopsis: "The perfect son is a masterpiece of a lie.", text:"He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it. They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked, and he eats the cake, smiles at the photographs, listens to the stories, applauds with steady hands, and inside him the stillness lingers, the echo of being seen and not seen at the same time, the ache of being loved as an accessory to love, the soft exhaustion of existing fully and being noticed only partly, a quiet knowing of absence in abundance, a slow weight that presses against the ribs and folds itself into his bones, and he walks through the day like this, through all the care and all the light, holding the impossible understanding that being looked after is not always being held.",
@@ -290,182 +201,122 @@
         `, 
         cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" 
               }
-    },
-      ];
+];
 
-    // 2. Initialize Supabase
-    const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
+        const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
 
-    // 3. State Variables
-    let activeStory = null;
-    let lastScroll = 0;
-    let currentRotation = 0;
-    let lastY = 0;
-    let isRotating = false;
-    let unlockThreshold = 360; 
+        let activeStory = null;
+        let lastScroll = 0;
+        let currentRotation = 0;
+        const unlockThreshold = 360;
 
-    // 4. Gear Logic
-    const gear = document.getElementById('vault-gear');
-    const container = document.getElementById('gear-container');
-    const progressText = document.getElementById('unlock-progress');
+        function rotateGear() {
+            currentRotation += 45;
+            const gear = document.getElementById('vault-gear');
+            const progressText = document.getElementById('unlock-progress');
+            
+            gear.style.transform = `rotate(${currentRotation}deg)`;
+            let percent = Math.min(Math.round((currentRotation / unlockThreshold) * 100), 100);
+            progressText.innerText = `DISENGAGING: ${percent}%`;
 
-    container.addEventListener('touchstart', (e) => {
-        isRotating = true;
-        lastY = e.touches[0].clientY;
-        container.style.cursor = 'grabbing';
-    });
+            if (currentRotation >= unlockThreshold) {
+                document.getElementById('gear-container').onclick = null;
+                triggerUnlock();
+            }
+        }
 
-  let currentRotation = 0;
-const unlockThreshold = 90;
+        function triggerUnlock() {
+            const gear = document.getElementById('vault-gear');
+            const progressText = document.getElementById('unlock-progress');
+            gear.classList.add('unlock-glow');
+            progressText.innerText = "ACCESS GRANTED";
+            setTimeout(completeAuth, 800);
+        }
 
-function rotateGear() {
-    // 1. Each tap turns the gear 45 degrees
-    currentRotation += 45;
-    
-    const gear = document.getElementById('vault-gear');
-    const progressText = document.getElementById('unlock-progress');
-    
-    // 2. Apply the rotation
-    gear.style.transform = `rotate(${currentRotation}deg)`;
-    
-    // 3. Update Progress UI
-    let percent = Math.min(Math.round((currentRotation / unlockThreshold) * 100), 100);
-    progressText.innerText = `DISENGAGING: ${percent}%`;
+        function completeAuth() {
+            const loader = document.getElementById('loading-screen');
+            loader.classList.add('access-granted-anim');
+            setTimeout(() => {
+                loader.style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+                renderStories();
+            }, 600);
+        }
 
-    // 4. Haptic feedback for iPad (if enabled)
-    if (window.navigator.vibrate) window.navigator.vibrate(10);
-
-    // 5. Trigger unlock at 360 degrees
-    if (currentRotation >= unlockThreshold) {
-        document.getElementById('gear-container').onclick = null; // Prevent double-clicking
-        triggerUnlock();
-    }
-}
-
-function triggerUnlock() {
-    const gear = document.getElementById('vault-gear');
-    const progressText = document.getElementById('unlock-progress');
-    
-    gear.classList.add('unlock-glow');
-    progressText.innerText = "ACCESS GRANTED";
-    
-    setTimeout(() => {
-        completeAuth();
-    }, 800);
-}
-
-    function triggerUnlock() {
-        gear.classList.add('unlock-glow');
-        progressText.innerText = "ACCESS GRANTED";
-        progressText.style.color = "#fff";
-        setTimeout(() => { completeAuth(); }, 800);
-    }
-
-    function completeAuth() {
-        const loader = document.getElementById('loading-screen');
-        loader.classList.add('access-granted-anim');
-        setTimeout(() => {
-            loader.style.display = 'none';
-            document.getElementById('main-content').classList.remove('hidden');
-            renderStories(); 
-        }, 600);
-    }
-
-    // 5. Story Rendering & Navigation
-    function renderStories() {
-        document.getElementById('story-grid').innerHTML = stories.map(s => `
-            <div onclick="showStory(${s.id})" class="group cursor-pointer">
-                <div class="story-card-container"><img src="${s.cover}"></div>
-                <h4 class="serif text-sm mt-4 uppercase tracking-tighter text-gray-500 group-hover:text-[#d4af37] transition-colors">${s.title}</h4>
-            </div>
-        `).join('');
-    }
-
-    async function showStory(id) {
-        activeStory = stories.find(s => s.id === id);
-        document.getElementById('home-page').classList.add('hidden');
-        document.getElementById('detail-page').classList.remove('hidden');
-        document.getElementById('detail-view').classList.remove('hidden');
-        document.getElementById('reading-view').classList.add('hidden');
-        
-        document.getElementById('detail-title').innerText = activeStory.title;
-        document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
-        document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
-        
-        document.getElementById('comment-list').innerHTML = "<p class='text-[8px] uppercase tracking-widest text-gray-600'>Retrieving history...</p>";
-        
-        const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
-        document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
-        
-        await fetchComments(); 
-        window.scrollTo(0,0);
-    }
-
-    function showHome() { 
-        document.getElementById('detail-page').classList.add('hidden'); 
-        document.getElementById('home-page').classList.remove('hidden'); 
-        window.scrollTo(0,0); 
-    }
-
-    async function startReading() {
-        document.getElementById('detail-view').classList.add('hidden');
-        document.getElementById('reading-view').classList.remove('hidden');
-        document.getElementById('reading-title').innerText = activeStory.title;
-        document.getElementById('full-text').innerHTML = activeStory.text;
-        window.scrollTo(0,0);
-    }
-
-    // 6. Database Ops (Likes & Comments)
-    async function handleLike() {
-        if (!activeStory) return;
-        try {
-            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', activeStory.id).maybeSingle();
-            const newCount = (data ? data.likes : 0) + 1;
-            await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
-            document.getElementById('like-count').innerText = `${newCount} LIKES`;
-        } catch (err) { console.error(err); }
-    }
-
-    async function postComment() {
-        const input = document.getElementById('comment-input');
-        const val = input.value.trim();
-        if (!val || !activeStory) return;
-        try {
-            await sbClient.from('comments').insert([{ story_id: activeStory.id, content: val }]);
-            input.value = "";
-            await fetchComments();
-        } catch (err) { console.error(err); }
-    }
-
-    async function fetchComments() {
-        if (!activeStory) return;
-        const list = document.getElementById('comment-list');
-        const { data } = await sbClient.from('comments').select('*').eq('story_id', activeStory.id).order('created_at', { ascending: false });
-        if (data && data.length > 0) {
-            list.innerHTML = data.map(c => `
-                <div class="border-l border-[#d4af37]/20 pl-6 py-4 mb-6 fade-in">
-                    <p class="text-[8px] text-gray-600 uppercase font-mono mb-2">Ref: ARCHIVE_ID_${String(c.id).slice(-3)}</p>
-                    <p class="reading-font text-gray-300 text-sm">${c.content}</p>
+        function renderStories() {
+            document.getElementById('story-grid').innerHTML = stories.map(s => `
+                <div onclick="showStory(${s.id})" class="group cursor-pointer">
+                    <div class="story-card-container"><img src="${s.cover}"></div>
+                    <h4 class="serif text-sm mt-4 uppercase tracking-tighter text-gray-500 group-hover:text-[#d4af37] transition-colors">${s.title}</h4>
                 </div>
             `).join('');
-        } else {
-            list.innerHTML = "<p class='text-gray-700 text-[8px] uppercase'>No prior transmissions.</p>";
         }
-    }
 
-    // 7. Window Events
-    window.onscroll = () => {
-        const cur = window.scrollY;
-        const nav = document.getElementById('top-nav');
-        const progressBar = document.getElementById('progress-bar');
-        if (cur > lastScroll && cur > 100) nav.classList.add('nav-hidden');
-        else nav.classList.remove('nav-hidden');
-        lastScroll = cur;
-        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-        if (totalHeight > 0) progressBar.style.width = `${(cur / totalHeight) * 100}%`;
-    };
+        async function showStory(id) {
+            activeStory = stories.find(s => s.id === id);
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('detail-page').classList.remove('hidden');
+            document.getElementById('detail-view').classList.remove('hidden');
+            document.getElementById('reading-view').classList.add('hidden');
+            document.getElementById('detail-title').innerText = activeStory.title;
+            document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
+            document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
+            
+            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
+            document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
+            fetchComments();
+            window.scrollTo(0,0);
+        }
 
-    window.onload = () => { /* Ready */ };
-</script>
+        function showHome() {
+            document.getElementById('detail-page').classList.add('hidden');
+            document.getElementById('home-page').classList.remove('hidden');
+        }
+
+        function startReading() {
+            document.getElementById('detail-view').classList.add('hidden');
+            document.getElementById('reading-view').classList.remove('hidden');
+            document.getElementById('reading-title').innerText = activeStory.title;
+            document.getElementById('full-text').innerHTML = activeStory.text;
+        }
+
+        async function handleLike() {
+            if (!activeStory) return;
+            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', activeStory.id).maybeSingle();
+            const newCount = (data ? data.likes : 0) + 1;
+            await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount });
+            document.getElementById('like-count').innerText = `${newCount} LIKES`;
+        }
+
+        async function postComment() {
+            const input = document.getElementById('comment-input');
+            if (!input.value.trim()) return;
+            await sbClient.from('comments').insert([{ story_id: activeStory.id, content: input.value }]);
+            input.value = "";
+            fetchComments();
+        }
+
+        async function fetchComments() {
+            const list = document.getElementById('comment-list');
+            const { data } = await sbClient.from('comments').select('*').eq('story_id', activeStory.id).order('created_at', { ascending: false });
+            list.innerHTML = data && data.length ? data.map(c => `
+                <div class="border-l border-[#d4af37]/20 pl-6 py-4 mb-6">
+                    <p class="text-[8px] text-gray-600 font-mono mb-2">Ref: ARCHIVE_ID_${String(c.id).slice(-3)}</p>
+                    <p class="reading-font text-gray-300 text-sm">${c.content}</p>
+                </div>
+            `).join('') : "<p class='text-gray-700 text-[8px] uppercase'>No transmissions.</p>";
+        }
+
+        window.onscroll = () => {
+            const cur = window.scrollY;
+            const nav = document.getElementById('top-nav');
+            const progress = document.getElementById('progress-bar');
+            if (cur > lastScroll && cur > 100) nav.style.transform = 'translateY(-100%)';
+            else nav.style.transform = 'translateY(0)';
+            lastScroll = cur;
+            const total = document.documentElement.scrollHeight - window.innerHeight;
+            progress.style.width = total > 0 ? `${(cur / total) * 100}%` : '0%';
+        };
+    </script>
 </body>
 </html>
