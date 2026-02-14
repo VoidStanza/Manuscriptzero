@@ -271,116 +271,184 @@
 
         async function handleLike() {
             let change = likedStories.has(activeStory.id) ? -1 : 1;
-            let newCount = (activeStory.likes || 0) + change;
-            const { error } = await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
-            if (!error) {
-                activeStory.likes = newCount;
-                change === 1 ? likedStories.add(activeStory.id) : likedStories.delete(activeStory.id);
-                document.getElementById('like-btn').innerText = likedStories.has(activeStory.id) ? '❤️' : '♡';
-                document.getElementById('like-count').innerText = `${newCount} LIKES`;
+const _url = 'https://iakkxwghbczalryylqzg.supabase.co';
+    const _key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc';
+    const sbClient = supabase.createClient(_url, _key);
+
+    // GLOBAL VARIABLES
+    let activeStory = null;
+    let scanTimer;
+    let scanProgress = 0;
+    let likedStories = new Set();
+    let lastScroll = 0;
+    let myComments = JSON.parse(localStorage.getItem('myComments') || '[]');
+
+    // --- INITIALIZATION / SCANNER ---
+    function startScan(e) {
+        if (e) e.preventDefault();
+        clearInterval(scanTimer);
+        document.body.classList.add('scanning');
+        scanTimer = setInterval(() => {
+            scanProgress += 2;
+            document.getElementById('progress-text').innerText = `DECRYPTING: ${scanProgress}%`;
+            if (scanProgress >= 100) { 
+                clearInterval(scanTimer); 
+                completeAuth(); 
             }
-        }
-
-        async function startReading() { // Add 'async' here
-    document.getElementById('synopsis-view').classList.add('hidden');
-    document.getElementById('reading-view').classList.remove('hidden');
-    
-    // Set text content
-    document.getElementById('reading-title').innerText = activeStory.title;
-    document.getElementById('full-text').innerHTML = activeStory.text;
-    
-    // THE HANDSHAKE: This pulls the data from Supabase
-    await fetchComments(); 
-    
-    window.scrollTo(0,0);
-}
-
-        }
-
-        function showHome() {
-            document.getElementById('detail-page').classList.add('hidden');
-            document.getElementById('home-page').classList.remove('hidden');
-            window.scrollTo(0,0);
-        }
-
-        window.onscroll = () => {
-            const cur = window.scrollY;
-            const nav = document.getElementById('top-nav');
-            cur > lastScroll && cur > 80 ? nav.classList.add('nav-hidden') : nav.classList.remove('nav-hidden');
-            lastScroll = cur;
-            if (!document.getElementById('reading-view').classList.contains('hidden')) {
-                const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                document.getElementById("progress-bar").style.width = (cur / h * 100) + "%";
-            }
-            // Add this variable at the top with your other lets
-let myComments = JSON.parse(localStorage.getItem('myComments') || '[]');
-
-async function postComment() {
-    const input = document.getElementById('comment-input');
-    const content = input.value.trim();
-    
-    if(!content) return;
-
-    const { data, error } = await sbClient
-        .from('comments')
-        .insert([{ 
-            story_id: activeStory.id, 
-            content: content 
-        }])
-        .select();
-
-    if (!error) {
-        // Save comment ID locally so the user can delete their own messages
-        myComments.push(data[0].id);
-        localStorage.setItem('myComments', JSON.stringify(myComments));
-        
-        input.value = ""; // Clear input
-        await fetchComments(); // Refresh list
-    } else {
-        console.error("Transmission failed:", error);
+        }, 30);
     }
-}
 
-async function fetchComments() {
-    const { data, error } = await sbClient
-        .from('comments')
-        .select('*')
-        .eq('story_id', activeStory.id)
-        .order('created_at', { ascending: false });
+    function stopScan() {
+        clearInterval(scanTimer);
+        if (scanProgress < 100) {
+            scanProgress = 0;
+            document.body.classList.remove('scanning');
+            document.getElementById('progress-text').innerText = "SYSTEM: LOCKED";
+        }
+    }
 
-    if (!error) {
-        const list = document.getElementById('comment-list');
-        list.innerHTML = data.map(c => `
-            <div class="border-l border-[#d4af37]/20 pl-6 py-2 fade-in">
-                <p class="text-xs text-gray-500 uppercase tracking-widest mb-2 font-mono">
-                    ID: ${c.id.toString().slice(-4)} | ${new Date(c.created_at).toLocaleDateString()}
-                </p>
-                <p class="reading-font text-gray-300 leading-relaxed">${c.content}</p>
-                ${myComments.includes(c.id) ? `
-                    <button onclick="deleteComment(${c.id})" class="text-[8px] text-red-900/50 hover:text-red-700 uppercase mt-4 tracking-tighter transition-colors">
-                        [ Erase Transmission ]
-                    </button>
-                ` : ''}
+    function completeAuth() {
+        document.getElementById('scan-status').innerText = "ACCESS GRANTED";
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('access-granted');
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+                renderStories();
+            }, 600);
+        }, 300);
+    }
+
+    // --- NAVIGATION & RENDERING ---
+    function renderStories() {
+        const grid = document.getElementById('story-grid');
+        grid.innerHTML = stories.map(s => `
+            <div onclick="showStory(${s.id})" class="group cursor-pointer">
+                <div class="story-card-container"><img src="${s.cover}"></div>
+                <h4 class="serif text-sm mt-3 uppercase tracking-tighter">${s.title}</h4>
             </div>
         `).join('');
     }
-}
 
-async function deleteComment(id) {
-    if(!confirm("Erase this transmission from the archive?")) return;
-    
-    const { error } = await sbClient
-        .from('comments')
-        .delete()
-        .eq('id', id);
+    function getReadTime(t) { return `${Math.ceil(t.length / 500)} min read`; }
 
-    if (!error) {
-        myComments = myComments.filter(cid => cid !== id);
-        localStorage.setItem('myComments', JSON.stringify(myComments));
-        await fetchComments();
+    async function showStory(id) {
+        activeStory = stories.find(s => s.id === id);
+        document.getElementById('home-page').classList.add('hidden');
+        document.getElementById('detail-page').classList.remove('hidden');
+        document.getElementById('synopsis-view').classList.remove('hidden');
+        document.getElementById('reading-view').classList.add('hidden');
+        
+        document.getElementById('detail-title').innerText = activeStory.title;
+        document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
+        document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
+        document.getElementById('detail-read-time').innerText = getReadTime(activeStory.text);
+
+        try {
+            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
+            activeStory.likes = data ? data.likes : 0;
+            document.getElementById('like-count').innerText = `${activeStory.likes} LIKES`;
+            document.getElementById('like-btn').innerText = likedStories.has(id) ? '❤️' : '♡';
+        } catch(e) { console.log("Meta not found"); }
+        
+        window.scrollTo(0,0);
     }
-}
-        };
-    </script>
+
+    function showHome() {
+        document.getElementById('detail-page').classList.add('hidden');
+        document.getElementById('home-page').classList.remove('hidden');
+        window.scrollTo(0,0);
+    }
+
+    async function startReading() {
+        document.getElementById('synopsis-view').classList.add('hidden');
+        document.getElementById('reading-view').classList.remove('hidden');
+        document.getElementById('reading-title').innerText = activeStory.title;
+        document.getElementById('full-text').innerHTML = activeStory.text;
+        
+        await fetchComments(); 
+        window.scrollTo(0,0);
+    }
+
+    // --- INTERACTION (LIKES & COMMENTS) ---
+    async function handleLike() {
+        let change = likedStories.has(activeStory.id) ? -1 : 1;
+        let newCount = (activeStory.likes || 0) + change;
+        const { error } = await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
+        if (!error) {
+            activeStory.likes = newCount;
+            change === 1 ? likedStories.add(activeStory.id) : likedStories.delete(activeStory.id);
+            document.getElementById('like-btn').innerText = likedStories.has(activeStory.id) ? '❤️' : '♡';
+            document.getElementById('like-count').innerText = `${newCount} LIKES`;
+        }
+    }
+
+    async function postComment() {
+        const input = document.getElementById('comment-input');
+        const content = input.value.trim();
+        if(!content || !activeStory) return;
+
+        const { data, error } = await sbClient
+            .from('comments')
+            .insert([{ story_id: activeStory.id, content: content }])
+            .select();
+
+        if (!error) {
+            myComments.push(data[0].id);
+            localStorage.setItem('myComments', JSON.stringify(myComments));
+            input.value = ""; 
+            await fetchComments(); 
+        }
+    }
+
+    async function fetchComments() {
+        if (!activeStory) return;
+        const { data, error } = await sbClient
+            .from('comments')
+            .select('*')
+            .eq('story_id', activeStory.id)
+            .order('created_at', { ascending: false });
+
+        if (!error) {
+            const list = document.getElementById('comment-list');
+            list.innerHTML = data.map(c => `
+                <div class="border-l border-[#d4af37]/20 pl-6 py-2 fade-in">
+                    <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-2 font-mono">
+                        ID: ${c.id.toString().slice(-4)} | ${new Date(c.created_at).toLocaleDateString()}
+                    </p>
+                    <p class="reading-font text-gray-300 leading-relaxed text-sm">${c.content}</p>
+                    ${myComments.includes(c.id) ? `
+                        <button onclick="deleteComment(${c.id})" class="text-[8px] text-red-900/50 hover:text-red-700 uppercase mt-4 tracking-tighter">
+                            [ Erase ]
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+    }
+
+    async function deleteComment(id) {
+        if(!confirm("Erase this transmission?")) return;
+        const { error } = await sbClient.from('comments').delete().eq('id', id);
+        if (!error) {
+            myComments = myComments.filter(cid => cid !== id);
+            localStorage.setItem('myComments', JSON.stringify(myComments));
+            await fetchComments();
+        }
+    }
+
+    // --- SCROLL EFFECTS ---
+    window.onscroll = () => {
+        const cur = window.scrollY;
+        const nav = document.getElementById('top-nav');
+        cur > lastScroll && cur > 80 ? nav.classList.add('nav-hidden') : nav.classList.remove('nav-hidden');
+        lastScroll = cur;
+        
+        if (!document.getElementById('reading-view').classList.contains('hidden')) {
+            const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById("progress-bar").style.width = (cur / h * 100) + "%";
+        }
+    };
+</script>
 </body>
 </html>
