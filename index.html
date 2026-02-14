@@ -285,240 +285,172 @@
         cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" 
               }
     },
-       const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
+      ];
 
-        let activeStory = null, scanTimer = null, scanProgress = 0, isAuthorized = false, lastScroll = 0;
+    // 2. Initialize Supabase
+    const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
 
-        let currentRotation = 0;
-let lastY = 0;
-let isRotating = false;
-let unlockThreshold = 360; // How many degrees to turn (360 = 1 full circle)
+    // 3. State Variables
+    let activeStory = null;
+    let lastScroll = 0;
+    let currentRotation = 0;
+    let lastY = 0;
+    let isRotating = false;
+    let unlockThreshold = 360; 
 
-const gear = document.getElementById('vault-gear');
-const container = document.getElementById('gear-container');
-const progressText = document.getElementById('unlock-progress');
+    // 4. Gear Logic
+    const gear = document.getElementById('vault-gear');
+    const container = document.getElementById('gear-container');
+    const progressText = document.getElementById('unlock-progress');
 
-// Touch Events for iPad/Phone
-container.addEventListener('touchstart', (e) => {
-    isRotating = true;
-    lastY = e.touches[0].clientY;
-    container.style.cursor = 'grabbing';
-});
+    container.addEventListener('touchstart', (e) => {
+        isRotating = true;
+        lastY = e.touches[0].clientY;
+        container.style.cursor = 'grabbing';
+    });
 
-container.addEventListener('touchmove', (e) => {
-    if (!isRotating) return;
-    let currentY = e.touches[0].clientY;
-    let delta = lastY - currentY; // Moving finger UP turns gear
-    
-    if (delta > 0) {
-        currentRotation += delta * 0.8; // Increase/decrease for turn speed
-        gear.style.transform = `rotate(${currentRotation}deg)`;
+    container.addEventListener('touchmove', (e) => {
+        if (!isRotating) return;
+        let currentY = e.touches[0].clientY;
+        let delta = lastY - currentY; 
         
-        let percent = Math.min(Math.round((currentRotation / unlockThreshold) * 100), 100);
-        progressText.innerText = `DECRYPTING: ${percent}%`;
+        if (delta > 0) {
+            currentRotation += delta * 0.8; 
+            gear.style.transform = `rotate(${currentRotation}deg)`;
+            
+            let percent = Math.min(Math.round((currentRotation / unlockThreshold) * 100), 100);
+            progressText.innerText = `DECRYPTING: ${percent}%`;
 
-        if (currentRotation >= unlockThreshold) {
-            isRotating = false;
-            triggerUnlock();
+            if (currentRotation >= unlockThreshold) {
+                isRotating = false;
+                triggerUnlock();
+            }
         }
+        lastY = currentY;
+    });
+
+    container.addEventListener('touchend', () => {
+        isRotating = false;
+        container.style.cursor = 'grab';
+        if (currentRotation < unlockThreshold) {
+            currentRotation = 0;
+            gear.style.transform = `rotate(0deg)`;
+            progressText.innerText = `SYSTEM: LOCKED`;
+        }
+    });
+
+    function triggerUnlock() {
+        gear.classList.add('unlock-glow');
+        progressText.innerText = "ACCESS GRANTED";
+        progressText.style.color = "#fff";
+        setTimeout(() => { completeAuth(); }, 800);
     }
-    lastY = currentY;
-});
 
-container.addEventListener('touchend', () => {
-    isRotating = false;
-    container.style.cursor = 'grab';
-    // If they let go too early, snap back to start
-    if (currentRotation < unlockThreshold) {
-        currentRotation = 0;
-        gear.style.transform = `rotate(0deg)`;
-        progressText.innerText = `SYSTEM: LOCKED`;
+    function completeAuth() {
+        const loader = document.getElementById('loading-screen');
+        loader.classList.add('access-granted-anim');
+        setTimeout(() => {
+            loader.style.display = 'none';
+            document.getElementById('main-content').classList.remove('hidden');
+            renderStories(); 
+        }, 600);
     }
-});
 
-function triggerUnlock() {
-    gear.classList.add('unlock-glow');
-    progressText.innerText = "ACCESS GRANTED";
-    progressText.style.color = "#fff";
-    
-    setTimeout(() => {
-        completeAuth();
-    }, 800);
-}
+    // 5. Story Rendering & Navigation
+    function renderStories() {
+        document.getElementById('story-grid').innerHTML = stories.map(s => `
+            <div onclick="showStory(${s.id})" class="group cursor-pointer">
+                <div class="story-card-container"><img src="${s.cover}"></div>
+                <h4 class="serif text-sm mt-4 uppercase tracking-tighter text-gray-500 group-hover:text-[#d4af37] transition-colors">${s.title}</h4>
+            </div>
+        `).join('');
+    }
 
-function completeAuth() {
-    const loader = document.getElementById('loading-screen');
-    loader.classList.add('access-granted-anim');
-    setTimeout(() => {
-        loader.style.display = 'none';
-        document.getElementById('main-content').classList.remove('hidden');
-        renderStories(); // Ensure this function exists to build your grid
-    }, 600);
-}
-        function renderStories() {
-            document.getElementById('story-grid').innerHTML = stories.map(s => `
-                <div onclick="showStory(${s.id})" class="group cursor-pointer">
-                    <div class="story-card-container"><img src="${s.cover}"></div>
-                    <h4 class="serif text-sm mt-4 uppercase tracking-tighter text-gray-500 group-hover:text-[#d4af37] transition-colors">${s.title}</h4>
-                </div>
-            `).join('');
-        }
+    async function showStory(id) {
+        activeStory = stories.find(s => s.id === id);
+        document.getElementById('home-page').classList.add('hidden');
+        document.getElementById('detail-page').classList.remove('hidden');
+        document.getElementById('detail-view').classList.remove('hidden');
+        document.getElementById('reading-view').classList.add('hidden');
+        
+        document.getElementById('detail-title').innerText = activeStory.title;
+        document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
+        document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
+        
+        document.getElementById('comment-list').innerHTML = "<p class='text-[8px] uppercase tracking-widest text-gray-600'>Retrieving history...</p>";
+        
+        const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
+        document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
+        
+        await fetchComments(); 
+        window.scrollTo(0,0);
+    }
 
-        async function showStory(id) {
-            activeStory = stories.find(s => s.id === id);
-            document.getElementById('home-page').classList.add('hidden');
-            document.getElementById('detail-page').classList.remove('hidden');
-            document.getElementById('detail-view').classList.remove('hidden');
-            document.getElementById('reading-view').classList.add('hidden');
-            
-            document.getElementById('detail-title').innerText = activeStory.title;
-            document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
-            document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
-            
-            // Clear current view and load history immediately
-            document.getElementById('comment-list').innerHTML = "<p class='text-[8px] uppercase tracking-widest text-gray-600'>Retrieving history...</p>";
-            
-            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
-            document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
-            
-            await fetchComments(); // Ensure comments load on story selection
-            window.scrollTo(0,0);
-        }
+    function showHome() { 
+        document.getElementById('detail-page').classList.add('hidden'); 
+        document.getElementById('home-page').classList.remove('hidden'); 
+        window.scrollTo(0,0); 
+    }
 
-        function showHome() { 
-            document.getElementById('detail-page').classList.add('hidden'); 
-            document.getElementById('home-page').classList.remove('hidden'); 
-            window.scrollTo(0,0); 
-        }
+    async function startReading() {
+        document.getElementById('detail-view').classList.add('hidden');
+        document.getElementById('reading-view').classList.remove('hidden');
+        document.getElementById('reading-title').innerText = activeStory.title;
+        document.getElementById('full-text').innerHTML = activeStory.text;
+        window.scrollTo(0,0);
+    }
 
-        async function startReading() {
-            document.getElementById('detail-view').classList.add('hidden');
-            document.getElementById('reading-view').classList.remove('hidden');
-            document.getElementById('reading-title').innerText = activeStory.title;
-            document.getElementById('full-text').innerHTML = activeStory.text;
-            window.scrollTo(0,0);
-        }
-// --- DATABASE OPS: LIKES ---
+    // 6. Database Ops (Likes & Comments)
     async function handleLike() {
         if (!activeStory) return;
-
         try {
-            // 1. Fetch current likes
-            const { data, error } = await sbClient
-                .from('stories_meta')
-                .select('likes')
-                .eq('story_id', activeStory.id)
-                .maybeSingle(); // maybeSingle prevents errors if row doesn't exist yet
-
-            if (error) throw error;
-
+            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', activeStory.id).maybeSingle();
             const newCount = (data ? data.likes : 0) + 1;
-
-            // 2. Update with upsert
-            const { error: upsertError } = await sbClient
-                .from('stories_meta')
-                .upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
-
-            if (upsertError) throw upsertError;
-
-            // 3. Update UI
+            await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount }, { onConflict: 'story_id' });
             document.getElementById('like-count').innerText = `${newCount} LIKES`;
-            document.getElementById('like-btn').innerText = '❤️'; 
-
-        } catch (err) {
-            console.error("Like System Error:", err.message);
-        }
+        } catch (err) { console.error(err); }
     }
 
-    // --- DATABASE OPS: COMMENTS ---
     async function postComment() {
         const input = document.getElementById('comment-input');
         const val = input.value.trim();
         if (!val || !activeStory) return;
-        
-        // Visual feedback
-        const originalBtnText = "TRANSMIT";
-        
         try {
-            const { error } = await sbClient
-                .from('comments')
-                .insert([{ story_id: activeStory.id, content: val }]);
-
-            if (error) throw error;
-
+            await sbClient.from('comments').insert([{ story_id: activeStory.id, content: val }]);
             input.value = "";
-            await fetchComments(); // Reload the history
-        } catch (err) {
-            alert("Transmission Failed: Check Connection");
-            console.error("Comment Error:", err.message);
-        }
+            await fetchComments();
+        } catch (err) { console.error(err); }
     }
 
     async function fetchComments() {
         if (!activeStory) return;
-
         const list = document.getElementById('comment-list');
-        
-        try {
-            const { data, error } = await sbClient
-                .from('comments')
-                .select('*')
-                .eq('story_id', activeStory.id)
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                list.innerHTML = "<p class='text-red-900 text-[8px] font-mono'>ENCRYPTION ERROR: ACCESS DENIED</p>";
-                return;
-            }
-
-            if (data && data.length > 0) {
-                list.innerHTML = data.map(c => `
-                    <div class="border-l border-[#d4af37]/20 pl-6 py-4 mb-6 fade-in">
-                        <div class="flex justify-between items-start mb-2">
-                            <p class="text-[8px] text-gray-600 uppercase tracking-[0.3em] font-mono">
-                                Ref: ARCHIVE_ID_${String(c.id).slice(-3)}
-                            </p>
-                            <p class="text-[8px] text-gray-700 font-mono">
-                                ${new Date(c.created_at).toLocaleDateString()}
-                            </p>
-                        </div>
-                        <p class="reading-font text-gray-300 text-sm leading-relaxed">${c.content}</p>
-                    </div>
-                `).join('');
-            } else {
-                list.innerHTML = "<p class='text-gray-700 text-[8px] uppercase tracking-widest'>No prior transmissions found in this sector.</p>";
-            }
-        } catch (err) {
-            console.error("Fetch Error:", err.message);
+        const { data } = await sbClient.from('comments').select('*').eq('story_id', activeStory.id).order('created_at', { ascending: false });
+        if (data && data.length > 0) {
+            list.innerHTML = data.map(c => `
+                <div class="border-l border-[#d4af37]/20 pl-6 py-4 mb-6 fade-in">
+                    <p class="text-[8px] text-gray-600 uppercase font-mono mb-2">Ref: ARCHIVE_ID_${String(c.id).slice(-3)}</p>
+                    <p class="reading-font text-gray-300 text-sm">${c.content}</p>
+                </div>
+            `).join('');
+        } else {
+            list.innerHTML = "<p class='text-gray-700 text-[8px] uppercase'>No prior transmissions.</p>";
         }
     }
 
-    // --- WINDOW & SCROLL EVENTS ---
+    // 7. Window Events
     window.onscroll = () => {
         const cur = window.scrollY;
         const nav = document.getElementById('top-nav');
         const progressBar = document.getElementById('progress-bar');
-
-        // Hide/Show Nav on Scroll
-        if (cur > lastScroll && cur > 100) {
-            nav.classList.add('nav-hidden');
-        } else {
-            nav.classList.remove('nav-hidden');
-        }
+        if (cur > lastScroll && cur > 100) nav.classList.add('nav-hidden');
+        else nav.classList.remove('nav-hidden');
         lastScroll = cur;
-
-        // Progress Bar Calculation
         const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-        if (totalHeight > 0) {
-            const progress = (cur / totalHeight) * 100;
-            progressBar.style.width = `${progress}%`;
-        }
+        if (totalHeight > 0) progressBar.style.width = `${(cur / totalHeight) * 100}%`;
     };
 
-    window.onload = () => {
-    // Left empty so the vault always starts locked on refresh.
-}
-    };
-    </script>
+    window.onload = () => { /* Ready */ };
+</script>
 </body>
 </html>
