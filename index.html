@@ -2,319 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>THE VAULT | ARCHIVE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE VAULT | ENTRY</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@300;400;600&display=swap');
-        
-        :root { --bg: #0a0a0b; --accent: #d4af37; }
-        * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; box-sizing: border-box; }
-        
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: #e2e2e2; margin: 0; overflow-x: hidden; }
-        .serif { font-family: 'Playfair Display', serif; }
-        .reading-font { font-family: 'Lora', serif; line-height: 1.9; }
-
-        /* CARDS */
-        .story-card-container { aspect-ratio: 2 / 3; width: 100%; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); background: #111; transition: all 0.5s ease; }
-        .story-card-container img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.8s ease; }
-        .group:hover .story-card-container img { filter: grayscale(0%); transform: scale(1.05); }
-
-        /* VAULT UI */
-        #loading-screen { 
-            user-select: none; -webkit-user-select: none; 
-            position: fixed; inset: 0; z-index: 200; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            background: black; 
-        }
-
-        #gear-container { width: 220px; height: 220px; cursor: pointer; pointer-events: auto; }
-        #vault-gear { width: 100%; height: 100%; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.1)); }
-        
-        #vault-gear.unlock-glow { animation: gearGlow 0.8s ease-out forwards; }
-
-        @keyframes gearGlow {
-            0% { filter: brightness(1) drop-shadow(0 0 15px var(--accent)); }
-            100% { filter: brightness(2) drop-shadow(0 0 60px var(--accent)); transform: scale(1.1); }
-        }
-
-        .hidden { display: none !important; }
-        .access-granted-anim { animation: portalExit 0.8s forwards; }
-        @keyframes portalExit { to { opacity: 0; transform: scale(1.1); filter: blur(20px); } }
-
-        #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 300; transition: width 0.2s; }
-        .fade-in { animation: fadeIn 0.5s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { background: #0a0a0b; color: #d4af37; overflow: hidden; }
+        #gear-container { width: 220px; height: 220px; cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .unlock-glow { animation: glow 0.8s forwards; }
+        @keyframes glow { to { filter: brightness(2) drop-shadow(0 0 40px #d4af37); transform: scale(1.1); } }
     </style>
 </head>
-<body>
-
-    <div id="progress-bar"></div>
-
-    <div id="loading-screen">
-        <div class="mb-12 text-center">
-            <h2 class="serif text-[#d4af37] tracking-[0.6em] text-[10px] uppercase mb-2">Vault Mechanism</h2>
-            <p id="gear-hint" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">Tap Gear to Rotate</p>
-        </div>
-
-        <div id="gear-container" onclick="rotateGear()">
-            <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-                <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
-                <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
-                <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
-            </svg>
-        </div>
-
-        <div id="unlock-progress" class="mt-12 text-[#d4af37] font-mono text-[10px] tracking-[0.2em]">SYSTEM: LOCKED</div>
+<body class="flex flex-col items-center justify-center h-screen">
+    <div class="mb-12 text-center">
+        <h2 class="tracking-[0.6em] text-[10px] uppercase mb-2">Vault Mechanism</h2>
+        <p id="unlock-progress" class="font-mono text-[10px]">SYSTEM: LOCKED</p>
     </div>
 
-    <div id="main-content" class="hidden">
-        <nav id="top-nav" class="fixed top-0 left-0 right-0 p-6 flex justify-between items-center bg-black/80 backdrop-blur-lg z-50 border-b border-white/5 transition-transform duration-500">
-            <h2 class="serif text-2xl cursor-pointer text-[#d4af37]" onclick="showHome()">V.</h2>
-        </nav>
-
-        <main class="p-6 pt-32 max-w-5xl mx-auto">
-            <section id="home-page">
-                <div class="mb-16">
-                    <h1 class="serif text-5xl mb-2 text-[#d4af37]">The Vault</h1>
-                    <p class="text-[10px] uppercase tracking-[0.4em] text-gray-600">Authorized Personnel Only</p>
-                </div>
-                <div id="story-grid" class="grid grid-cols-2 md:grid-cols-3 gap-10"></div>
-            </section>
-
-            <section id="detail-page" class="hidden">
-                <button onclick="showHome()" class="text-[9px] uppercase tracking-[0.3em] text-gray-500 mb-12 border-b border-gray-800 pb-1">← Return to Gallery</button>
-                <div id="detail-view">
-                    <div class="flex flex-col md:flex-row gap-12">
-                        <div id="detail-cover" class="w-full md:w-1/3 aspect-[2/3] bg-cover bg-center border border-white/10 grayscale"></div>
-                        <div class="flex-1">
-                            <h2 id="detail-title" class="serif text-5xl mb-6 text-[#d4af37]"></h2>
-                            <p id="detail-synopsis" class="reading-font text-xl text-gray-400 italic mb-10"></p>
-                            <button onclick="startReading()" class="w-full py-5 bg-[#d4af37] text-black font-bold uppercase text-[11px] tracking-[0.3em]">Enter the archive</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="reading-view" class="hidden max-w-2xl mx-auto">
-                    <h2 id="reading-title" class="serif text-3xl text-center mb-20 text-[#d4af37]"></h2>
-                    <div id="full-text" class="reading-font text-lg text-gray-300 space-y-10 mb-20"></div>
-                    <div class="py-16 border-t border-white/5 flex flex-col items-center">
-                        <button onclick="handleLike()" id="like-btn" class="text-5xl">♡</button>
-                        <span id="like-count" class="text-[10px] text-[#d4af37] mt-4 tracking-[0.3em] uppercase">0 Likes</span>
-                    </div>
-                    <div class="pt-16 border-t border-white/5">
-                        <h3 class="serif text-2xl text-[#d4af37] mb-8">Marginalia</h3>
-                        <textarea id="comment-input" class="w-full bg-[#111] border border-white/10 p-5 text-white mb-4 outline-none" rows="4" placeholder="Enter message..."></textarea>
-                        <button onclick="postComment()" class="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest">Preserve</button>
-                        <div id="comment-list" class="mt-20 space-y-12 pb-32"></div>
-                    </div>
-                </div>
-            </section>
-        </main>
+    <div id="gear-container" onclick="rotate()">
+        <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
+            <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
+        </svg>
     </div>
 
     <script>
-        const stories = [
-            { id: 1, title: "Horizon", synopsis: "The perfect son is a masterpiece of a lie.", text:"He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it. They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked, and he eats the cake, smiles at the photographs, listens to the stories, applauds with steady hands, and inside him the stillness lingers, the echo of being seen and not seen at the same time, the ache of being loved as an accessory to love, the soft exhaustion of existing fully and being noticed only partly, a quiet knowing of absence in abundance, a slow weight that presses against the ribs and folds itself into his bones, and he walks through the day like this, through all the care and all the light, holding the impossible understanding that being looked after is not always being held.",
-            cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg" },
-            { id: 2, 
-        title: "The Dance of the 2 Empires", 
-        synopsis: "Two crowns, one dance, and a shared history.", 
-        text: `The crown didn’t feel any heavier today — but something beneath it did. Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign?<br><br>
-        Or maybe it was her body — weary and still waiting for the warmth she had once been promised. She shook the feeling off as best she could. The court watched her. The sound that finally broke through the tension wasn’t the music — it was the voice she knew best. Her only true friend — now the Emperor of the South — stood before her, asking for her hand.<br><br>
-        Not for a game in the palace garden this time, but for a dance in the ballroom. A dance between two powerful nations, under the eyes of a hundred watching nobles. She took his hand. They stepped onto the floor — not as the children they once were, but as rulers.<br><br>
-        Still, something in their steps remembered old rhythms. As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”<br><br>
-        But somewhere between the fourth and fifth step, the past crept in. They found themselves drifting — their legs in time with the music of the present, their minds slipping back to old memories: Shared camping trips, whispered jokes around a fire, a clumsy first swordfight, the smell of rain on travel cloaks.<br><br>
-        The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them. He made a polite remark — something about the alliance, or the Chancellor’s speech. She replied with a practiced smile. The kind you give when there’s too much history in the room.<br><br>
-        Then came the pause. Long enough to be uncomfortable. Short enough not to be intentional. He glanced sideways at her — not at the empress, but at the girl who once got them both grounded for sneaking out to see the stars. And just like that, she laughed. Not the courtly kind — a real one. Unfiltered. Familiar. The tension broke. Their words softened.<br><br>
-        They talked — about the ball, about their ridiculous swordmaster, about small things. They started as delegates. But by the time their glasses emptied, they had become something else. Not rulers. Not children. But people who remembered what it was like to not be either.`, 
-        cover: "https://i.pinimg.com/736x/b5/34/43/b53443eaeed068570e1084f73bebeaf5.jpg" 
-    },
-             { id: 3, 
-        title: "Anamnesis", 
-        synopsis: "The archives are hungry.", 
-       text: `
-        <div class="space-y-6 font-mono text-sm border-l-2 border-[#d4af37]/30 pl-6 py-4 bg-black/20">
-            <p class="text-[#d4af37] font-bold tracking-widest uppercase">RECOLLECTION OF A SUPPOSED PREVIOUS EXISTENCE</p>
-            <p class="text-gray-500 italic">INT. MEDICAL COLLEGE – RESEARCH LAB – NIGHT</p>
-            <p>Dim lighting. The hum of machinery fills the air. DR. Jeevith (30s, ambitious, sleep-deprived) leans over his laptop, eyes scanning the screen. A cold cup of coffee sits beside him, untouched. His fingers hover over the keyboard. <span class="text-[#d4af37]">-Click.</span></p>
-            <div class="bg-[#d4af37]/5 p-4 border border-[#d4af37]/10">
-                <p class="text-[10px] text-gray-500 mb-2">ON SCREEN: VIDEO PLAYBACK</p>
-                <p class="italic text-gray-400">ARJUN (VIDEO): I... I woke up in the dissection hall. I don’t remember going there.</p>
-            </div>
-
-            <p>Jeevith leans in. Pauses the video, rewinds. He checks the hospital logs. Nothing. No record of Arjun’s admission. No proof of his existence was found. A notification pops up: <span class="text-red-500 font-bold animate-pulse">"NEW FILE ADDED: ANAMNESIS_002."</span></p>
-
-            <p class="text-gray-500 italic">INT. HOSPITAL HALLWAY – NIGHT</p>
-
-            <p>Jeevith’s footsteps echo. Too loud. He sees a figure at the far end of the hallway. Back turned. It’s Arjun.</p>
-
-            <p><span class="text-[#d4af37]">JEEVITH:</span> [Shakily] Arjun? What are you doing here?</p>
-
-            <p>Arjun turns. His movements are too smooth. His face too blank. His shadow does not move.</p>
-
-            <p><span class="text-[#d4af37]">ARJUN (FLAT TONE):</span> You shouldn’t have seen the file.</p>
-
-            <p class="text-gray-500 italic">INT. RESEARCH LAB – NIGHT</p>
-
-            <p>Jeevith bursts into the lab, slamming the door. He rushes to his laptop. On screen: Surveillance footage of <span class="italic text-white">himself</span> sitting at this desk, watching this exact moment.</p>
-
-            <p class="text-red-500 font-bold border-y border-red-900/50 py-2 text-center">"ANAMNESIS_003 – FILE READY FOR NEXT SUBJECT."</p>
-            <p>A voice from the darkness: <span class="italic text-gray-400">"Don't run."</span></p>
-
-            <p>The door SLAMS OPEN. A shadowy figure lunges. The laptop glitches violently. Everything cuts to black.</p>
-
-            <div class="pt-8 opacity-60">
-                <p class="text-xs">TEXT APPEARS ON SCREEN:</p>
-                <p class="text-[#d4af37] font-bold">"ANAMNESIS_004 – FILE READY FOR NEXT SUBJECT."</p>
-            </div>
-        </div>
-        `, 
-        cover: "https://i.pinimg.com/1200x/dc/0d/c1/dc0dc15c13dcfe322b098796162b2a39.jpg" 
-    }
-              { id: 4, 
-        title: "Empathodexterity", 
-        synopsis: "Silver edges, different worlds: the same inherited precision", 
-       text: `
-        <div class="reading-font text-gray-300">
-            <p class="mb-6">The old woman’s bangles sang a sharp, glass melody as she worked, a rhythmic percussion that cut through the humid air of the bazaar. To the passing crowds, she was just the "Guava Lady," a fixture of the pavement, but to the young girl sitting at her feet, she was a surgeon of the streets.</p>
+        let deg = 0;
+        function rotate() {
+            deg += 45;
+            document.getElementById('vault-gear').style.transform = `rotate(${deg}deg)`;
+            let p = Math.min(Math.round((deg/360)*100), 100);
+            document.getElementById('unlock-progress').innerText = `DISENGAGING: ${p}%`;
             
-            <p class="mb-6">"Watch the wrist, Meena," her mother would say, never once looking up from her work. With a swift, silver flash of her paring knife, a firm guava was transformed into perfect, bite-sized pieces of hospitality. Meena watched those hands every day, stained with the nectar of the fruit and the rust-coloured dust of chilli powder, weathered by the relentless sun, yet moving with the grace of a conductor leading a symphony.</p>
-
-            <blockquote class="border-l-2 border-[#d4af37] pl-4 py-2 my-8 italic text-[#d4af37]/80">
-                "The hand must be steady, Meena, but the heart must be soft. That is how you truly serve."
-            </blockquote>
-
-            <p class="mb-6">Two decades later, the golden sun has been replaced by the sterile, unwavering glare of overhead surgical lamps. The chaotic symphony of the marketplace has faded into a heavy, clinical silence.</p>
-            
-            <p class="mb-6">Meena looks down at her own hands. They are no longer stained with fruit and chilli powder; instead, they are encased in pale, sterile latex. The rhythmic clinking of glass bangles has been traded for the steady, digital pulse of a heart monitor, a neon green line marking the boundary between life and the unknown.</p>
-
-            <p class="mb-6">She picks up the scalpel. It is significantly smaller and lighter than her mother’s worn paring knife, but as she touches the silver edge to the patient’s skin, she feels that same familiar weight of responsibility. She makes the first incision, a clean, decisive arc. It is the same motion she observed on a street corner years ago, the same unwavering precision once used to quarter a guava.</p>
-
-            <p class="mb-6">The street vendor fed the body, and the daughter mended the life. It was a shared legacy of the wrist. As Meena's scalpel moved, the distinction vanished – different tools, different worlds, but the same sacred precision. She was her mother's daughter, with a quiet inheritance of discipline; proving that every cut, when guided by a soft heart, is an altar where life is honored.</p> </div>`,cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" 
-              }
-];
-       const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
-
-        let activeStory = null;
-        let lastScroll = 0;
-        let currentRotation = 0;
-        const unlockThreshold = 360;
-
-        function rotateGear() {
-            currentRotation += 45;
-            const gear = document.getElementById('vault-gear');
-            const progressText = document.getElementById('unlock-progress');
-            
-            gear.style.transform = `rotate(${currentRotation}deg)`;
-            let percent = Math.min(Math.round((currentRotation / unlockThreshold) * 100), 100);
-            progressText.innerText = `DISENGAGING: ${percent}%`;
-
-            if (currentRotation >= unlockThreshold) {
-                document.getElementById('gear-container').onclick = null;
-                triggerUnlock();
+            if (deg >= 360) {
+                document.getElementById('vault-gear').classList.add('unlock-glow');
+                setTimeout(() => { window.location.href = 'gallery.html'; }, 800);
             }
         }
-
-        function triggerUnlock() {
-            const gear = document.getElementById('vault-gear');
-            const progressText = document.getElementById('unlock-progress');
-            gear.classList.add('unlock-glow');
-            progressText.innerText = "ACCESS GRANTED";
-            setTimeout(completeAuth, 800);
-        }
-
-        function completeAuth() {
-            const loader = document.getElementById('loading-screen');
-            loader.classList.add('access-granted-anim');
-            setTimeout(() => {
-                loader.style.display = 'none';
-                document.getElementById('main-content').classList.remove('hidden');
-                renderStories();
-            }, 600);
-        }
-
-        function renderStories() {
-            document.getElementById('story-grid').innerHTML = stories.map(s => `
-                <div onclick="showStory(${s.id})" class="group cursor-pointer">
-                    <div class="story-card-container"><img src="${s.cover}"></div>
-                    <h4 class="serif text-sm mt-4 uppercase tracking-tighter text-gray-500 group-hover:text-[#d4af37] transition-colors">${s.title}</h4>
-                </div>
-            `).join('');
-        }
-
-        async function showStory(id) {
-            activeStory = stories.find(s => s.id === id);
-            document.getElementById('home-page').classList.add('hidden');
-            document.getElementById('detail-page').classList.remove('hidden');
-            document.getElementById('detail-view').classList.remove('hidden');
-            document.getElementById('reading-view').classList.add('hidden');
-            document.getElementById('detail-title').innerText = activeStory.title;
-            document.getElementById('detail-synopsis').innerText = activeStory.synopsis;
-            document.getElementById('detail-cover').style.backgroundImage = `url(${activeStory.cover})`;
-            
-            try {
-                const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', id).single();
-                document.getElementById('like-count').innerText = `${data ? data.likes : 0} LIKES`;
-                fetchComments();
-            } catch(e) { console.log("Database connection pending..."); }
-            
-            window.scrollTo(0,0);
-        }
-
-        function showHome() {
-            document.getElementById('detail-page').classList.add('hidden');
-            document.getElementById('home-page').classList.remove('hidden');
-        }
-
-        function startReading() {
-            document.getElementById('detail-view').classList.add('hidden');
-            document.getElementById('reading-view').classList.remove('hidden');
-            document.getElementById('reading-title').innerText = activeStory.title;
-            document.getElementById('full-text').innerHTML = activeStory.text;
-        }
-
-        async function handleLike() {
-            if (!activeStory) return;
-            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', activeStory.id).maybeSingle();
-            const newCount = (data ? data.likes : 0) + 1;
-            await sbClient.from('stories_meta').upsert({ story_id: activeStory.id, likes: newCount });
-            document.getElementById('like-count').innerText = `${newCount} LIKES`;
-        }
-
-        async function postComment() {
-            const input = document.getElementById('comment-input');
-            if (!input.value.trim()) return;
-            await sbClient.from('comments').insert([{ story_id: activeStory.id, content: input.value }]);
-            input.value = "";
-            fetchComments();
-        }
-
-        async function fetchComments() {
-            const list = document.getElementById('comment-list');
-            try {
-                const { data } = await sbClient.from('comments').select('*').eq('story_id', activeStory.id).order('created_at', { ascending: false });
-                list.innerHTML = data && data.length ? data.map(c => `
-                    <div class="border-l border-[#d4af37]/20 pl-6 py-4 mb-6">
-                        <p class="text-[8px] text-gray-600 font-mono mb-2">Ref: ARCHIVE_ID_${String(c.id).slice(-3)}</p>
-                        <p class="reading-font text-gray-300 text-sm">${c.content}</p>
-                    </div>
-                `).join('') : "<p class='text-gray-700 text-[8px] uppercase'>No transmissions.</p>";
-            } catch(e) { list.innerHTML = "<p class='text-gray-700 text-[8px] uppercase'>Archive connection offline.</p>"; }
-        }
-
-        window.onscroll = () => {
-            const cur = window.scrollY;
-            const nav = document.getElementById('top-nav');
-            const progress = document.getElementById('progress-bar');
-            if (cur > lastScroll && cur > 100) nav.style.transform = 'translateY(-100%)';
-            else nav.style.transform = 'translateY(0)';
-            lastScroll = cur;
-            const total = document.documentElement.scrollHeight - window.innerHeight;
-            progress.style.width = total > 0 ? `${(cur / total) * 100}%` : '0%';
-        };
     </script>
 </body>
 </html>
