@@ -212,25 +212,56 @@
             }
         }
 
-        // 2. METADATA & LIKES
-        async function fetchMetadata() {
+      // 2. METADATA & LIKES
+async function fetchMetadata() {
             const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', currentId).maybeSingle();
-            if (data) document.getElementById('like-count').innerText = `${data.likes} LIKES`;
+            if (data) {
+                document.getElementById('like-count').innerText = `${data.likes} LIKES`;
+            }
+            
+            // Check local storage on load to set the heart icon
+            if (localStorage.getItem(`liked_story_${currentId}`)) {
+                const btn = document.getElementById('like-btn');
+                btn.innerText = '♥';
+                btn.classList.add('opacity-50');
+            }
         }
 
         async function handleLike() {
-            if (localStorage.getItem(`liked_story_${currentId}`)) return;
+            const hasLiked = localStorage.getItem(`liked_story_${currentId}`);
+            const btn = document.getElementById('like-btn');
+            
+            const { data } = await sbClient.from('stories_meta')
+                .select('likes')
+                .eq('story_id', currentId)
+                .maybeSingle();
+            
+            let currentLikes = data ? data.likes : 0;
 
-            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', currentId).maybeSingle();
-            const newCount = (data ? data.likes : 0) + 1;
-            
-            const { error } = await sbClient.from('stories_meta').upsert({ story_id: currentId, likes: newCount }, { onConflict: 'story_id' });
-            
-            if (!error) {
-                localStorage.setItem(`liked_story_${currentId}`, true);
-                document.getElementById('like-count').innerText = `${newCount} LIKES`;
-                document.getElementById('like-btn').innerText = '♥';
-                document.getElementById('like-btn').classList.add('opacity-50', 'pointer-events-none');
+            if (hasLiked) {
+                // UN-LIKE
+                const newCount = Math.max(0, currentLikes - 1);
+                const { error } = await sbClient.from('stories_meta')
+                    .upsert({ story_id: currentId, likes: newCount }, { onConflict: 'story_id' });
+
+                if (!error) {
+                    localStorage.removeItem(`liked_story_${currentId}`);
+                    document.getElementById('like-count').innerText = `${newCount} LIKES`;
+                    btn.innerText = '♡';
+                    btn.classList.remove('opacity-50');
+                }
+            } else {
+                // LIKE
+                const newCount = currentLikes + 1;
+                const { error } = await sbClient.from('stories_meta')
+                    .upsert({ story_id: currentId, likes: newCount }, { onConflict: 'story_id' });
+
+                if (!error) {
+                    localStorage.setItem(`liked_story_${currentId}`, true);
+                    document.getElementById('like-count').innerText = `${newCount} LIKES`;
+                    btn.innerText = '♥';
+                    btn.classList.add('opacity-50');
+                }
             }
         }
 
