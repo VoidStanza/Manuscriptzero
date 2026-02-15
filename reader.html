@@ -27,10 +27,18 @@
 
     <div id="scroll-progress" style="width: 0%"></div>
 
-    <nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/90 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
-        <h2 class="serif text-2xl text-[#d4af37] cursor-pointer" onclick="location.href='gallery.html'">V.</h2>
-        <span class="text-[9px] uppercase tracking-[0.4em] text-gray-700">Record Decrypted</span>
-    </nav>
+<nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/90 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
+    <h2 class="serif text-2xl text-[#d4af37] cursor-pointer" onclick="location.href='gallery.html'">V.</h2>
+    
+    <div class="flex items-center space-x-6">
+        <div class="flex items-center border border-white/10 rounded-full px-3 py-1 bg-black/50">
+            <button onclick="adjustFont(-2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2 transition-colors">A-</button>
+            <div class="w-[1px] h-3 bg-white/10 mx-1"></div>
+            <button onclick="adjustFont(2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2 transition-colors">A+</button>
+        </div>
+        <span class="text-[9px] uppercase tracking-[0.4em] text-gray-700 hidden md:block">Record Decrypted</span>
+    </div>
+</nav>
 
     <main class="max-w-2xl mx-auto px-6 pt-40 pb-24">
         <header class="mb-20 text-center">
@@ -85,12 +93,11 @@
     <p class="mb-6">She took his hand. They stepped onto the floor — not as the children they once were, but as rulers. Still, something in their steps remembered old rhythms.</p>
     
     <p class="mb-6">As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”</p>
-    
-        <p>But somewhere between the fourth and fifth step, the past crept in.</p>
-        <p class="mt-2">They found themselves drifting —</p>
-        <p>Their legs in time with the music of the present,</p>
-        <p>Their minds slipping back to old memories:</p>
-        <p>Shared camping trips, whispered jokes around a fire, a clumsy first swordfight, the smell of rain on travel cloaks.</p>
+    <p>But somewhere between the fourth and fifth step, the past crept in.</p>
+    <p class="mt-2">They found themselves drifting —</p>
+    <p>Their legs in time with the music of the present,</p>
+    <p>Their minds slipping back to old memories:</p>
+    <p>Shared camping trips, whispered jokes around a fire, a clumsy first swordfight, the smell of rain on travel cloaks.</p>
 
     <p class="mb-6">The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them.</p>
     
@@ -236,7 +243,17 @@
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             document.getElementById('scroll-progress').style.width = (scroll / height * 100) + "%";
         };
+// Add this near the bottom of your <script>
+let currentFontSize = 18; // Matches your 'text-lg' default
 
+function adjustFont(delta) {
+    const content = document.getElementById('content');
+    // Limits font between 12px and 36px
+    if ((delta > 0 && currentFontSize < 36) || (delta < 0 && currentFontSize > 12)) {
+        currentFontSize += delta;
+        content.style.fontSize = currentFontSize + 'px';
+    }
+};
         window.onload = init;
     </script>
 </body>
