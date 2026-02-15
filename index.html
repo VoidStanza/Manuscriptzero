@@ -36,19 +36,22 @@
             transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); 
             filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2));
         }
+
+        /* Access Granted Glow for Text */
+        .text-unlock-glow {
+            animation: textGlow 0.8s ease-out forwards;
+            color: #d4af37 !important;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 0px rgba(212, 175, 55, 0); }
+            100% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.8), 0 0 40px rgba(212, 175, 55, 0.4); transform: scale(1.05); }
+        }
+
+        /* Access Granted Glow for Gear */
         .unlock-glow { 
             animation: gearGlow 0.8s ease-out forwards; 
         }
-        .text-unlock-glow {
-    animation: textGlow 0.8s ease-out forwards;
-    color: #d4af37 !important; /* Ensures it stays gold */
-}
-
-@keyframes textGlow {
-    0% { text-shadow: 0 0 0px rgba(212, 175, 55, 0); }
-    100% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.8), 0 0 40px rgba(212, 175, 55, 0.4); transform: scale(1.05); }
-}
-        
 
         @keyframes gearGlow {
             0% { filter: brightness(1) drop-shadow(0 0 15px #d4af37); }
@@ -65,41 +68,38 @@
 <body>
 
     <div id="ui-wrapper" class="flex flex-col items-center">
-    <div class="mb-12 text-center">
-        <h2 class="serif tracking-[0.6em] text-[10px] uppercase mb-2">Vault</h2>
-        <p id="unlock-progress" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">
-            Two-Phase Verification Required
-        </p>
-    </div>
+        <div class="mb-12 text-center">
+            <h2 class="serif tracking-[0.6em] text-[10px] uppercase mb-2">Vault</h2>
+            <p id="unlock-progress" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">
+                Two-Phase Verification Required
+            </p>
+        </div>
 
-    <div id="gear-container" class="relative group" onclick="rotateGear()">
-        <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-60 h-60">
-            <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
-            <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
-            <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
-        </svg>
-    </div>
+        <div id="gear-container" class="relative group" onclick="rotateGear()">
+            <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-60 h-60">
+                <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
+                <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
+                <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
+            </svg>
+        </div>
 
-        <div id="status-text" class="mt-4 text-gray-700 font-mono text-[9px] tracking-[0.2em] uppercase">
+        <div id="status-text" class="mt-12 text-gray-700 font-mono text-[9px] tracking-[0.2em] uppercase">
             Status: Secured
         </div>
     </div>
-</div>
 
     <script>
         let currentRotation = 0;
         const unlockThreshold = 360;
 
         function rotateGear() {
-            // INCREMENT BY 180 DEGREES
             currentRotation += 180; 
             
             const gear = document.getElementById('vault-gear');
             const statusText = document.getElementById('status-text');
             const progressHint = document.getElementById('unlock-progress');
             
-            // Apply rotation
             gear.style.transform = `rotate(${currentRotation}deg)`;
             
             if (currentRotation === 180) {
@@ -108,20 +108,21 @@
             }
 
             if (currentRotation >= unlockThreshold) {
-                // Disable further clicks
                 document.getElementById('gear-container').onclick = null;
                 
-                // Visual feedback
-                statusText.innerText = "ACCESS GRANTED To MANUSCRIPT ZERO";
+                // Final reveal and glow
+                statusText.innerText = "ACCESS GRANTED TO MANUSCRIPT ZERO";
+                statusText.classList.remove('text-gray-700'); // Remove the dim color
+                statusText.classList.add('text-unlock-glow');
+                
                 gear.classList.add('unlock-glow');
                 
-                // Transition to next page
                 setTimeout(() => {
                     document.body.classList.add('fade-out');
                     setTimeout(() => {
-                        window.location.href = 'gallery.html'; // Direct to your gallery page
+                        window.location.href = 'gallery.html';
                     }, 800);
-                }, 1500);
+                }, 1800); // Slightly longer delay to appreciate the glow
             }
         }
     </script>
