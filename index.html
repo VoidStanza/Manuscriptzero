@@ -56,26 +56,31 @@
 <body>
 
     <div id="ui-wrapper" class="flex flex-col items-center">
-        <div class="mb-12 text-center">
-            <h2 class="serif tracking-[0.6em] text-[10px] uppercase mb-2">Vault</h2>
-            <p id="unlock-progress" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">
-                Two-Phase Verification Required
-            </p>
-        </div>
+    <div class="mb-12 text-center">
+        <h2 class="serif tracking-[0.6em] text-[10px] uppercase mb-2">Vault Mechanism</h2>
+        <p id="unlock-progress" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">
+            Two-Phase Verification Required
+        </p>
+    </div>
 
-        <div id="gear-container" onclick="rotateGear()">
-            <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
-                <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
-                <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
-            </svg>
-        </div>
+    <div id="gear-container" class="relative group" onclick="rotateGear()">
+        <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-60 h-60">
+            <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
+            <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
+            <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
+        </svg>
+    </div>
 
-        <div id="status-text" class="mt-12 text-[#d4af37] font-mono text-[10px] tracking-[0.2em]">
-            STATUS: SECURED
+    <div class="mt-12 text-center">
+        <h3 class="serif text-[#d4af37] tracking-[0.8em] text-[12px] uppercase opacity-80">
+            Zero Manuscript
+        </h3>
+        <div id="status-text" class="mt-4 text-gray-700 font-mono text-[9px] tracking-[0.2em] uppercase">
+            Status: Secured
         </div>
     </div>
+</div>
 
     <script>
         let currentRotation = 0;
