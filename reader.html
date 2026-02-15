@@ -21,6 +21,11 @@
         textarea { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; resize: none; transition: 0.3s; }
         textarea:focus { border-color: #d4af37; outline: none; }
         .comment-item { border-left: 1px solid rgba(212, 175, 55, 0.2); padding-left: 1.5rem; margin-bottom: 2.5rem; }
+        .comment-item { 
+    border-left: 1px solid rgba(212, 175, 55, 0.2); 
+    padding-left: 1.5rem; 
+    margin-bottom: 3rem; 
+}
     </style>
 </head>
 <body>
@@ -216,6 +221,47 @@
             await sbClient.from('stories_meta').upsert({ story_id: currentId, likes: newCount });
             document.getElementById('like-count').innerText = `${newCount} LIKES`;
             document.getElementById('like-btn').innerText = '♥';
+            // Update this inside your init() function
+async function init() {
+    const params = new URLSearchParams(window.location.search);
+    currentId = parseInt(params.get('id'));
+    const story = stories.find(s => s.id === currentId);
+
+    if (story) {
+        document.getElementById('title').innerText = story.title;
+        document.getElementById('synopsis').innerText = story.synopsis;
+        document.getElementById('content').innerHTML = story.text;
+        
+        // CHECK IF ALREADY LIKED IN THIS BROWSER
+        if (localStorage.getItem(`liked_story_${currentId}`)) {
+            document.getElementById('like-btn').innerText = '♥';
+            document.getElementById('like-btn').classList.add('opacity-50', 'pointer-events-none');
+        }
+
+        fetchMetadata();
+        fetchComments();
+    }
+}
+
+// Update your handleLike() function
+async function handleLike() {
+    // Prevent multiple likes if already in localStorage
+    if (localStorage.getItem(`liked_story_${currentId}`)) return;
+
+    const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', currentId).maybeSingle();
+    const newCount = (data ? data.likes : 0) + 1;
+    
+    const { error } = await sbClient.from('stories_meta').upsert({ story_id: currentId, likes: newCount });
+    
+    if (!error) {
+        // SAVE TO BROWSER MEMORY
+        localStorage.setItem(`liked_story_${currentId}`, true);
+        
+        document.getElementById('like-count').innerText = `${newCount} LIKES`;
+        document.getElementById('like-btn').innerText = '♥';
+        document.getElementById('like-btn').classList.add('opacity-50', 'pointer-events-none');
+    }
+}
         }
 
         async function postComment() {
@@ -224,19 +270,74 @@
             await sbClient.from('comments').insert([{ story_id: currentId, content: input.value }]);
             input.value = "";
             fetchComments();
+            // Shows the hidden text area when 'Reply' is clicked
+function showReplyInput(parentId) {
+    const el = document.getElementById(`reply-to-${parentId}`);
+    el.classList.toggle('hidden');
+}
+
+// Posts the reply to Supabase using the parent_id
+async function postReply(parentId) {
+    const input = document.getElementById(`input-${parentId}`);
+    if (!input.value.trim()) return;
+
+    const { error } = await sbClient.from('comments').insert([{ 
+        story_id: currentId, 
+        content: input.value,
+        parent_id: parentId 
+    }]);
+
+    if (error) {
+        console.error("Reply Error:", error);
+    } else {
+        input.value = "";
+        fetchComments(); // Refresh the list
+    }
+}
         }
 
-        async function fetchComments() {
-            const list = document.getElementById('comment-list');
-            const { data } = await sbClient.from('comments').select('*').eq('story_id', currentId).order('created_at', { ascending: false });
-            
-            list.innerHTML = data && data.length ? data.map(c => `
-                <div class="comment-item">
-                    <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">${new Date(c.created_at).toLocaleDateString()}</p>
-                    <p class="reading-font text-gray-300 text-sm leading-relaxed">${c.content}</p>
+async function fetchComments() {
+    const list = document.getElementById('comment-list');
+    const { data } = await sbClient.from('comments')
+        .select('*')
+        .eq('story_id', currentId)
+        .order('created_at', { ascending: true }); // Ascending helps nesting
+    
+    if (!data || data.length === 0) {
+        list.innerHTML = "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>No marginalia recorded.</p>";
+        return;
+    }
+
+    // Separate main comments from replies
+    const mainComments = data.filter(c => !c.parent_id);
+    const replies = data.filter(c => c.parent_id);
+
+    list.innerHTML = mainComments.map(c => {
+        const threadReplies = replies.filter(r => r.parent_id === c.id);
+        return `
+            <div class="comment-item">
+                <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">
+                    ${new Date(c.created_at).toLocaleDateString()}
+                </p>
+                <p class="reading-font text-gray-300 text-sm mb-3">${c.content}</p>
+                <button onclick="showReplyInput('${c.id}')" class="text-[8px] text-[#d4af37] uppercase tracking-widest hover:underline">Reply</button>
+                
+                <div class="ml-8 mt-6 border-l border-white/5 pl-6">
+                    ${threadReplies.map(r => `
+                        <div class="mb-4">
+                            <p class="text-[7px] text-gray-600 font-mono uppercase mb-1">${new Date(r.created_at).toLocaleDateString()}</p>
+                            <p class="reading-font text-gray-400 text-xs">${r.content}</p>
+                        </div>
+                    `).join('')}
+                    <div id="reply-to-${c.id}" class="hidden mt-4">
+                        <textarea id="input-${c.id}" class="w-full p-3 text-xs mb-2" rows="2" placeholder="Reply to this note..."></textarea>
+                        <button onclick="postReply('${c.id}')" class="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">Post Response</button>
+                    </div>
                 </div>
-            `).join('') : "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>No marginalia recorded.</p>";
-        }
+            </div>
+        `;
+    }).join('');
+}
 
         window.onscroll = () => {
             const scroll = document.documentElement.scrollTop;
