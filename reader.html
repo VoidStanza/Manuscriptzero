@@ -21,6 +21,27 @@
         textarea { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; resize: none; transition: 0.3s; }
         textarea:focus { border-color: #d4af37; outline: none; }
         .comment-item { border-left: 1px solid rgba(212, 175, 55, 0.2); padding-left: 1.5rem; margin-bottom: 3rem; }
+        /* Styling for the therapist's notes and the sun/soil quote */
+blockquote {
+    position: relative;
+    font-style: italic;
+}
+
+blockquote::before, blockquote::after {
+    content: "“";
+    position: absolute;
+    font-size: 4rem;
+    opacity: 0.1;
+    color: #d4af37;
+}
+
+blockquote::before { top: -20px; left: 10px; }
+blockquote::after { content: "”"; bottom: -40px; right: 10px; }
+
+.font-mono {
+    font-family: 'Courier New', monospace;
+    letter-spacing: -0.02em;
+}
     </style>
 </head>
 <body>
@@ -184,7 +205,41 @@
 </div>`
                 
 
-            }
+            },
+            {
+                  id: 5,
+                title: "Kintsugi",
+                synopsis: "A story of gold-filled cracks",
+                text: `<div class="reading-font text-gray-300">
+        <p class="mb-6">The bottle did not shatter loudly. It split with a dull, imperfect crack — like something already fractured simply admitting it.</p>
+        
+        <div class="border-l border-[#d4af37]/30 pl-6 my-8 italic text-gray-400 text-sm font-mono">
+            CASE FILE: 2026-AKR <br>
+            LOCATION: St. Jude’s Recovery Wing <br>
+            STATUS: Stitched and Monitored.
+        </div>
+
+        <p class="mb-6">Akira sat beneath white hospital lights, the steady beeping of the ECG machine measuring the <span class="monitor-gold">thin line between survival and surrender</span>. The world called it domestic violence. The report called it self-defense. The silence called it inheritance.</p>
+        
+        <p class="mb-6">“Start wherever it feels true,” the therapist said.</p>
+        
+        <p class="mb-6">Riverie exhaled. “It began in France,” she said. And memory did not drift — it walked in, fully dressed. French streets once held her laughter. Love did not arrive as thunder. It arrived as convenience. Softness became dependence. Dependence became correction.</p>
+
+        <blockquote class="border-y border-white/5 py-8 my-8 text-center text-[#d4af37] serif text-xl">
+            "I thought I was your sun. It turns out I was your soil."
+        </blockquote>
+
+        <p class="mb-6">That night Daichi returned from losing again. The shouting began without words. It arrived as volume. As force seeking surface. Riverie became that surface. But this time Akira did not remain doorway still.</p>
+        
+        <p class="mb-6">“I don’t remember deciding,” Akira said now in the therapist’s office. “I remember stopping.”</p>
+
+        <p class="mb-6">The room held that sentence carefully. Self-defence is clear in court. It is not clear in the body. Riverie reached for his hand. Not because he was fragile, but because he had been strong for too long.</p>
+        
+        <p class="glitch-red border-t border-white/5 pt-6 text-center tracking-widest uppercase text-xs">
+            Archive Note: The cycle of silence has been terminated.
+        </p>
+    </div>`
+},
     ];
 
         let currentId = null;
