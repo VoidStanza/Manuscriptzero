@@ -15,9 +15,8 @@
         
         #scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: #d4af37; z-index: 100; transition: width 0.1s; }
         
-        /* Highlight styles for Anamnesis and Empathodexterity */
+        /* Highlight styles for Anamnesis */
         .glitch-red { color: #ef4444; font-weight: bold; text-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
-        .monitor-green { color: #4ade80; font-weight: bold; text-shadow: 0 0 8px rgba(74, 222, 128, 0.4); }
 
         textarea { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; resize: none; transition: 0.3s; }
         textarea:focus { border-color: #d4af37; outline: none; }
@@ -50,7 +49,7 @@
             <div class="space-y-10">
                 <h3 class="serif text-2xl text-[#d4af37]">Marginalia</h3>
                 <textarea id="comment-input" class="w-full p-5 text-sm" rows="4" placeholder="Leave a trace in the archive..."></textarea>
-                <button onclick="postComment()" class="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition-all">Preserve Message</button>
+                <button onclick="postComment()" class="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition-all">Record in the Margin</button>
                 
                 <div id="comment-list" class="mt-16 pt-8">
                     </div>
@@ -87,13 +86,11 @@
     
     <p class="mb-6">As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”</p>
     
-    <div class="my-10 pl-8 border-l border-[#d4af37]/20 italic text-gray-400">
         <p>But somewhere between the fourth and fifth step, the past crept in.</p>
         <p class="mt-2">They found themselves drifting —</p>
         <p>Their legs in time with the music of the present,</p>
         <p>Their minds slipping back to old memories:</p>
         <p>Shared camping trips, whispered jokes around a fire, a clumsy first swordfight, the smell of rain on travel cloaks.</p>
-    </div>
 
     <p class="mb-6">The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them.</p>
     
@@ -172,7 +169,7 @@
 
     <p class="mb-6">Two decades later, the golden sun has been replaced by the sterile, unwavering glare of overhead surgical lamps. The chaotic symphony of the marketplace, the honking rickshaws and shouting vendors has faded into a heavy, clinical silence.</p>
     
-    <p class="mb-6">Meena looks down at her own hands. They are no longer stained with fruit and chilli powder; instead, they are encased in pale, sterile latex. The rhythmic clinking of glass bangles has been traded for the steady, digital pulse of a heart monitor, a <span class="monitor-green">neon green line</span> marking the boundary between life and the unknown. The newspaper-lined crate she once leaned against is now a stainless-steel table covered in a sterile blue drape.</p>
+    <p class="mb-6">Meena looks down at her own hands. They are no longer stained with fruit and chilli powder; instead, they are encased in pale, sterile latex. The rhythmic clinking of glass bangles has been traded for the steady, digital pulse of a heart monitor, a neon green line marking the boundary between life and the unknown. The newspaper-lined crate she once leaned against is now a stainless-steel table covered in a sterile blue drape.</p>
 
     <p class="mb-6">She picks up the scalpel. It is significantly smaller and lighter than her mother’s worn paring knife, but as she touches the silver edge to the patient’s skin, she feels that same familiar weight of responsibility.</p>
     
