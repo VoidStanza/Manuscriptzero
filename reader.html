@@ -11,39 +11,34 @@
         
         body { background: #0a0a0b; color: #e2e2e2; font-family: 'Montserrat', sans-serif; margin: 0; }
         .serif { font-family: 'Playfair Display', serif; }
-        .reading-font { font-family: 'Lora', serif; line-height: 1.9; }
+        .reading-font { font-family: 'Lora', serif; line-height: 1.9; transition: font-size 0.2s ease; }
         
         #scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: #d4af37; z-index: 100; transition: width 0.1s; }
         
-        /* Highlight styles for Anamnesis */
         .glitch-red { color: #ef4444; font-weight: bold; text-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
+        .monitor-gold { color: #d4af37; font-weight: 600; text-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
 
         textarea { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; resize: none; transition: 0.3s; }
         textarea:focus { border-color: #d4af37; outline: none; }
-        .comment-item { border-left: 1px solid rgba(212, 175, 55, 0.2); padding-left: 1.5rem; margin-bottom: 2.5rem; }
-        .comment-item { 
-    border-left: 1px solid rgba(212, 175, 55, 0.2); 
-    padding-left: 1.5rem; 
-    margin-bottom: 3rem; 
-}
+        .comment-item { border-left: 1px solid rgba(212, 175, 55, 0.2); padding-left: 1.5rem; margin-bottom: 3rem; }
     </style>
 </head>
 <body>
 
     <div id="scroll-progress" style="width: 0%"></div>
 
-<nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/90 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
-    <h2 class="serif text-2xl text-[#d4af37] cursor-pointer" onclick="location.href='gallery.html'">V.</h2>
-    
-    <div class="flex items-center space-x-6">
-        <div class="flex items-center border border-white/10 rounded-full px-3 py-1 bg-black/50">
-            <button onclick="adjustFont(-2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2 transition-colors">A-</button>
-            <div class="w-[1px] h-3 bg-white/10 mx-1"></div>
-            <button onclick="adjustFont(2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2 transition-colors">A+</button>
+    <nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/90 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
+        <h2 class="serif text-2xl text-[#d4af37] cursor-pointer" onclick="location.href='gallery.html'">V.</h2>
+        
+        <div class="flex items-center space-x-6">
+            <div class="flex items-center border border-white/10 rounded-full px-3 py-1 bg-black/50">
+                <button onclick="adjustFont(-2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2 transition-colors">A-</button>
+                <div class="w-[1px] h-3 bg-white/10 mx-1"></div>
+                <button onclick="adjustFont(2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2 transition-colors">A+</button>
+            </div>
+            <span class="text-[9px] uppercase tracking-[0.4em] text-gray-700 hidden md:block">Record Decrypted</span>
         </div>
-        <span class="text-[9px] uppercase tracking-[0.4em] text-gray-700 hidden md:block">Record Decrypted</span>
-    </div>
-</nav>
+    </nav>
 
     <main class="max-w-2xl mx-auto px-6 pt-40 pb-24">
         <header class="mb-20 text-center">
@@ -64,8 +59,7 @@
                 <textarea id="comment-input" class="w-full p-5 text-sm" rows="4" placeholder="Leave a trace in the archive..."></textarea>
                 <button onclick="postComment()" class="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition-all">Record in the Margin</button>
                 
-                <div id="comment-list" class="mt-16 pt-8">
-                    </div>
+                <div id="comment-list" class="mt-16 pt-8"></div>
             </div>
         </section>
 
@@ -73,7 +67,6 @@
             <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-[8px] uppercase tracking-[0.5em] text-gray-800 hover:text-[#d4af37]">Top</button>
         </footer>
     </main>
-
     <script>
         const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
         const stories = [
@@ -192,11 +185,13 @@
                 
 
             }
-      ];
+    ];
 
         let currentId = null;
+        let currentFontSize = 18;
 
-        function init() {
+        // 1. INITIALIZE PAGE
+        async function init() {
             const params = new URLSearchParams(window.location.search);
             currentId = parseInt(params.get('id'));
             const story = stories.find(s => s.id === currentId);
@@ -205,156 +200,122 @@
                 document.getElementById('title').innerText = story.title;
                 document.getElementById('synopsis').innerText = story.synopsis;
                 document.getElementById('content').innerHTML = story.text;
+                
+                // Check localStorage for Likes
+                if (localStorage.getItem(`liked_story_${currentId}`)) {
+                    document.getElementById('like-btn').innerText = '♥';
+                    document.getElementById('like-btn').classList.add('opacity-50', 'pointer-events-none');
+                }
+
                 fetchMetadata();
                 fetchComments();
             }
         }
 
+        // 2. METADATA & LIKES
         async function fetchMetadata() {
             const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', currentId).maybeSingle();
             if (data) document.getElementById('like-count').innerText = `${data.likes} LIKES`;
         }
 
         async function handleLike() {
+            if (localStorage.getItem(`liked_story_${currentId}`)) return;
+
             const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', currentId).maybeSingle();
             const newCount = (data ? data.likes : 0) + 1;
-            await sbClient.from('stories_meta').upsert({ story_id: currentId, likes: newCount });
-            document.getElementById('like-count').innerText = `${newCount} LIKES`;
-            document.getElementById('like-btn').innerText = '♥';
-            // Update this inside your init() function
-async function init() {
-    const params = new URLSearchParams(window.location.search);
-    currentId = parseInt(params.get('id'));
-    const story = stories.find(s => s.id === currentId);
-
-    if (story) {
-        document.getElementById('title').innerText = story.title;
-        document.getElementById('synopsis').innerText = story.synopsis;
-        document.getElementById('content').innerHTML = story.text;
-        
-        // CHECK IF ALREADY LIKED IN THIS BROWSER
-        if (localStorage.getItem(`liked_story_${currentId}`)) {
-            document.getElementById('like-btn').innerText = '♥';
-            document.getElementById('like-btn').classList.add('opacity-50', 'pointer-events-none');
+            
+            const { error } = await sbClient.from('stories_meta').upsert({ story_id: currentId, likes: newCount }, { onConflict: 'story_id' });
+            
+            if (!error) {
+                localStorage.setItem(`liked_story_${currentId}`, true);
+                document.getElementById('like-count').innerText = `${newCount} LIKES`;
+                document.getElementById('like-btn').innerText = '♥';
+                document.getElementById('like-btn').classList.add('opacity-50', 'pointer-events-none');
+            }
         }
 
-        fetchMetadata();
-        fetchComments();
-    }
-}
-
-// Update your handleLike() function
-async function handleLike() {
-    // Prevent multiple likes if already in localStorage
-    if (localStorage.getItem(`liked_story_${currentId}`)) return;
-
-    const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', currentId).maybeSingle();
-    const newCount = (data ? data.likes : 0) + 1;
-    
-    const { error } = await sbClient.from('stories_meta').upsert({ story_id: currentId, likes: newCount });
-    
-    if (!error) {
-        // SAVE TO BROWSER MEMORY
-        localStorage.setItem(`liked_story_${currentId}`, true);
-        
-        document.getElementById('like-count').innerText = `${newCount} LIKES`;
-        document.getElementById('like-btn').innerText = '♥';
-        document.getElementById('like-btn').classList.add('opacity-50', 'pointer-events-none');
-    }
-}
-        }
-
+        // 3. COMMENTS & REPLIES
         async function postComment() {
             const input = document.getElementById('comment-input');
             if (!input.value.trim()) return;
             await sbClient.from('comments').insert([{ story_id: currentId, content: input.value }]);
             input.value = "";
             fetchComments();
-            // Shows the hidden text area when 'Reply' is clicked
-function showReplyInput(parentId) {
-    const el = document.getElementById(`reply-to-${parentId}`);
-    el.classList.toggle('hidden');
-}
-
-// Posts the reply to Supabase using the parent_id
-async function postReply(parentId) {
-    const input = document.getElementById(`input-${parentId}`);
-    if (!input.value.trim()) return;
-
-    const { error } = await sbClient.from('comments').insert([{ 
-        story_id: currentId, 
-        content: input.value,
-        parent_id: parentId 
-    }]);
-
-    if (error) {
-        console.error("Reply Error:", error);
-    } else {
-        input.value = "";
-        fetchComments(); // Refresh the list
-    }
-}
         }
 
-async function fetchComments() {
-    const list = document.getElementById('comment-list');
-    const { data } = await sbClient.from('comments')
-        .select('*')
-        .eq('story_id', currentId)
-        .order('created_at', { ascending: true }); // Ascending helps nesting
-    
-    if (!data || data.length === 0) {
-        list.innerHTML = "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>No marginalia recorded.</p>";
-        return;
-    }
+        function showReplyInput(parentId) {
+            const el = document.getElementById(`reply-to-${parentId}`);
+            el.classList.toggle('hidden');
+        }
 
-    // Separate main comments from replies
-    const mainComments = data.filter(c => !c.parent_id);
-    const replies = data.filter(c => c.parent_id);
+        async function postReply(parentId) {
+            const input = document.getElementById(`input-${parentId}`);
+            if (!input.value.trim()) return;
 
-    list.innerHTML = mainComments.map(c => {
-        const threadReplies = replies.filter(r => r.parent_id === c.id);
-        return `
-            <div class="comment-item">
-                <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">
-                    ${new Date(c.created_at).toLocaleDateString()}
-                </p>
-                <p class="reading-font text-gray-300 text-sm mb-3">${c.content}</p>
-                <button onclick="showReplyInput('${c.id}')" class="text-[8px] text-[#d4af37] uppercase tracking-widest hover:underline">Reply</button>
-                
-                <div class="ml-8 mt-6 border-l border-white/5 pl-6">
-                    ${threadReplies.map(r => `
-                        <div class="mb-4">
-                            <p class="text-[7px] text-gray-600 font-mono uppercase mb-1">${new Date(r.created_at).toLocaleDateString()}</p>
-                            <p class="reading-font text-gray-400 text-xs">${r.content}</p>
+            const { error } = await sbClient.from('comments').insert([{ 
+                story_id: currentId, 
+                content: input.value,
+                parent_id: parentId 
+            }]);
+
+            if (!error) {
+                input.value = "";
+                fetchComments();
+            }
+        }
+
+        async function fetchComments() {
+            const list = document.getElementById('comment-list');
+            const { data } = await sbClient.from('comments').select('*').eq('story_id', currentId).order('created_at', { ascending: true });
+            
+            if (!data || data.length === 0) {
+                list.innerHTML = "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>No marginalia recorded.</p>";
+                return;
+            }
+
+            const mainComments = data.filter(c => !c.parent_id);
+            const replies = data.filter(c => c.parent_id);
+
+            list.innerHTML = mainComments.map(c => {
+                const threadReplies = replies.filter(r => r.parent_id === c.id);
+                return `
+                    <div class="comment-item">
+                        <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">${new Date(c.created_at).toLocaleDateString()}</p>
+                        <p class="reading-font text-gray-300 text-sm mb-3">${c.content}</p>
+                        <button onclick="showReplyInput('${c.id}')" class="text-[8px] text-[#d4af37] uppercase tracking-widest hover:underline">Reply</button>
+                        
+                        <div class="ml-8 mt-6 border-l border-white/5 pl-6">
+                            ${threadReplies.map(r => `
+                                <div class="mb-4">
+                                    <p class="text-[7px] text-gray-600 font-mono uppercase mb-1">${new Date(r.created_at).toLocaleDateString()}</p>
+                                    <p class="reading-font text-gray-400 text-xs">${r.content}</p>
+                                </div>
+                            `).join('')}
+                            <div id="reply-to-${c.id}" class="hidden mt-4">
+                                <textarea id="input-${c.id}" class="w-full p-3 text-xs mb-2" rows="2" placeholder="Reply..."></textarea>
+                                <button onclick="postReply('${c.id}')" class="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">Post Response</button>
+                            </div>
                         </div>
-                    `).join('')}
-                    <div id="reply-to-${c.id}" class="hidden mt-4">
-                        <textarea id="input-${c.id}" class="w-full p-3 text-xs mb-2" rows="2" placeholder="Reply to this note..."></textarea>
-                        <button onclick="postReply('${c.id}')" class="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">Post Response</button>
                     </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
+                `;
+            }).join('');
+        }
+
+        // 4. UTILITIES
+        function adjustFont(delta) {
+            const content = document.getElementById('content');
+            if ((delta > 0 && currentFontSize < 36) || (delta < 0 && currentFontSize > 12)) {
+                currentFontSize += delta;
+                content.style.fontSize = currentFontSize + 'px';
+            }
+        }
 
         window.onscroll = () => {
             const scroll = document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             document.getElementById('scroll-progress').style.width = (scroll / height * 100) + "%";
         };
-// Add this near the bottom of your <script>
-let currentFontSize = 18; // Matches your 'text-lg' default
 
-function adjustFont(delta) {
-    const content = document.getElementById('content');
-    // Limits font between 12px and 36px
-    if ((delta > 0 && currentFontSize < 36) || (delta < 0 && currentFontSize > 12)) {
-        currentFontSize += delta;
-        content.style.fontSize = currentFontSize + 'px';
-    }
-};
         window.onload = init;
     </script>
 </body>
