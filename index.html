@@ -39,6 +39,16 @@
         .unlock-glow { 
             animation: gearGlow 0.8s ease-out forwards; 
         }
+        .text-unlock-glow {
+    animation: textGlow 0.8s ease-out forwards;
+    color: #d4af37 !important; /* Ensures it stays gold */
+}
+
+@keyframes textGlow {
+    0% { text-shadow: 0 0 0px rgba(212, 175, 55, 0); }
+    100% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.8), 0 0 40px rgba(212, 175, 55, 0.4); transform: scale(1.05); }
+}
+        
 
         @keyframes gearGlow {
             0% { filter: brightness(1) drop-shadow(0 0 15px #d4af37); }
@@ -71,10 +81,6 @@
         </svg>
     </div>
 
-    <div class="mt-12 text-center">
-        <h3 class="serif text-[#d4af37] tracking-[0.8em] text-[12px] uppercase opacity-80">
-            Zero Manuscript
-        </h3>
         <div id="status-text" class="mt-4 text-gray-700 font-mono text-[9px] tracking-[0.2em] uppercase">
             Status: Secured
         </div>
@@ -98,7 +104,7 @@
             
             if (currentRotation === 180) {
                 statusText.innerText = "STATUS: HALF-LOCKED";
-                progressHint.innerText = "One Final Turn";
+                progressHint.innerText = "One Final Step";
             }
 
             if (currentRotation >= unlockThreshold) {
@@ -115,7 +121,7 @@
                     setTimeout(() => {
                         window.location.href = 'gallery.html'; // Direct to your gallery page
                     }, 800);
-                }, 1000);
+                }, 1500);
             }
         }
     </script>
