@@ -42,16 +42,15 @@
     <nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/95 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
         <div class="flex flex-col">
             <h2 class="serif text-2xl text-[#d4af37] cursor-pointer" onclick="location.href='gallery.html'">V.</h2>
-            <button onclick="goToLatest()" class="text-[7px] uppercase tracking-[0.3em] text-gray-600 hover:text-[#d4af37] mt-1 text-left transition-colors">New Artifact</button>
-        </div>
+    
         
         <div class="flex items-center space-x-6">
             <div class="flex items-center border border-white/10 rounded-full px-3 py-1 bg-black/50">
                 <button onclick="adjustFont(-2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2">A-</button>
                 <div class="w-[1px] h-3 bg-white/10 mx-1"></div>
-                <button onclick="adjustFont(2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2">A+</button>
+                <button onclick="adjustFont(2)" class="text-gray-200 hover:text-[#d4af37] text-xs px-2">A+</button>
             </div>
-            <span class="text-[9px] uppercase tracking-[0.4em] text-gray-700 hidden md:block">Record Decrypted</span>
+            <span class="text-[9px] uppercase tracking-[0.4em] text-gray-300 hidden md:block">Record Decrypted</span>
         </div>
     </nav>
 
@@ -110,44 +109,47 @@
             } else {
                 document.getElementById('content').innerText = "Record not found.";
             }
-        }
+       
 
-        function goToLatest() {
-            const latestId = Math.max(...stories.map(s => s.id));
-            location.href = `reader.html?id=${latestId}`;
-        }
+       async function fetchMetadata() {
+    const docRef = db.collection("stories_meta").doc(currentId.toString());
+    const doc = await docRef.get();
+    const btn = document.getElementById('like-btn');
+    
+    // 1. Correctly set the count (default to 0 if doc doesn't exist)
+    const currentLikes = doc.exists ? (doc.data().likes || 0) : 0;
+    document.getElementById('like-count').innerText = `${currentLikes} LIKES`;
 
-        async function fetchMetadata() {
-            const docRef = db.collection("stories_meta").doc(currentId.toString());
-            const doc = await docRef.get();
-            const btn = document.getElementById('like-btn');
-            
-            if (doc.exists) {
-                document.getElementById('like-count').innerText = `${doc.data().likes || 0} LIKES`;
-            }
+    // 2. ONLY glow if the local storage says we liked it
+    if (localStorage.getItem(`liked_story_${currentId}`) === "true") {
+        btn.innerText = '♥';
+        btn.classList.add('active-shine');
+    } else {
+        btn.innerText = '♡';
+        btn.classList.remove('active-shine');
+    }
+}
 
-            if (localStorage.getItem(`liked_story_${currentId}`)) {
-                btn.innerText = '♥';
-                btn.classList.add('active-shine');
-            } else {
-                btn.innerText = '♡';
-                btn.classList.remove('active-shine');
-            }
-        }
+async function handleLike() {
+    const docRef = db.collection("stories_meta").doc(currentId.toString());
+    const hasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
+    const btn = document.getElementById('like-btn');
 
-        async function handleLike() {
-            const docRef = db.collection("stories_meta").doc(currentId.toString());
-            const hasLiked = localStorage.getItem(`liked_story_${currentId}`);
-            
-            if (hasLiked) {
-                await docRef.set({ likes: firebase.firestore.FieldValue.increment(-1) }, { merge: true });
-                localStorage.removeItem(`liked_story_${currentId}`);
-            } else {
-                await docRef.set({ likes: firebase.firestore.FieldValue.increment(1) }, { merge: true });
-                localStorage.setItem(`liked_story_${currentId}`, true);
-            }
-            fetchMetadata();
-        }
+    if (hasLiked) {
+        // REMOVE LIKE
+        await docRef.set({ likes: firebase.firestore.FieldValue.increment(-1) }, { merge: true });
+        localStorage.setItem(`liked_story_${currentId}`, "false"); // Set to false string
+        btn.classList.remove('active-shine');
+        btn.innerText = '♡';
+    } else {
+        // ADD LIKE
+        await docRef.set({ likes: firebase.firestore.FieldValue.increment(1) }, { merge: true });
+        localStorage.setItem(`liked_story_${currentId}`, "true"); // Set to true string
+        btn.classList.add('active-shine');
+        btn.innerText = '♥';
+    }
+    fetchMetadata();
+}
 
         async function postComment() {
             const input = document.getElementById('comment-input');
