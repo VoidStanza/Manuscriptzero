@@ -116,22 +116,58 @@
             document.getElementById('content').innerText = "Record not found.";
         }
     } // <--- THIS WAS MISSING: Closes init()
+async function fetchMetadata() {
+    if (!currentId) return;
+    const docRef = db.collection("stories_meta").doc(currentId.toString());
+    const doc = await docRef.get();
+    const btn = document.getElementById('like-btn');
+    
+    // 1. Get current likes or default to 0
+    const currentLikes = doc.exists ? (doc.data().likes || 0) : 0;
+    document.getElementById('like-count').innerText = `${currentLikes} LIKES`;
 
-    async function fetchMetadata() {
-        const docRef = db.collection("stories_meta").doc(currentId.toString());
-        const doc = await docRef.get();
-        const btn = document.getElementById('like-btn');
+    // 2. STRICT CHECK: Only glow if localStorage explicitly says "true"
+    const userHasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
+
+    if (userHasLiked) {
+        btn.innerText = '♥';
+        btn.classList.add('active-shine');
+    } else {
+        btn.innerText = '♡';
+        btn.classList.remove('active-shine');
+    }
+}
+
+async function handleLike() {
+    const docRef = db.collection("stories_meta").doc(currentId.toString());
+    const btn = document.getElementById('like-btn');
+    
+    // Check current state
+    const hasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
+
+    if (hasLiked) {
+        // ACTION: UNLIKE (Subtract 1)
+        await docRef.set({ 
+            likes: firebase.firestore.FieldValue.increment(-1) 
+        }, { merge: true });
         
-        const currentLikes = doc.exists ? (doc.data().likes || 0) : 0;
-        document.getElementById('like-count').innerText = `${currentLikes} LIKES`;
-
-        if (localStorage.getItem(`liked_story_${currentId}`) === "true") {
-            btn.innerText = '♥';
-            btn.classList.add('active-shine');
-        } else {
-            btn.innerText = '♡';
-            btn.classList.remove('active-shine');
-        }
+        localStorage.setItem(`liked_story_${currentId}`, "false");
+        btn.classList.remove('active-shine');
+        btn.innerText = '♡';
+    } else {
+        // ACTION: LIKE (Add 1)
+        await docRef.set({ 
+            likes: firebase.firestore.FieldValue.increment(1) 
+        }, { merge: true });
+        
+        localStorage.setItem(`liked_story_${currentId}`, "true");
+        btn.classList.add('active-shine');
+        btn.innerText = '♥';
+    }
+    
+    // Refresh the count from the server to ensure accuracy
+    fetchMetadata();
+}
     }
 
     async function handleLike() {
