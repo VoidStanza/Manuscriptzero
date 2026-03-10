@@ -5,115 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE VAULT | GALLERY</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="stories.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital@0;1&display=swap');
         
-        body { 
-            background: #0a0a0b; 
-            color: #e2e2e2; 
-            font-family: 'Lora', serif; 
-        }
-        
+        body { background: #0a0a0b; color: #e2e2e2; font-family: 'Lora', serif; }
         .card { 
             border: 1px solid rgba(255,255,255,0.05); 
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
             overflow: hidden; 
             background: #111;
         }
-        
         .card:hover {
             border-color: rgba(212, 175, 55, 0.3);
             transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        
-        .card:hover img { 
-            filter: grayscale(0%); 
-            transform: scale(1.05); 
-        }
-        
-        img { 
-            filter: grayscale(100%); 
-            transition: all 0.8s ease; 
-        }
-
+        .card:hover img { filter: grayscale(0%); transform: scale(1.05); }
+        img { filter: grayscale(100%); transition: all 0.8s ease; }
         .serif { font-family: 'Playfair Display', serif; }
     </style>
 </head>
 <body class="p-8">
-   <nav class="mb-20 max-w-6xl mx-auto">
-    <h1 class="serif text-[#d4af37] text-3xl tracking-tighter cursor-pointer" onclick="location.href='index.html'">V.</h1>
-       <button onclick="goToLatest()" class="text-[9px] uppercase tracking-[0.4em] text-[#d4af37] border border-[#d4af37]/30 px-4 py-2 hover:bg-[#d4af37] hover:text-black transition-all">
-    Access Latest Artifact
-</button>
 
-<script src="stories.js"></script>
-<script>
-    function goToLatest() {
-        const latestId = Math.max(...stories.map(s => s.id));
-        window.location.href = `reader.html?id=${latestId}`;
-    }
-</script>
-</nav>
+    <nav class="mb-20 max-w-6xl mx-auto flex justify-between items-center">
+        <h1 class="serif text-[#d4af37] text-3xl tracking-tighter cursor-pointer" onclick="location.href='index.html'">V.</h1>
+        
+        <button onclick="goToLatest()" class="text-[9px] uppercase tracking-[0.4em] text-[#d4af37] border border-[#d4af37]/30 px-6 py-2 hover:bg-[#d4af37] hover:text-black transition-all">
+            Access Latest Artifact
+        </button>
+    </nav>
+
     <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
         </div>
 
     <script>
-        const stories = [
-            { 
-                id: 1, 
-                title: "Horizon", 
-                synopsis: "The perfect son is a masterpiece of a lie.", 
-                cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg" 
-            },
-            { 
-                id: 2, 
-                title: "The Dance of the 2 Empires", 
-                synopsis: "Two crowns, one dance, and a shared history.", 
-                cover: "https://i.pinimg.com/736x/b5/34/43/b53443eaeed068570e1084f73bebeaf5.jpg" 
-            },
-            { 
-                id: 3, 
-                title: "Anamnesis", 
-                synopsis: "The archives are hungry.", 
-                cover: "https://i.pinimg.com/1200x/dc/0d/c1/dc0dc15c13dcfe322b098796162b2a39.jpg" 
-            },
-            { 
-                id: 4, 
-                title: "Empathodexterity", 
-                synopsis: "Silver edges, different worlds: the same inherited precision", 
-                cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" 
-            },
-             { 
-                id: 5, 
-                title: "Kintsugi", 
-                synopsis: "A story of gold-filled cracks", 
-                cover: "https://i.pinimg.com/736x/61/90/b9/6190b9bff1fae3657da043473a061f13.jpg" 
-            },
-            { 
-                id: 6, 
-                title: "Calliope of Wyvern Reef", 
-                synopsis: "A voice of ancient power", 
-                cover: "https://i.pinimg.com/236x/4c/4d/e2/4c4de2586ed6d326b654fdf522b92477.jpg" 
-        }
-        ];
+        // Use the stories array from stories.js
+        const renderGrid = () => {
+            const gridElement = document.getElementById('grid');
+            
+            // Safety check: if stories.js isn't loaded, don't crash
+            if (typeof stories === 'undefined') {
+                gridElement.innerHTML = "<p class='text-red-500'>Error: stories.js not found.</p>";
+                return;
+            }
 
-       const renderGrid = () => {
-    const gridElement = document.getElementById('grid');
-    gridElement.innerHTML = stories.map(s => `
-        <div onclick="location.href='reader.html?id=${s.id}'" class="card cursor-pointer group">
-            <div class="aspect-[2/3] w-full overflow-hidden">
-                <img src="${s.cover}" alt="${s.title}" class="w-full h-full object-cover">
-            </div>
-            <div class="p-6">
-                <h3 class="serif text-lg text-[#d4af37] mb-2 group-hover:text-white transition-colors">${s.title}</h3>
-                <p class="text-xs text-gray-500 leading-relaxed italic line-clamp-2">${s.synopsis}</p>
-                <div class="mt-4 pt-4 border-t border-white/5 flex justify-end items-center">
-                    <span class="text-[8px] uppercase tracking-widest text-[#d4af37] opacity-0 group-hover:opacity-100 transition-opacity">Read Record →</span>
+            gridElement.innerHTML = stories.map(s => `
+                <div onclick="location.href='reader.html?id=${s.id}'" class="card cursor-pointer group">
+                    <div class="aspect-[2/3] w-full overflow-hidden">
+                        <img src="${s.cover}" alt="${s.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                             <h3 class="serif text-lg text-[#d4af37] group-hover:text-white transition-colors">${s.title}</h3>
+                             <span class="text-[8px] text-gray-600 font-mono">ID: ${s.id}</span>
+                        </div>
+                        <p class="text-xs text-gray-500 leading-relaxed italic line-clamp-2">${s.synopsis}</p>
+                        <div class="mt-4 pt-4 border-t border-white/5 flex justify-end items-center">
+                            <span class="text-[8px] uppercase tracking-widest text-[#d4af37] opacity-0 group-hover:opacity-100 transition-opacity">Read Record →</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    `).join('');
-};
+            `).join('');
+        };
+
+        function goToLatest() {
+            if (typeof stories !== 'undefined' && stories.length > 0) {
+                const latestId = Math.max(...stories.map(s => s.id));
+                window.location.href = `reader.html?id=${latestId}`;
+            }
+        }
 
         renderGrid();
     </script>
