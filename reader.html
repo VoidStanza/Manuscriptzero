@@ -136,39 +136,43 @@ async function fetchMetadata() {
         btn.innerText = '♡';
         btn.classList.remove('active-shine');
     }
-}
 
 async function handleLike() {
     const docRef = db.collection("stories_meta").doc(currentId.toString());
     const btn = document.getElementById('like-btn');
     
-    // Check current state
+    // Explicitly check for the string "true"
     const hasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
 
     if (hasLiked) {
-        // ACTION: UNLIKE (Subtract 1)
-        await docRef.set({ 
-            likes: firebase.firestore.FieldValue.increment(-1) 
-        }, { merge: true });
+        // UNLIKE ACTION
+        const doc = await docRef.get();
+        let currentLikes = doc.exists ? (doc.data().likes || 0) : 0;
         
+        // Prevent going into negatives
+        const newCount = Math.max(0, currentLikes - 1);
+        
+        await docRef.set({ likes: newCount }, { merge: true });
         localStorage.setItem(`liked_story_${currentId}`, "false");
+        
         btn.classList.remove('active-shine');
         btn.innerText = '♡';
     } else {
-        // ACTION: LIKE (Add 1)
+        // LIKE ACTION
         await docRef.set({ 
             likes: firebase.firestore.FieldValue.increment(1) 
         }, { merge: true });
         
         localStorage.setItem(`liked_story_${currentId}`, "true");
+        
         btn.classList.add('active-shine');
         btn.innerText = '♥';
     }
     
-    // Refresh the count from the server to ensure accuracy
+    // Immediately refresh the display
     fetchMetadata();
 }
-    }
+        
 
     async function handleLike() {
         const docRef = db.collection("stories_meta").doc(currentId.toString());
