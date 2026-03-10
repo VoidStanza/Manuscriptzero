@@ -79,120 +79,122 @@
     </main>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCFuBka3dQmAl-iasBdjDW_qVNITrKqkaw",
-            authDomain: "vault-ff944.firebaseapp.com",
-            projectId: "vault-ff944",
-            storageBucket: "vault-ff944.firebasestorage.app",
-            messagingSenderId: "473879346291",
-            appId: "1:473879346291:web:29a57ad2b5fd98f3b8fe06",
-            measurementId: "G-3L8ZJP58R3"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyCFuBka3dQmAl-iasBdjDW_qVNITrKqkaw",
+        authDomain: "vault-ff944.firebaseapp.com",
+        projectId: "vault-ff944",
+        storageBucket: "vault-ff944.firebasestorage.app",
+        messagingSenderId: "473879346291",
+        appId: "1:473879346291:web:29a57ad2b5fd98f3b8fe06",
+        measurementId: "G-3L8ZJP58R3"
+    };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        let currentId = null;
-        let currentFontSize = 18;
+    let currentId = null;
+    let currentFontSize = 18;
 
-        async function init() {
-            const params = new URLSearchParams(window.location.search);
-            currentId = parseInt(params.get('id'));
-            
-            const story = stories.find(s => s.id === currentId);
-            if (story) {
-                document.getElementById('title').innerText = story.title;
-                document.getElementById('synopsis').innerText = story.synopsis;
-                document.getElementById('content').innerHTML = story.text;
-                fetchMetadata();
-                fetchComments();
-            } else {
-                document.getElementById('content').innerText = "Record not found.";
-            }
-       
+    async function init() {
+        const params = new URLSearchParams(window.location.search);
+        currentId = parseInt(params.get('id'));
+        
+        // Ensure stories is loaded from stories.js
+        if (typeof stories === 'undefined') {
+            document.getElementById('content').innerText = "Database connection error.";
+            return;
+        }
 
-       async function fetchMetadata() {
-    const docRef = db.collection("stories_meta").doc(currentId.toString());
-    const doc = await docRef.get();
-    const btn = document.getElementById('like-btn');
-    
-    // 1. Correctly set the count (default to 0 if doc doesn't exist)
-    const currentLikes = doc.exists ? (doc.data().likes || 0) : 0;
-    document.getElementById('like-count').innerText = `${currentLikes} LIKES`;
-
-    // 2. ONLY glow if the local storage says we liked it
-    if (localStorage.getItem(`liked_story_${currentId}`) === "true") {
-        btn.innerText = '♥';
-        btn.classList.add('active-shine');
-    } else {
-        btn.innerText = '♡';
-        btn.classList.remove('active-shine');
-    }
-}
-
-async function handleLike() {
-    const docRef = db.collection("stories_meta").doc(currentId.toString());
-    const hasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
-    const btn = document.getElementById('like-btn');
-
-    if (hasLiked) {
-        // REMOVE LIKE
-        await docRef.set({ likes: firebase.firestore.FieldValue.increment(-1) }, { merge: true });
-        localStorage.setItem(`liked_story_${currentId}`, "false"); // Set to false string
-        btn.classList.remove('active-shine');
-        btn.innerText = '♡';
-    } else {
-        // ADD LIKE
-        await docRef.set({ likes: firebase.firestore.FieldValue.increment(1) }, { merge: true });
-        localStorage.setItem(`liked_story_${currentId}`, "true"); // Set to true string
-        btn.classList.add('active-shine');
-        btn.innerText = '♥';
-    }
-    fetchMetadata();
-}
-
-        async function postComment() {
-            const input = document.getElementById('comment-input');
-            if (!input.value.trim()) return;
-            await db.collection("comments").add({
-                story_id: currentId,
-                content: input.value,
-                created_at: firebase.firestore.Timestamp.now()
-            });
-            input.value = "";
+        const story = stories.find(s => s.id === currentId);
+        if (story) {
+            document.getElementById('title').innerText = story.title;
+            document.getElementById('synopsis').innerText = story.synopsis;
+            document.getElementById('content').innerHTML = story.text;
+            fetchMetadata();
             fetchComments();
+        } else {
+            document.getElementById('content').innerText = "Record not found.";
         }
+    } // <--- THIS WAS MISSING: Closes init()
 
-        async function fetchComments() {
-            const list = document.getElementById('comment-list');
-            const snapshot = await db.collection("comments")
-                .where("story_id", "==", currentId)
-                .get();
+    async function fetchMetadata() {
+        const docRef = db.collection("stories_meta").doc(currentId.toString());
+        const doc = await docRef.get();
+        const btn = document.getElementById('like-btn');
+        
+        const currentLikes = doc.exists ? (doc.data().likes || 0) : 0;
+        document.getElementById('like-count').innerText = `${currentLikes} LIKES`;
 
-            let data = [];
-            snapshot.forEach(doc => data.push(doc.data()));
-            data.sort((a,b) => b.created_at - a.created_at);
-
-            list.innerHTML = data.length ? data.map(c => `
-                <div class="comment-item">
-                    <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">${c.created_at?.toDate().toLocaleDateString() || "RECENT"}</p>
-                    <p class="reading-font text-gray-300 text-sm">${c.content}</p>
-                </div>
-            `).join('') : "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>Empty archives.</p>";
+        if (localStorage.getItem(`liked_story_${currentId}`) === "true") {
+            btn.innerText = '♥';
+            btn.classList.add('active-shine');
+        } else {
+            btn.innerText = '♡';
+            btn.classList.remove('active-shine');
         }
+    }
 
-        function adjustFont(delta) {
-            currentFontSize = Math.min(Math.max(currentFontSize + delta, 12), 32);
-            document.getElementById('content').style.fontSize = `${currentFontSize}px`;
+    async function handleLike() {
+        const docRef = db.collection("stories_meta").doc(currentId.toString());
+        const hasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
+        const btn = document.getElementById('like-btn');
+
+        if (hasLiked) {
+            await docRef.set({ likes: firebase.firestore.FieldValue.increment(-1) }, { merge: true });
+            localStorage.setItem(`liked_story_${currentId}`, "false");
+            btn.classList.remove('active-shine');
+            btn.innerText = '♡';
+        } else {
+            await docRef.set({ likes: firebase.firestore.FieldValue.increment(1) }, { merge: true });
+            localStorage.setItem(`liked_story_${currentId}`, "true");
+            btn.classList.add('active-shine');
+            btn.innerText = '♥';
         }
+        fetchMetadata();
+    }
 
-        window.onscroll = () => {
-            const winScroll = document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            document.getElementById("scroll-progress").style.width = (winScroll / height * 100) + "%";
-        };
+    async function postComment() {
+        const input = document.getElementById('comment-input');
+        if (!input.value.trim()) return;
+        await db.collection("comments").add({
+            story_id: currentId,
+            content: input.value,
+            created_at: firebase.firestore.Timestamp.now()
+        });
+        input.value = "";
+        fetchComments();
+    }
 
-        window.onload = init;
-    </script>
-</body>
-</html>
+    async function fetchComments() {
+        const list = document.getElementById('comment-list');
+        const snapshot = await db.collection("comments")
+            .where("story_id", "==", currentId)
+            .get();
+
+        let data = [];
+        snapshot.forEach(doc => data.push(doc.data()));
+        data.sort((a,b) => b.created_at - a.created_at);
+
+        list.innerHTML = data.length ? data.map(c => `
+            <div class="comment-item">
+                <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">
+                    ${c.created_at?.toDate().toLocaleDateString() || "RECENT"}
+                </p>
+                <p class="reading-font text-gray-300 text-sm">${c.content}</p>
+            </div>
+        `).join('') : "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>Empty archives.</p>";
+    }
+
+    function adjustFont(delta) {
+        currentFontSize = Math.min(Math.max(currentFontSize + delta, 12), 32);
+        document.getElementById('content').style.fontSize = `${currentFontSize}px`;
+    }
+
+    window.onscroll = () => {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        document.getElementById("scroll-progress").style.width = (winScroll / height * 100) + "%";
+    };
+
+    window.onload = init;
+</script>
