@@ -396,21 +396,26 @@ function adjustFont(delta) {
     }
 
     // 3. COMMENTS & REPLIES (FIREBASE VERSION)
-    async function postComment() {
-        const input = document.getElementById('comment-input');
-        if (!input.value.trim()) return;
+  async function fetchComments() {
+    const list = document.getElementById('comment-list');
+    
+    // We try to fetch where story_id is a number
+    let snapshot = await db.collection("comments")
+        .where("story_id", "==", Number(currentId)) 
+        .orderBy("created_at", "asc")
+        .get();
 
-        await db.collection("comments").add({
-            story_id: currentId,
-            content: input.value,
-            parent_id: null,
-            created_at: firebase.firestore.Timestamp.now()
-        });
-
-        input.value = "";
-        fetchComments();
+    let data = [];
+    snapshot.forEach(doc => data.push({ id: doc.id, ...doc.data() }));
+    
+    // If that's empty, we try string just in case
+    if (data.length === 0) {
+        snapshot = await db.collection("comments")
+            .where("story_id", "==", currentId.toString())
+            .orderBy("created_at", "asc")
+            .get();
+        snapshot.forEach(doc => data.push({ id: doc.id, ...doc.data() }));
     }
-
     function showReplyInput(parentId) {
         const el = document.getElementById(`reply-to-${parentId}`);
         el.classList.toggle('hidden');
