@@ -6,65 +6,56 @@
     <title>THE VAULT | RECORD</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="stories.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@300;400;600&display=swap');
         
-        body { background: #0a0a0b; color: #e2e2e2; font-family: 'Montserrat', sans-serif; margin: 0; }
+        body { background: #0a0a0b; color: #e2e2e2; font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; }
         .serif { font-family: 'Playfair Display', serif; }
         .reading-font { font-family: 'Lora', serif; line-height: 1.9; transition: font-size 0.2s ease; }
         
-   window.addEventListener('scroll', () => {
-    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    if (height > 0) {
-        const scrolled = (winScroll / height) * 100;
-        const progressBar = document.getElementById("scroll-progress");
-        if (progressBar) progressBar.style.width = scrolled + "%";
-    }
-});
-        .glitch-red { color: #ef4444; font-weight: bold; text-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
-        .monitor-gold { color: #d4af37; font-weight: 600; text-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
-
-        textarea { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; resize: none; transition: 0.3s; }
-        textarea:focus { border-color: #d4af37; outline: none; }
-        .comment-item { border-left: 1px solid rgba(212, 175, 55, 0.2); padding-left: 1.5rem; margin-bottom: 3rem; }
-
-        blockquote { position: relative; font-style: italic; }
-        blockquote::before, blockquote::after {
-            content: "“";
-            position: absolute;
-            font-size: 4rem;
-            opacity: 0.1;
-            color: #d4af37;
+        #scroll-progress { 
+            position: fixed; top: 0; left: 0; height: 2px; background: #d4af37; 
+            z-index: 100; transition: width 0.1s; box-shadow: 0 0 10px #d4af37;
         }
-        blockquote::before { top: -20px; left: 10px; }
-        blockquote::after { content: "”"; bottom: -40px; right: 10px; }
 
-        .font-mono { font-family: 'Courier New', monospace; letter-spacing: -0.02em; }
+        /* The Liquid Gold Like Button */
+        #like-btn { color: #4a3f1d; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
+        #like-btn.active-shine {
+            color: #ffcc00 !important;
+            opacity: 1 !important;
+            transform: scale(1.3);
+            text-shadow: 0 0 15px #ffcc00, 0 0 30px #d4af37, 0 0 5px #fff;
+        }
+
+        .comment-item { border-left: 1px solid rgba(212, 175, 55, 0.2); padding-left: 1.5rem; margin-bottom: 3rem; }
+        textarea { background: #000; border: 1px solid rgba(255,255,255,0.05); color: #ccc; }
     </style>
 </head>
 <body>
 
     <div id="scroll-progress" style="width: 0%"></div>
 
-    <nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/90 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
-        <h2 class="serif text-2xl text-[#d4af37] cursor-pointer" onclick="location.href='gallery.html'">V.</h2>
+    <nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/95 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
+        <div class="flex flex-col">
+            <h2 class="serif text-2xl text-[#d4af37] cursor-pointer" onclick="location.href='gallery.html'">V.</h2>
+            <button onclick="goToLatest()" class="text-[7px] uppercase tracking-[0.3em] text-gray-600 hover:text-[#d4af37] mt-1 text-left transition-colors">New Artifact</button>
+        </div>
         
         <div class="flex items-center space-x-6">
             <div class="flex items-center border border-white/10 rounded-full px-3 py-1 bg-black/50">
-                <button onclick="adjustFont(-2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2 transition-colors">A-</button>
+                <button onclick="adjustFont(-2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2">A-</button>
                 <div class="w-[1px] h-3 bg-white/10 mx-1"></div>
-                <button onclick="adjustFont(2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2 transition-colors">A+</button>
+                <button onclick="adjustFont(2)" class="text-gray-500 hover:text-[#d4af37] text-xs px-2">A+</button>
             </div>
             <span class="text-[9px] uppercase tracking-[0.4em] text-gray-700 hidden md:block">Record Decrypted</span>
         </div>
     </nav>
 
-    <main class="max-w-2xl mx-auto px-6 pt-40 pb-24">
+    <main class="max-w-2xl mx-auto px-6 pt-48 pb-24">
         <header class="mb-20 text-center">
             <h1 id="title" class="serif text-5xl text-[#d4af37] mb-6"></h1>
             <p id="synopsis" class="reading-font italic text-gray-500 text-lg"></p>
@@ -74,429 +65,132 @@
 
         <section class="border-t border-white/5 pt-16">
             <div class="flex flex-col items-center mb-20">
-                <button onclick="handleLike()" id="like-btn" class="text-4xl hover:scale-110 transition-transform duration-300 text-[#d4af37]">♡</button>
+                <button onclick="handleLike()" id="like-btn" class="text-4xl">♡</button>
                 <span id="like-count" class="text-[10px] text-[#d4af37] mt-4 tracking-[0.3em] uppercase">0 Likes</span>
             </div>
 
             <div class="space-y-10">
                 <h3 class="serif text-2xl text-[#d4af37]">Marginalia</h3>
-                <textarea id="comment-input" class="w-full p-5 text-sm" rows="4" placeholder="Leave a trace in the archive..."></textarea>
+                <textarea id="comment-input" class="w-full p-5 text-sm" rows="4" placeholder="Leave a trace..."></textarea>
                 <button onclick="postComment()" class="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition-all">Record in the Margin</button>
                 
                 <div id="comment-list" class="mt-16 pt-8"></div>
             </div>
         </section>
-
-        <footer class="mt-24 text-center">
-            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-[8px] uppercase tracking-[0.5em] text-gray-800 hover:text-[#d4af37]">Top</button>
-        </footer>
     </main>
-    <script>
-  // 1. CONFIG & INIT
-const firebaseConfig = {
-    apiKey: "AIzaSyCFuBka3dQmAl-iasBdjDW_qVNITrKqkaw",
-    authDomain: "vault-ff944.firebaseapp.com",
-    projectId: "vault-ff944",
-    storageBucket: "vault-ff944.firebasestorage.app",
-    messagingSenderId: "473879346291",
-    appId: "1:473879346291:web:29a57ad2b5fd98f3b8fe06",
-    measurementId: "G-3L8ZJP58R3"
-};
 
-// Initialize Firebase using the "Compat" method
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore(); // This is your "Database" connection
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFuBka3dQmAl-iasBdjDW_qVNITrKqkaw",
+            authDomain: "vault-ff944.firebaseapp.com",
+            projectId: "vault-ff944",
+            storageBucket: "vault-ff944.firebasestorage.app",
+            messagingSenderId: "473879346291",
+            appId: "1:473879346291:web:29a57ad2b5fd98f3b8fe06",
+            measurementId: "G-3L8ZJP58R3"
         };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         let currentId = null;
         let currentFontSize = 18;
 
-function adjustFont(delta) {
-    currentFontSize += delta;
-    // Set limits so the text doesn't become invisible or too huge
-    if (currentFontSize < 12) currentFontSize = 12;
-    if (currentFontSize > 32) currentFontSize = 32;
-    
-    const content = document.getElementById('content');
-    if (content) {
-        content.style.fontSize = `${currentFontSize}px`;
-    }
-}
-        const stories = [
-            {
-                id: 1,
-                title: "Horizon",
-                synopsis: "The perfect son is a masterpiece of a lie.",
-                text: `<p class="mb-6">He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it.</p>
-               <p class="mb-6">They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked.</p>
-               <p class="mb-6">And he eats the cake, smiles at the photographs, listens to the stories, applauds with steady hands, and inside him the stillness lingers, the echo of being seen and not seen at the same time, the ache of being loved as an accessory to love, the soft exhaustion of existing fully and being noticed only partly, a quiet knowing of absence in abundance, a slow weight that presses against the ribs and folds itself into his bones, and he walks through the day like this, through all the care and all the light, holding the impossible understanding that being looked after is not always being held.</p>` 
-            },
-            {
-                id: 2,
-                title: "The Dance of the 2 Empires",
-                synopsis: "Two crowns, one dance, and a shared history.",
-                text: `<div class="reading-font text-gray-300">
-    <p class="mb-6">The crown didn’t feel any heavier today — but something beneath it did. Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign? Or maybe it was her body — weary and still waiting for the warmth she had once been promised.</p>
-    
-    <p class="mb-6">She shook the feeling off as best she could. The court watched her. The sound that finally broke through the tension wasn’t the music — it was the voice she knew best. Her only true friend — now the Emperor of the South — stood before her, asking for her hand. Not for a game in the palace garden this time, but for a dance in the ballroom. A dance between two powerful nations, under the eyes of a hundred watching nobles.
-    </p>
-    
-    <p class="mb-6">She took his hand. They stepped onto the floor — not as the children they once were, but as rulers. Still, something in their steps remembered old rhythms.</p>
-    
-    <p class="mb-6">As the orchestra played on, they moved with regal precision, their posture dignified, their gaze steady. They looked every bit the pair the court wanted to see — strong, composed, and perfectly suited to be hailed as “The First Nobles.”</p>
-    <p>But somewhere between the fourth and fifth step, the past crept in.</p>
-    <p class="mt-2">They found themselves drifting —</p>
-    <p>Their legs in time with the music of the present,</p>
-    <p>Their minds slipping back to old memories:</p>
-    <p>Shared camping trips, whispered jokes around a fire, a clumsy first swordfight, the smell of rain on travel cloaks.</p>
-
-    <p class="mb-6">The dance ended, but something lingered. They stepped onto the balcony, champagne in hand. The chill air pressed gently against their skin. For a few moments, they stood in silence, the music fading behind them.</p>
-    
-    <p class="mb-6">He made a polite remark — something about the alliance, or the Chancellor’s speech. She replied with a practiced smile. The kind you give when there’s too much history in the room.</p>
-    
-    <p class="mb-6">Then came the pause. Long enough to be uncomfortable. Short enough not to be intentional. He glanced sideways at her — not at the empress, but at the girl who once got them both grounded for sneaking out to see the stars.</p>
-    
-    <p class="mb-6">And just like that, she laughed. Not the courtly kind — a real one. Unfiltered. Familiar. The tension broke. Their words softened. They talked — about the ball, about their ridiculous swordmaster, about small things.</p>
-    
-    <p class="mb-6">They started as delegates. But by the time their glasses emptied, they had become something else. Not rulers. Not children. But people who remembered what it was like to not be either.</p>`
-    },
-            {
-                id: 3,
-                title: "Anamnesis",
-                synopsis: "The archives are hungry.",
-                text: `<div class="space-y-6 font-mono text-sm border-l-2 border-[#d4af37]/30 pl-6 py-4 bg-black/20">
-    <p class="text-[#d4af37] font-bold tracking-widest uppercase">RECOLLECTION OF A SUPPOSED PREVIOUS EXISTENCE</p>
-    
-    <p class="text-gray-400 italic">INT. MEDICAL COLLEGE – RESEARCH LAB – NIGHT</p>
-    
-    <p>Dim lighting. The hum of machinery fills the air. DR. Jeevith (30s, ambitious, sleep-deprived) leans over his laptop, eyes scanning the screen. A cold cup of coffee sits beside him, untouched. His fingers hover over the keyboard. -Click.</p>
-
-    <p><span class="text-[#d4af37]">ON SCREEN:</span> A video recording starts playing. A younger voice, shaky, uncertain. <br>
-    <span class="italic text-gray-400">ARJUN (VIDEO): I... I woke up in the dissection hall. I don’t remember going there.</span></p>
-
-    <p>Jeevith leans in. Pauses the video, rewinds. He exhales sharply, rubbing his face. He checks the hospital logs. Nothing. No record of Arjun’s admission. No proof of his existence was found. Jeevith frowns. His cursor hovers over the video file.</p>
-    
-    <p class="glitch-red animate-pulse uppercase tracking-tighter border-y border-red-900/30 py-2 text-center">
-        "NEW FILE ADDED: ANAMNESIS_002"
-    </p>
-
-    <p class="text-gray-400 italic">INT. HOSPITAL HALLWAY – NIGHT</p>
-    
-    <p>Jeevith walks through the dimly lit corridor. His footsteps echo. Too loud. His breath quickens. Something feels off. Then—he sees him. A figure stands at the far end of the hallway. Back turned. Jeevith slows. His pulse thuds. It’s Arjun.</p>
-
-    <p class="italic">"He was discharged yesterday… he shouldn't be here…" Jeevith murmurs, beads of sweat on his forehead. "Arjun?"</p>
-
-    <p>Silence. Jeevith takes a step forward. Arjun doesn’t move. Jeevith’s shadow stretches unnaturally. Long, distorted. Then—Arjun turns. Something is wrong. His movements are too smooth. His face too blank.</p>
-
-    <p><span class="text-red-500 uppercase">Arjun:</span> You shouldn’t have seen the file.</p>
-
-    <p>The lights flicker. Shadows shift the wrong way. Jeevith takes a step back. Arjun steps forward. But—his shadow does not move.</p>
-
-    <p class="text-gray-400 italic">INT. RESEARCH LAB – NIGHT</p>
-
-    <p>Jeevith bursts into the lab, slamming the door shut. His hands tremble as he rushes to his laptop. The screen is still on. Surveillance footage of himself. Sitting at this desk. Watching this exact video.</p>
-
-    <p class="glitch-red animate-pulse uppercase tracking-tighter border-y border-red-900/30 py-2 text-center">
-        "ANAMNESIS_003 – FILE READY FOR NEXT SUBJECT."
-    </p>
-
-    <p>Jeevith freezes. "Next subject...?" A cold realization washes over him. He’s in the file now. The door behind him creaks. A dark figure stands just beyond it. Watching. Whispers slither through the air.</p>
-
-    <p><span class="text-red-500 uppercase">Arjun (From the darkness):</span> Don’t run.</p>
-
-    <p>The door SLAMS OPEN. A shadowy figure lunges forward. The laptop screen glitches violently. Everything cuts to black. A computer screen flickers on. A grainy surveillance video of Jeevith, sitting at the desk, staring blankly.</p>
-
-    <div class="pt-8 opacity-60">
-        <p class="text-[#d4af37] font-bold uppercase">Archive Note:</p>
-        <p class="glitch-red font-bold">"ANAMNESIS_004 – FILE READY FOR NEXT SUBJECT."</p>
-    </div>
-</div>`
-            },
-            {
-                id: 4,
-                title: "Empathodexterity",
-                synopsis: "Silver edges, different worlds: the same inherited precision",
-                text: `<div class="reading-font text-gray-300">
-    <p class="mb-6">The old woman’s bangles sang a sharp, glass melody as she worked, a rhythmic percussion that cut through the humid air of the bazaar. To the passing crowds, she was just the "Guava Lady," a fixture of the pavement, but to the young girl sitting at her feet, she was a surgeon of the streets.</p>
-    
-    <p class="mb-6">"Watch the wrist, Meena," her mother would say, never once looking up from her work. With a swift, silver flash of her paring knife, a firm guava was transformed into perfect, bite-sized pieces of hospitality. Meena watched those hands every day, stained with the nectar of the fruit and the rust-coloured dust of chilli powder, weathered by the relentless sun, yet moving with the grace of a conductor leading a symphony. The cuts seemed effortless yet precise to the millimeter, and in that precision, she honored the fruit by wasting nothing.</p>
-
-    <blockquote class="border-l-2 border-[#d4af37] pl-4 py-2 my-8 italic text-[#d4af37]/80">
-        "The hand must be steady, Meena, but the heart must be soft," her mother whispered as she handed a newspaper cone to a hungry child. "That is how you truly serve."
-    </blockquote>
-
-    <p class="mb-6">Two decades later, the golden sun has been replaced by the sterile, unwavering glare of overhead surgical lamps. The chaotic symphony of the marketplace, the honking rickshaws and shouting vendors has faded into a heavy, clinical silence.</p>
-    
-    <p class="mb-6">Meena looks down at her own hands. They are no longer stained with fruit and chilli powder; instead, they are encased in pale, sterile latex. The rhythmic clinking of glass bangles has been traded for the steady, digital pulse of a heart monitor, a neon green line marking the boundary between life and the unknown. The newspaper-lined crate she once leaned against is now a stainless-steel table covered in a sterile blue drape.</p>
-
-    <p class="mb-6">She picks up the scalpel. It is significantly smaller and lighter than her mother’s worn paring knife, but as she touches the silver edge to the patient’s skin, she feels that same familiar weight of responsibility.</p>
-    
-    <p class="mb-6">She makes the first incision, a clean, decisive arc. It is the same motion she observed on a street corner years ago, the same unwavering precision once used to quarter a guava. Only now, the "sweetness" she is trying to reach isn't a snack for a child; it is the rhythmic thrum of a human life struggling to continue.</p>
-
-    <p class="mb-6">The street vendor fed the body, and the daughter mended the life. It was a shared legacy of the wrist. As Meena's scalpel moved, the distinction vanished – different tools, different worlds, but the same sacred precision. She was her mother's daughter, with a quiet inheritance of discipline; proving that every cut, when guided by a soft heart, is an altar where life is honored.</p>
-</div>`
-                
-
-            },
-            {
-                  id: 5,
-                title: "Kintsugi",
-                synopsis: "A story of gold-filled cracks",
-                text:`<div class="reading-font text-gray-300">
-        <p class="mb-6">The bottle did not shatter loudly. It split with a dull, imperfect crack — like something already fractured simply admitting it.</p>
-        
-        <p class="mb-6">When the police entered the apartment, blood had already decided its direction. It traced the tile in thin deliberate rivers, curved around chair legs, paused beneath the couch where shadows gathered. The broken alcohol bottle lay on its side, glinting faintly, no longer weapon nor glass — only aftermath. Daichi’s body was still. Akira was not.</p>
-        
-        <p class="mb-6">He stood a few steps away, hands cut, breath uneven, eyes fixed on something beyond the room — as if the ceiling had opened and shown him a sky he had not prepared for. Riverie reached him before the sirens quieted. She did not scream. She did not collapse. She only held his face between her palms and said his name as if anchoring him to gravity.</p>
-        
-        <p class="mb-6">Eighteen hours earlier, he had knelt with a ring. Now he sat beneath white hospital lights, stitched and monitored, the steady beeping of the ECG machine measuring the thin line between survival and surrender. The world called it domestic violence. The report called it self-defense. The silence called it inheritance.</p>
-        
-        <p class="mb-6">The therapist’s office smelled faintly of paper and citrus polish. Riverie sat upright, hands folded, posture practiced. Akira leaned back but not comfortably, shoulders carrying an alertness that did not belong to upholstered furniture. The therapist spoke gently, as though words might bruise. “Start wherever it feels true.”</p>
-        
-        <p class="mb-6">Riverie exhaled. “It began in France,” she said. And memory did not drift — it walked in, fully dressed. French streets once held her laughter. Outdoor cafés leaning into sunlight, almond petals scattered like careless blessings, wisteria spilling from balconies in soft violet confessions. She met Daichi over coffee that cooled untouched because conversation warmed faster. They leaned closer before either of them noticed they had moved.</p>
-        
-        <p class="mb-6">Love did not arrive as thunder. It arrived as convenience. As shared weekends. As fewer reasons to return to separate doors. He suggested she rest from work. “You deserve softness,” he whispered. Softness became dependence. Dependence became suggestion. Suggestion became correction. “You don’t look like the woman I met.” “I work hard. Don’t waste it on vanity.”</p>
-        
-        <p class="mb-6">His words shifted with the hour — morning critique, evening complaint — and she adjusted herself like furniture being rearranged without being asked. When she told him she was pregnant, sunlight pooled across the kitchen tiles. “I’m carrying our child,” she said, bright as the stove flame. “That’s another plate of work on me,” he replied. The fork paused. The air tightened. She chose hope over warning. Hope is not foolish. It is simply loyal.</p>
-        
-        <p class="mb-6">Akira listened without interrupting. He had never heard the story from its beginning. Only from its bruises. “The first time he struck me,” Riverie continued, “I thought it was a moment. The second time, I called it stress. By the third, I had begun to call it love misunderstood.” Her hand moved unconsciously to her wrist, as if remembering where bracelets once hid discoloration.</p>
-        
-        <p class="mb-6">At a small clinic, trembling, she told the midwife not to report him. “Just until the baby comes,” she whispered. “I can endure.” Endure became a habit. Premature labour came like a verdict. In an ambulance, beneath fluorescent urgency, Akira entered the world between sirens and apologies no one voiced aloud.</p>
-        
-        <p class="mb-6">Daichi left soon after. Money arrived monthly. Identical transfers. Precise. Mechanical. Rent and utilities paid like a roof under maintenance. “I thought he was still caring for us,” Riverie said quietly. The therapist did not interrupt. Akira’s jaw tightened.</p>
-        
-        <p class="mb-6">Years later, the door knocked again. Daichi stood there aged by indulgence, smelling of alcohol and something unfinished. He called Riverie an obligation. He said he had provided. He did not say he had divided. “And I believed him,” Riverie said. “I believed I was expensive.”</p>
-        
-        <p class="mb-6">Akira looked at her then — not as a son, but as someone seeing gravity for the first time. He began working before his shoulders had finished widening. Football cleats traded for part-time shifts. Money folded carefully and placed into her hands. Money that passed from her palms into Daichi’s. “I knew,” Akira said finally, his voice steady, “that if I resisted, he would double it on her.”</p>
-        
-        <p class="mb-6">“And the girl?” the therapist asked gently. Akira’s mouth softened. “She flinched the way my mother did.” He had recognized the posture before he recognized the person — wrists hidden, eyes lowered, breathing calibrated to avoid notice. He stood beside her because this time resistance would not circle back to wound his mother.</p>
-        
-        <p class="mb-6">He loved her like soil loves a seed — unseen, uncelebrated, breaking itself quietly so something else may rise. When she bloomed, radiant and unafraid, he mistook her turning toward the sun as a turning toward him. He knelt. “Sunflower,” he had said, “I thought I was your sun. It turns out I was your soil.” Her refusal was gentle. Gentleness can still empty a room.</p>
-        
-        <p class="mb-6">That night Daichi returned from losing again. Gambling does not only consume money. It consumes dignity and demands replacement. The shouting began without words. It arrived as volume. As force seeking surface. Riverie became that surface. But this time Akira did not remain doorway still. He stepped forward.</p>
-        
-        <p class="mb-6">Years of swallowed restraint surfaced all at once. The bottle broke in his father’s hand first. The second fracture belonged to the air between them. Blood followed faster than thought. “I don’t remember deciding,” Akira said now. “I remember stopping.”</p>
-        
-        <p class="mb-12">The room held that sentence carefully. Self-defence is clear in court. It is not clear in the body. Riverie reached for his hand. Not because he was fragile. But because he had been strong for too long. “We survived,” she said softly. Outside the therapist’s window, afternoon light moved without agenda. For the first time, their story was not being endured. It was being spoken. And spoken stories do not shatter the way silent ones do. They reshape.</p>
-    </div>`
-},
-            {
-    id: 6,
-    title: "Calliope of Wyvern Reef",
-    synopsis: "A beauty guarded by silence reveals a voice of ancient power when the sea claims its own.",
-    text: `<div class="reading-font text-gray-300">
-        <p class="mb-6">In the sea-shore village of Wyvern Reef lived a girl whose beauty people spoke of in lowered voices. They said even young Medusa, before the curse of stone and serpents, would have admired her face. Her name was Calliope.</p>
-        
-        <p class="mb-6">Her voice was softer than tide foam and clearer than a conch shell blown at dawn. The women of the village guarded her like a sacred jewel. Fishermen and sailors who came through Wyvern Reef heard stories of her, but none had ever seen her face.</p>
-        
-        <p class="mb-6">The women would laugh when the girl asked why she was praised so much. “A peacock’s feather,” they told her, “is useful only to call its mate. Beyond that, it serves no purpose.” Calliope never felt beautiful. Beauty, to her, felt like a cloak others wrapped around her shoulders.</p>
-        
-        <p class="mb-6">Years passed. The innocent glow of childhood ripened into the quiet radiance of a young woman. With that change came stricter silence. Her mother no longer allowed her voice to be heard when men were nearby. Soon the sailors began calling her something else: The Mermaid of Wyvern Reef.</p>
-        
-        <p class="mb-6">They whispered that the Wyvern god who guarded the reefs had blessed the village with a daughter of the sea. For a while, life remained gentle. Then the pirates came.</p>
-        
-        <p class="mb-6">The crew of the Tidal Scythe were men who feared neither kings nor storms. They had heard rumors drifting across taverns and ports: of a girl with a voice like moonlight on water. They raided the village for her.</p>
-        
-        <p class="mb-6">Calliope was dragged aboard their ship, chained not for labor but for amusement. The pirates believed beauty was a thing to break and admire afterward. To tame her, they locked her in a freezing iron chamber below deck, the cold biting into her bones. But they had made a mistake.</p>
-        
-        <p class="mb-6">They had captured a girl named Calliope. Names, in old stories, are rarely accidents. The moment the frost bit her skin and the salt air filled her lungs, something ancient awakened. Her ears sharpened into graceful points. Iridescent scales shimmered along her skin like moonlight scattered across dark water. Her hair flowed thick and deep, like the coral reefs that guarded her village coast.</p>
-        
-        <p class="mb-6">Calliope had never been merely human. She was a siren. And sirens do not scream. They sing.</p>
-        
-        <p class="mb-6">Her voice rose slowly, not in terror but in opera—clear, haunting, impossibly beautiful. The sound slipped through wood and iron like water through sand. The pirates began to hallucinate. Some saw golden shores rising from the sea. Some heard dead lovers calling their names. Some laughed, some wept, some threw themselves against the railings trying to reach the voices only they could hear.</p>
-        
-        <p class="mb-6">The proud ship that had crossed a hundred storms now drifted under the command of a single voice. Masts sagged. Ropes slipped loose. Men forgot their orders. Above them the sky darkened. The Wyvern god of the reef had not abandoned his daughter.</p>
-        
-        <p class="mb-6">Winds tore across the sea as if from enormous wings. Waves rose like walls. The Tidal Scythe pitched and groaned under the sudden fury of the storm. In the chaos, Calliope slipped free. She dove into the black water and swam toward home.</p>
-        
-        <p class="mb-6">But when the reef finally appeared through the fog, her heart tightened. Broken roofs. Empty docks. Doors hanging open. It looked as if the village had been destroyed. Panic tightened her chest as she searched the waters for her mother.</p>
-        
-        <p class="mb-6">Then the sea ahead of her erupted. Waves split as something massive cut through them with frightening speed. For a heartbeat, Calliope thought a great white shark was charging toward her. But it was not a shark. It was her mother.</p>
-        
-        <p class="mb-6">She rose from the water in a burst of silver scales and dark hair, arms wrapping around her daughter before the tide could pull them apart. The two clung to one another, laughing and crying in the same breath. Her mother guided her toward the temple carved into the reef cliffs—the shrine of the Wyvern god.</p>
-        
-        <p class="mb-6">And there Calliope learned the truth. The village had never truly fallen. The buildings had been abandoned on purpose. When the pirates came, the women of Wyvern Reef had hidden the people in caves beneath the cliffs. Because the women knew something the pirates did not.</p>
-        
-        <p class="mb-12">Calliope was not the only siren. Her mother was one as well. In fact, the secret had lived among the women of the village for generations. Siren voices could destroy ships… or shield entire villages. Everything depended on the song. That was why the women guarded their daughters so fiercely. Not because they were fragile. But because a voice like that could change the fate of the sea. And the sea always listens.</p>
-    </div>`
-                
-            }
-    ];
-<script>
-    // 1. CONFIG & INIT
-    const firebaseConfig = {
-        apiKey: "AIzaSyCFuBka3dQmAl-iasBdjDW_qVNITrKqkaw",
-        authDomain: "vault-ff944.firebaseapp.com",
-        projectId: "vault-ff944",
-        storageBucket: "vault-ff944.firebasestorage.app",
-        messagingSenderId: "473879346291",
-        appId: "1:473879346291:web:29a57ad2b5fd98f3b8fe06",
-        measurementId: "G-3L8ZJP58R3"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    let currentId = null;
-    let currentFontSize = 18;
-
-    // ... (Your stories array remains here) ...
-
-    async function init() {
-        const params = new URLSearchParams(window.location.search);
-        currentId = parseInt(params.get('id'));
-        const story = stories.find(s => s.id === currentId);
-
-        if (story) {
-            document.getElementById('title').innerText = story.title;
-            document.getElementById('synopsis').innerText = story.synopsis;
-            document.getElementById('content').innerHTML = story.text;
+        async function init() {
+            const params = new URLSearchParams(window.location.search);
+            currentId = parseInt(params.get('id'));
             
+            const story = stories.find(s => s.id === currentId);
+            if (story) {
+                document.getElementById('title').innerText = story.title;
+                document.getElementById('synopsis').innerText = story.synopsis;
+                document.getElementById('content').innerHTML = story.text;
+                fetchMetadata();
+                fetchComments();
+            } else {
+                document.getElementById('content').innerText = "Record not found.";
+            }
+        }
+
+        function goToLatest() {
+            const latestId = Math.max(...stories.map(s => s.id));
+            location.href = `reader.html?id=${latestId}`;
+        }
+
+        async function fetchMetadata() {
+            const docRef = db.collection("stories_meta").doc(currentId.toString());
+            const doc = await docRef.get();
+            const btn = document.getElementById('like-btn');
+            
+            if (doc.exists) {
+                document.getElementById('like-count').innerText = `${doc.data().likes || 0} LIKES`;
+            }
+
+            if (localStorage.getItem(`liked_story_${currentId}`)) {
+                btn.innerText = '♥';
+                btn.classList.add('active-shine');
+            } else {
+                btn.innerText = '♡';
+                btn.classList.remove('active-shine');
+            }
+        }
+
+        async function handleLike() {
+            const docRef = db.collection("stories_meta").doc(currentId.toString());
+            const hasLiked = localStorage.getItem(`liked_story_${currentId}`);
+            
+            if (hasLiked) {
+                await docRef.set({ likes: firebase.firestore.FieldValue.increment(-1) }, { merge: true });
+                localStorage.removeItem(`liked_story_${currentId}`);
+            } else {
+                await docRef.set({ likes: firebase.firestore.FieldValue.increment(1) }, { merge: true });
+                localStorage.setItem(`liked_story_${currentId}`, true);
+            }
             fetchMetadata();
+        }
+
+        async function postComment() {
+            const input = document.getElementById('comment-input');
+            if (!input.value.trim()) return;
+            await db.collection("comments").add({
+                story_id: currentId,
+                content: input.value,
+                created_at: firebase.firestore.Timestamp.now()
+            });
+            input.value = "";
             fetchComments();
         }
-    }
 
-    // 2. METADATA & LIKES (FIREBASE VERSION)
-    async function fetchMetadata() {
-        const docRef = db.collection("stories_meta").doc(currentId.toString());
-        const doc = await docRef.get();
-        
-        if (doc.exists) {
-            document.getElementById('like-count').innerText = `${doc.data().likes || 0} LIKES`;
-        }
-        
-        const btn = document.getElementById('like-btn');
-        if (localStorage.getItem(`liked_story_${currentId}`)) {
-            btn.innerText = '♥';
-            btn.classList.add('opacity-50');
-        } else {
-            btn.innerText = '♡';
-            btn.classList.remove('opacity-50');
-        }
-    }
+        async function fetchComments() {
+            const list = document.getElementById('comment-list');
+            const snapshot = await db.collection("comments")
+                .where("story_id", "==", currentId)
+                .get();
 
-    async function handleLike() {
-        const hasLiked = localStorage.getItem(`liked_story_${currentId}`);
-        const btn = document.getElementById('like-btn');
-        const docRef = db.collection("stories_meta").doc(currentId.toString());
+            let data = [];
+            snapshot.forEach(doc => data.push(doc.data()));
+            data.sort((a,b) => b.created_at - a.created_at);
 
-        if (hasLiked) {
-            await docRef.set({ likes: firebase.firestore.FieldValue.increment(-1) }, { merge: true });
-            localStorage.removeItem(`liked_story_${currentId}`);
-            btn.innerText = '♡';
-            btn.classList.remove('opacity-50');
-        } else {
-            await docRef.set({ likes: firebase.firestore.FieldValue.increment(1) }, { merge: true });
-            localStorage.setItem(`liked_story_${currentId}`, true);
-            btn.innerText = '♥';
-            btn.classList.add('opacity-50');
-        }
-        fetchMetadata();
-    }
-
-    // 3. COMMENTS & REPLIES (FIREBASE VERSION)
-  async function fetchComments() {
-    const list = document.getElementById('comment-list');
-    
-    // We try to fetch where story_id is a number
-    let snapshot = await db.collection("comments")
-        .where("story_id", "==", Number(currentId)) 
-        .orderBy("created_at", "asc")
-        .get();
-
-    let data = [];
-    snapshot.forEach(doc => data.push({ id: doc.id, ...doc.data() }));
-    
-    // If that's empty, we try string just in case
-    if (data.length === 0) {
-        snapshot = await db.collection("comments")
-            .where("story_id", "==", currentId.toString())
-            .orderBy("created_at", "asc")
-            .get();
-        snapshot.forEach(doc => data.push({ id: doc.id, ...doc.data() }));
-    }
-    function showReplyInput(parentId) {
-        const el = document.getElementById(`reply-to-${parentId}`);
-        el.classList.toggle('hidden');
-    }
-
-    async function postReply(parentId) {
-        const input = document.getElementById(`input-${parentId}`);
-        if (!input.value.trim()) return;
-
-        await db.collection("comments").add({
-            story_id: currentId,
-            content: input.value,
-            parent_id: parentId,
-            created_at: firebase.firestore.Timestamp.now()
-        });
-
-        input.value = "";
-        fetchComments();
-    }
-
-    async function fetchComments() {
-        const list = document.getElementById('comment-list');
-        const snapshot = await db.collection("comments")
-            .where("story_id", "==", currentId)
-            .orderBy("created_at", "asc")
-            .get();
-
-        const data = [];
-        snapshot.forEach(doc => data.push({ id: doc.id, ...doc.data() }));
-        
-        if (data.length === 0) {
-            list.innerHTML = "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>No marginalia recorded.</p>";
-            return;
-        }
-
-        const mainComments = data.filter(c => !c.parent_id);
-        const replies = data.filter(c => c.parent_id);
-
-        list.innerHTML = mainComments.map(c => {
-            const threadReplies = replies.filter(r => r.parent_id === c.id);
-            const dateStr = c.created_at?.toDate().toLocaleDateString() || "RECENT";
-            return `
+            list.innerHTML = data.length ? data.map(c => `
                 <div class="comment-item">
-                    <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">${dateStr}</p>
-                    <p class="reading-font text-gray-300 text-sm mb-3">${c.content}</p>
-                    <button onclick="showReplyInput('${c.id}')" class="text-[8px] text-[#d4af37] uppercase tracking-widest hover:underline">Reply</button>
-                    <div class="ml-8 mt-6 border-l border-white/5 pl-6">
-                        ${threadReplies.map(r => `
-                            <div class="mb-4">
-                                <p class="text-[7px] text-gray-600 font-mono uppercase mb-1">${r.created_at?.toDate().toLocaleDateString() || "RECENT"}</p>
-                                <p class="reading-font text-gray-400 text-xs">${r.content}</p>
-                            </div>
-                        `).join('')}
-                        <div id="reply-to-${c.id}" class="hidden mt-4">
-                            <textarea id="input-${c.id}" class="w-full p-3 text-xs mb-2" rows="2" placeholder="Reply..."></textarea>
-                            <button onclick="postReply('${c.id}')" class="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">Post Response</button>
-                        </div>
-                    </div>
+                    <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">${c.created_at?.toDate().toLocaleDateString() || "RECENT"}</p>
+                    <p class="reading-font text-gray-300 text-sm">${c.content}</p>
                 </div>
-            `;
-        }).join('');
-    }
-
-    // 4. UTILITIES (FONT & SCROLL)
-    function adjustFont(delta) {
-        const content = document.getElementById('content');
-        if ((delta > 0 && currentFontSize < 36) || (delta < 0 && currentFontSize > 12)) {
-            currentFontSize += delta;
-            content.style.fontSize = currentFontSize + 'px';
+            `).join('') : "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>Empty archives.</p>";
         }
-    }
 
-    window.onscroll = () => {
-        const scroll = document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        if (height > 0) {
-            document.getElementById('scroll-progress').style.width = (scroll / height * 100) + "%";
+        function adjustFont(delta) {
+            currentFontSize = Math.min(Math.max(currentFontSize + delta, 12), 32);
+            document.getElementById('content').style.fontSize = `${currentFontSize}px`;
         }
-    };
 
-    window.onload = init;
-</script>
+        window.onscroll = () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById("scroll-progress").style.width = (winScroll / height * 100) + "%";
+        };
+
+        window.onload = init;
+    </script>
 </body>
 </html>
