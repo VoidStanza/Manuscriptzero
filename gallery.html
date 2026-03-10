@@ -42,6 +42,17 @@
 <body class="p-8">
    <nav class="mb-20 max-w-6xl mx-auto">
     <h1 class="serif text-[#d4af37] text-3xl tracking-tighter cursor-pointer" onclick="location.href='index.html'">V.</h1>
+       <button onclick="goToLatest()" class="text-[9px] uppercase tracking-[0.4em] text-[#d4af37] border border-[#d4af37]/30 px-4 py-2 hover:bg-[#d4af37] hover:text-black transition-all">
+    Access Latest Artifact
+</button>
+
+<script src="stories.js"></script>
+<script>
+    function goToLatest() {
+        const latestId = Math.max(...stories.map(s => s.id));
+        window.location.href = `reader.html?id=${latestId}`;
+    }
+</script>
 </nav>
     <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
         </div>
