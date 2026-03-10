@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE VAULT | RECORD</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@300;400;600&display=swap');
         
@@ -13,35 +17,34 @@
         .serif { font-family: 'Playfair Display', serif; }
         .reading-font { font-family: 'Lora', serif; line-height: 1.9; transition: font-size 0.2s ease; }
         
-        #scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: #d4af37; z-index: 100; transition: width 0.1s; }
-        
+   window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    if (height > 0) {
+        const scrolled = (winScroll / height) * 100;
+        const progressBar = document.getElementById("scroll-progress");
+        if (progressBar) progressBar.style.width = scrolled + "%";
+    }
+});
         .glitch-red { color: #ef4444; font-weight: bold; text-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
         .monitor-gold { color: #d4af37; font-weight: 600; text-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
 
         textarea { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; resize: none; transition: 0.3s; }
         textarea:focus { border-color: #d4af37; outline: none; }
         .comment-item { border-left: 1px solid rgba(212, 175, 55, 0.2); padding-left: 1.5rem; margin-bottom: 3rem; }
-        /* Styling for the therapist's notes and the sun/soil quote */
-blockquote {
-    position: relative;
-    font-style: italic;
-}
 
-blockquote::before, blockquote::after {
-    content: "“";
-    position: absolute;
-    font-size: 4rem;
-    opacity: 0.1;
-    color: #d4af37;
-}
+        blockquote { position: relative; font-style: italic; }
+        blockquote::before, blockquote::after {
+            content: "“";
+            position: absolute;
+            font-size: 4rem;
+            opacity: 0.1;
+            color: #d4af37;
+        }
+        blockquote::before { top: -20px; left: 10px; }
+        blockquote::after { content: "”"; bottom: -40px; right: 10px; }
 
-blockquote::before { top: -20px; left: 10px; }
-blockquote::after { content: "”"; bottom: -40px; right: 10px; }
-
-.font-mono {
-    font-family: 'Courier New', monospace;
-    letter-spacing: -0.02em;
-}
+        .font-mono { font-family: 'Courier New', monospace; letter-spacing: -0.02em; }
     </style>
 </head>
 <body>
@@ -89,7 +92,36 @@ blockquote::after { content: "”"; bottom: -40px; right: 10px; }
         </footer>
     </main>
     <script>
-        const sbClient = supabase.createClient('https://iakkxwghbczalryylqzg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlha2t4d2doYmN6YWxyeXlscXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Nzk1NzcsImV4cCI6MjA4NjU1NTU3N30._KXFa9Ohst1P-vA8L6Eyd3B8qdPCTSbPHV0_kO3OkVc');
+  // 1. CONFIG & INIT
+const firebaseConfig = {
+    apiKey: "AIzaSyCFuBka3dQmAl-iasBdjDW_qVNITrKqkaw",
+    authDomain: "vault-ff944.firebaseapp.com",
+    projectId: "vault-ff944",
+    storageBucket: "vault-ff944.firebasestorage.app",
+    messagingSenderId: "473879346291",
+    appId: "1:473879346291:web:29a57ad2b5fd98f3b8fe06",
+    measurementId: "G-3L8ZJP58R3"
+};
+
+// Initialize Firebase using the "Compat" method
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore(); // This is your "Database" connection
+        };
+
+        let currentId = null;
+        let currentFontSize = 18;
+
+function adjustFont(delta) {
+    currentFontSize += delta;
+    // Set limits so the text doesn't become invisible or too huge
+    if (currentFontSize < 12) currentFontSize = 12;
+    if (currentFontSize > 32) currentFontSize = 32;
+    
+    const content = document.getElementById('content');
+    if (content) {
+        content.style.fontSize = `${currentFontSize}px`;
+    }
+}
         const stories = [
             {
                 id: 1,
@@ -290,168 +322,176 @@ blockquote::after { content: "”"; bottom: -40px; right: 10px; }
                 
             }
     ];
+<script>
+    // 1. CONFIG & INIT
+    const firebaseConfig = {
+        apiKey: "AIzaSyCFuBka3dQmAl-iasBdjDW_qVNITrKqkaw",
+        authDomain: "vault-ff944.firebaseapp.com",
+        projectId: "vault-ff944",
+        storageBucket: "vault-ff944.firebasestorage.app",
+        messagingSenderId: "473879346291",
+        appId: "1:473879346291:web:29a57ad2b5fd98f3b8fe06",
+        measurementId: "G-3L8ZJP58R3"
+    };
 
-        let currentId = null;
-        let currentFontSize = 18;
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        // 1. INITIALIZE PAGE
-        async function init() {
-            const params = new URLSearchParams(window.location.search);
-            currentId = parseInt(params.get('id'));
-            const story = stories.find(s => s.id === currentId);
+    let currentId = null;
+    let currentFontSize = 18;
 
-            if (story) {
-                document.getElementById('title').innerText = story.title;
-                document.getElementById('synopsis').innerText = story.synopsis;
-                document.getElementById('content').innerHTML = story.text;
-                
-                // Check localStorage for Likes
-                if (localStorage.getItem(`liked_story_${currentId}`)) {
-                    document.getElementById('like-btn').innerText = '♥';
-                    document.getElementById('like-btn').classList.add('opacity-50', 'pointer-events-none');
-                }
+    // ... (Your stories array remains here) ...
 
-                fetchMetadata();
-                fetchComments();
-            }
-        }
+    async function init() {
+        const params = new URLSearchParams(window.location.search);
+        currentId = parseInt(params.get('id'));
+        const story = stories.find(s => s.id === currentId);
 
-      // 2. METADATA & LIKES
-async function fetchMetadata() {
-            const { data } = await sbClient.from('stories_meta').select('likes').eq('story_id', currentId).maybeSingle();
-            if (data) {
-                document.getElementById('like-count').innerText = `${data.likes} LIKES`;
-            }
+        if (story) {
+            document.getElementById('title').innerText = story.title;
+            document.getElementById('synopsis').innerText = story.synopsis;
+            document.getElementById('content').innerHTML = story.text;
             
-            // Check local storage on load to set the heart icon
-            if (localStorage.getItem(`liked_story_${currentId}`)) {
-                const btn = document.getElementById('like-btn');
-                btn.innerText = '♥';
-                btn.classList.add('opacity-50');
-            }
-        }
-
-        async function handleLike() {
-            const hasLiked = localStorage.getItem(`liked_story_${currentId}`);
-            const btn = document.getElementById('like-btn');
-            
-            const { data } = await sbClient.from('stories_meta')
-                .select('likes')
-                .eq('story_id', currentId)
-                .maybeSingle();
-            
-            let currentLikes = data ? data.likes : 0;
-
-            if (hasLiked) {
-                // UN-LIKE
-                const newCount = Math.max(0, currentLikes - 1);
-                const { error } = await sbClient.from('stories_meta')
-                    .upsert({ story_id: currentId, likes: newCount }, { onConflict: 'story_id' });
-
-                if (!error) {
-                    localStorage.removeItem(`liked_story_${currentId}`);
-                    document.getElementById('like-count').innerText = `${newCount} LIKES`;
-                    btn.innerText = '♡';
-                    btn.classList.remove('opacity-50');
-                }
-            } else {
-                // LIKE
-                const newCount = currentLikes + 1;
-                const { error } = await sbClient.from('stories_meta')
-                    .upsert({ story_id: currentId, likes: newCount }, { onConflict: 'story_id' });
-
-                if (!error) {
-                    localStorage.setItem(`liked_story_${currentId}`, true);
-                    document.getElementById('like-count').innerText = `${newCount} LIKES`;
-                    btn.innerText = '♥';
-                    btn.classList.add('opacity-50');
-                }
-            }
-        }
-
-        // 3. COMMENTS & REPLIES
-        async function postComment() {
-            const input = document.getElementById('comment-input');
-            if (!input.value.trim()) return;
-            await sbClient.from('comments').insert([{ story_id: currentId, content: input.value }]);
-            input.value = "";
+            fetchMetadata();
             fetchComments();
         }
+    }
 
-        function showReplyInput(parentId) {
-            const el = document.getElementById(`reply-to-${parentId}`);
-            el.classList.toggle('hidden');
+    // 2. METADATA & LIKES (FIREBASE VERSION)
+    async function fetchMetadata() {
+        const docRef = db.collection("stories_meta").doc(currentId.toString());
+        const doc = await docRef.get();
+        
+        if (doc.exists) {
+            document.getElementById('like-count').innerText = `${doc.data().likes || 0} LIKES`;
+        }
+        
+        const btn = document.getElementById('like-btn');
+        if (localStorage.getItem(`liked_story_${currentId}`)) {
+            btn.innerText = '♥';
+            btn.classList.add('opacity-50');
+        } else {
+            btn.innerText = '♡';
+            btn.classList.remove('opacity-50');
+        }
+    }
+
+    async function handleLike() {
+        const hasLiked = localStorage.getItem(`liked_story_${currentId}`);
+        const btn = document.getElementById('like-btn');
+        const docRef = db.collection("stories_meta").doc(currentId.toString());
+
+        if (hasLiked) {
+            await docRef.set({ likes: firebase.firestore.FieldValue.increment(-1) }, { merge: true });
+            localStorage.removeItem(`liked_story_${currentId}`);
+            btn.innerText = '♡';
+            btn.classList.remove('opacity-50');
+        } else {
+            await docRef.set({ likes: firebase.firestore.FieldValue.increment(1) }, { merge: true });
+            localStorage.setItem(`liked_story_${currentId}`, true);
+            btn.innerText = '♥';
+            btn.classList.add('opacity-50');
+        }
+        fetchMetadata();
+    }
+
+    // 3. COMMENTS & REPLIES (FIREBASE VERSION)
+    async function postComment() {
+        const input = document.getElementById('comment-input');
+        if (!input.value.trim()) return;
+
+        await db.collection("comments").add({
+            story_id: currentId,
+            content: input.value,
+            parent_id: null,
+            created_at: firebase.firestore.Timestamp.now()
+        });
+
+        input.value = "";
+        fetchComments();
+    }
+
+    function showReplyInput(parentId) {
+        const el = document.getElementById(`reply-to-${parentId}`);
+        el.classList.toggle('hidden');
+    }
+
+    async function postReply(parentId) {
+        const input = document.getElementById(`input-${parentId}`);
+        if (!input.value.trim()) return;
+
+        await db.collection("comments").add({
+            story_id: currentId,
+            content: input.value,
+            parent_id: parentId,
+            created_at: firebase.firestore.Timestamp.now()
+        });
+
+        input.value = "";
+        fetchComments();
+    }
+
+    async function fetchComments() {
+        const list = document.getElementById('comment-list');
+        const snapshot = await db.collection("comments")
+            .where("story_id", "==", currentId)
+            .orderBy("created_at", "asc")
+            .get();
+
+        const data = [];
+        snapshot.forEach(doc => data.push({ id: doc.id, ...doc.data() }));
+        
+        if (data.length === 0) {
+            list.innerHTML = "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>No marginalia recorded.</p>";
+            return;
         }
 
-        async function postReply(parentId) {
-            const input = document.getElementById(`input-${parentId}`);
-            if (!input.value.trim()) return;
+        const mainComments = data.filter(c => !c.parent_id);
+        const replies = data.filter(c => c.parent_id);
 
-            const { error } = await sbClient.from('comments').insert([{ 
-                story_id: currentId, 
-                content: input.value,
-                parent_id: parentId 
-            }]);
-
-            if (!error) {
-                input.value = "";
-                fetchComments();
-            }
-        }
-
-        async function fetchComments() {
-            const list = document.getElementById('comment-list');
-            const { data } = await sbClient.from('comments').select('*').eq('story_id', currentId).order('created_at', { ascending: true });
-            
-            if (!data || data.length === 0) {
-                list.innerHTML = "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>No marginalia recorded.</p>";
-                return;
-            }
-
-            const mainComments = data.filter(c => !c.parent_id);
-            const replies = data.filter(c => c.parent_id);
-
-            list.innerHTML = mainComments.map(c => {
-                const threadReplies = replies.filter(r => r.parent_id === c.id);
-                return `
-                    <div class="comment-item">
-                        <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">${new Date(c.created_at).toLocaleDateString()}</p>
-                        <p class="reading-font text-gray-300 text-sm mb-3">${c.content}</p>
-                        <button onclick="showReplyInput('${c.id}')" class="text-[8px] text-[#d4af37] uppercase tracking-widest hover:underline">Reply</button>
-                        
-                        <div class="ml-8 mt-6 border-l border-white/5 pl-6">
-                            ${threadReplies.map(r => `
-                                <div class="mb-4">
-                                    <p class="text-[7px] text-gray-600 font-mono uppercase mb-1">${new Date(r.created_at).toLocaleDateString()}</p>
-                                    <p class="reading-font text-gray-400 text-xs">${r.content}</p>
-                                </div>
-                            `).join('')}
-                            <div id="reply-to-${c.id}" class="hidden mt-4">
-                                <textarea id="input-${c.id}" class="w-full p-3 text-xs mb-2" rows="2" placeholder="Reply..."></textarea>
-                                <button onclick="postReply('${c.id}')" class="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">Post Response</button>
+        list.innerHTML = mainComments.map(c => {
+            const threadReplies = replies.filter(r => r.parent_id === c.id);
+            const dateStr = c.created_at?.toDate().toLocaleDateString() || "RECENT";
+            return `
+                <div class="comment-item">
+                    <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">${dateStr}</p>
+                    <p class="reading-font text-gray-300 text-sm mb-3">${c.content}</p>
+                    <button onclick="showReplyInput('${c.id}')" class="text-[8px] text-[#d4af37] uppercase tracking-widest hover:underline">Reply</button>
+                    <div class="ml-8 mt-6 border-l border-white/5 pl-6">
+                        ${threadReplies.map(r => `
+                            <div class="mb-4">
+                                <p class="text-[7px] text-gray-600 font-mono uppercase mb-1">${r.created_at?.toDate().toLocaleDateString() || "RECENT"}</p>
+                                <p class="reading-font text-gray-400 text-xs">${r.content}</p>
                             </div>
+                        `).join('')}
+                        <div id="reply-to-${c.id}" class="hidden mt-4">
+                            <textarea id="input-${c.id}" class="w-full p-3 text-xs mb-2" rows="2" placeholder="Reply..."></textarea>
+                            <button onclick="postReply('${c.id}')" class="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">Post Response</button>
                         </div>
                     </div>
-                `;
-            }).join('');
-        }
+                </div>
+            `;
+        }).join('');
+    }
 
-        // 4. UTILITIES
-        function adjustFont(delta) {
-            const content = document.getElementById('content');
-            if ((delta > 0 && currentFontSize < 36) || (delta < 0 && currentFontSize > 12)) {
-                currentFontSize += delta;
-                content.style.fontSize = currentFontSize + 'px';
-            }
+    // 4. UTILITIES (FONT & SCROLL)
+    function adjustFont(delta) {
+        const content = document.getElementById('content');
+        if ((delta > 0 && currentFontSize < 36) || (delta < 0 && currentFontSize > 12)) {
+            currentFontSize += delta;
+            content.style.fontSize = currentFontSize + 'px';
         }
+    }
 
-        window.onscroll = () => {
-            const scroll = document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    window.onscroll = () => {
+        const scroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        if (height > 0) {
             document.getElementById('scroll-progress').style.width = (scroll / height * 100) + "%";
-        };
+        }
+    };
 
-        window.onload = init;
-    </script>
+    window.onload = init;
+</script>
 </body>
 </html>
