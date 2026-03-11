@@ -225,46 +225,50 @@ count.innerText="0 LIKES";
 }
 
 }
+async function handleLike() {
+    const docRef = db.collection("stories_meta").doc(currentId.toString());
+    const btn = document.getElementById('like-btn');
+    const hasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
 
+    try {
+        if (hasLiked) {
+            // 1. REMOVE LIKE (Global)
+            await docRef.update({
+                likes: firebase.firestore.FieldValue.increment(-1)
+            }).catch(async (error) => {
+                // If document doesn't exist, create it at 0
+                if (error.code === 'not-found') {
+                    await docRef.set({ likes: 0 });
+                }
+            });
 
+            localStorage.setItem(`liked_story_${currentId}`, "false");
+            btn.classList.remove('active-shine');
+            btn.innerText = '♡';
+        } else {
+            // 2. ADD LIKE (Global)
+            await docRef.update({
+                likes: firebase.firestore.FieldValue.increment(1)
+            }).catch(async (error) => {
+                // If document doesn't exist, create it at 1
+                if (error.code === 'not-found') {
+                    await docRef.set({ likes: 1 });
+                }
+            });
 
-async function handleLike(){
-
-const btn=document.getElementById("like-btn");
-const count=document.getElementById("like-count");
-
-const liked=localStorage.getItem(`liked_story_${currentId}`)==="true";
-
-if(liked){
-
-await db.collection("stories_meta")
-.doc(currentId.toString())
-.set({liked:false},{merge:true});
-
-btn.innerText="♡";
-btn.classList.remove("active");
-count.innerText="0 LIKES";
-
-localStorage.setItem(`liked_story_${currentId}`,"false");
-
-}else{
-
-await db.collection("stories_meta")
-.doc(currentId.toString())
-.set({liked:true},{merge:true});
-
-btn.innerText="♥";
-btn.classList.add("active");
-count.innerText="1 LIKE";
-
-localStorage.setItem(`liked_story_${currentId}`,"true");
-
+            localStorage.setItem(`liked_story_${currentId}`, "true");
+            btn.classList.add('active-shine');
+            btn.innerText = '♥';
+        }
+    } catch (err) {
+        console.error("Archive Error:", err);
+    }
+    
+    // 3. Refresh display for everyone
+    fetchMetadata();
 }
 
-}
-
-
-
+  }
 async function postComment(){
 
 const input=document.getElementById("comment-input");
