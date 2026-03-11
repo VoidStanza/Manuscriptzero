@@ -11,353 +11,196 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400&family=Montserrat:wght@300;400;600&display=swap');
+    
+    body { background:#0a0a0b; color:#e2e2e2; font-family:'Montserrat',sans-serif; margin:0; overflow-x:hidden; }
+    .serif { font-family:'Playfair Display',serif; }
+    .reading-font { font-family:'Lora',serif; line-height:1.9; transition:font-size .2s; }
+    
+    #scroll-progress { position:fixed; top:0; left:0; height:2px; background:#d4af37; z-index:100; width:0%; box-shadow:0 0 10px #d4af37; }
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400&family=Montserrat:wght@300;400;600&display=swap');
+    /* Updated Like Button CSS to match JS classes */
+    #like-btn { color:#4a3f1d; font-size:40px; cursor:pointer; transition:.4s cubic-bezier(.175,.885,.32,1.275); }
+    #like-btn.active-shine {
+        color:#ffcc00 !important;
+        transform:scale(1.3);
+        text-shadow:0 0 15px #ffcc00, 0 0 30px #d4af37, 0 0 5px #fff;
+    }
 
-body{
-background:#0a0a0b;
-color:#e2e2e2;
-font-family:'Montserrat',sans-serif;
-margin:0;
-overflow-x:hidden;
-}
-
-.serif{
-font-family:'Playfair Display',serif;
-}
-
-.reading-font{
-font-family:'Lora',serif;
-line-height:1.9;
-transition:font-size .2s;
-}
-
-#scroll-progress{
-position:fixed;
-top:0;
-left:0;
-height:2px;
-background:#d4af37;
-z-index:100;
-width:0%;
-box-shadow:0 0 10px #d4af37;
-}
-
-#like-btn{
-color:#555;
-font-size:40px;
-cursor:pointer;
-transition:.4s cubic-bezier(.175,.885,.32,1.275);
-}
-
-#like-btn.active{
-color:#ffcc00;
-transform:scale(1.3);
-text-shadow:0 0 15px #ffcc00,0 0 30px #d4af37,0 0 5px #fff;
-}
-
-.comment-item{
-border-left:1px solid rgba(212,175,55,.2);
-padding-left:1.5rem;
-margin-bottom:3rem;
-}
-
-textarea{
-background:#000;
-border:1px solid rgba(255,255,255,.05);
-color:#ccc;
-outline:none;
-}
-
-textarea:focus{
-border-color:#d4af37;
-}
-
+    .comment-item { border-left:1px solid rgba(212,175,55,.2); padding-left:1.5rem; margin-bottom:3rem; }
+    textarea { background:#000; border:1px solid rgba(255,255,255,0.05); color:#ccc; outline:none; width:100%; padding:20px; }
+    textarea:focus { border-color:#d4af37; }
 </style>
-</head>
-
-<body>
 
 <div id="scroll-progress"></div>
 
 <nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/95 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
-
-<h2 class="serif text-2xl text-[#d4af37] cursor-pointer hover:opacity-70"
-onclick="location.href='gallery.html'">V.</h2>
-
-<div class="flex items-center space-x-6">
-
-<span class="text-[9px] uppercase tracking-[0.4em] text-gray-500 hidden md:block">
-Record Decrypted
-</span>
-
-<div class="flex items-center border border-white/10 rounded-full px-3 py-1 bg-black/50">
-
-<button onclick="adjustFont(-2)" class="text-gray-500 text-xs px-2 font-bold">A-</button>
-
-<div class="w-[1px] h-3 bg-white/10 mx-1"></div>
-
-<button onclick="adjustFont(2)" class="text-gray-200 text-xs px-2 font-bold">A+</button>
-
-</div>
-</div>
+    <h2 class="serif text-2xl text-[#d4af37] cursor-pointer hover:opacity-70" onclick="location.href='gallery.html'">V.</h2>
+    <div class="flex items-center space-x-6">
+        <span class="text-[9px] uppercase tracking-[0.4em] text-gray-500 hidden md:block">Record Decrypted</span>
+        <div class="flex items-center border border-white/10 rounded-full px-3 py-1 bg-black/50">
+            <button onclick="adjustFont(-2)" class="text-gray-500 text-xs px-2 font-bold">A-</button>
+            <div class="w-[1px] h-3 bg-white/10 mx-1"></div>
+            <button onclick="adjustFont(2)" class="text-gray-200 text-xs px-2 font-bold">A+</button>
+        </div>
+    </div>
 </nav>
 
-
 <main class="max-w-2xl mx-auto px-6 pt-48 pb-24">
+    <header class="mb-20 text-center">
+        <h1 id="title" class="serif text-5xl text-[#d4af37] mb-6"></h1>
+        <p id="synopsis" class="reading-font italic text-gray-500 text-lg"></p>
+    </header>
 
-<header class="mb-20 text-center">
+    <article id="content" class="reading-font text-gray-300 text-lg mb-32"></article>
 
-<h1 id="title" class="serif text-5xl text-[#d4af37] mb-6"></h1>
+    <section class="border-t border-white/5 pt-16">
+        <div class="flex flex-col items-center mb-20">
+            <div id="like-btn" onclick="handleLike()">♡</div>
+            <span id="like-count" class="text-[10px] text-[#d4af37] mt-4 tracking-[0.3em] uppercase">0 LIKES</span>
+        </div>
 
-<p id="synopsis" class="reading-font italic text-gray-500 text-lg"></p>
-
-</header>
-
-<article id="content" class="reading-font text-gray-300 text-lg mb-32"></article>
-
-
-<section class="border-t border-white/5 pt-16">
-
-<div class="flex flex-col items-center mb-20">
-
-<div id="like-btn" onclick="handleLike()">♡</div>
-
-<span id="like-count"
-class="text-[10px] text-[#d4af37] mt-4 tracking-[0.3em] uppercase">
-0 LIKES
-</span>
-
-</div>
-
-
-<div class="space-y-10">
-
-<h3 class="serif text-2xl text-[#d4af37]">Marginalia</h3>
-
-<textarea id="comment-input"
-class="w-full p-5 text-sm"
-rows="4"
-placeholder="Leave a trace..."></textarea>
-
-<button onclick="postComment()"
-class="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition">
-
-Record in the Margin
-
-</button>
-
-<div id="comment-list" class="mt-16 pt-8"></div>
-
-</div>
-</section>
+        <div class="space-y-10">
+            <h3 class="serif text-2xl text-[#d4af37]">Marginalia</h3>
+            <textarea id="comment-input" rows="4" placeholder="Leave a trace..."></textarea>
+            <button onclick="postComment()" class="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#d4af37] hover:text-black transition">
+                Record in the Margin
+            </button>
+            <div id="comment-list" class="mt-16 pt-8"></div>
+        </div>
+    </section>
 </main>
 
-
 <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCFuBka3dQmAl-iasBdjDW_qVNITrKqkaw",
+        authDomain: "vault-ff944.firebaseapp.com",
+        projectId: "vault-ff944",
+        storageBucket: "vault-ff944.firebasestorage.app",
+        messagingSenderId: "473879346291",
+        appId: "1:473879346291:web:29a57ad2b5fd98f3b8fe06"
+    };
 
-const firebaseConfig={
-apiKey:"AIzaSyCFuBka3dQmAl-iasBdjDW_qVNITrKqkaw",
-authDomain:"vault-ff944.firebaseapp.com",
-projectId:"vault-ff944",
-storageBucket:"vault-ff944.firebasestorage.app",
-messagingSenderId:"473879346291",
-appId:"1:473879346291:web:29a57ad2b5fd98f3b8fe06"
-};
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-firebase.initializeApp(firebaseConfig);
+    let currentId = null;
+    let currentFontSize = 18;
 
-const db=firebase.firestore();
+    async function init() {
+        const params = new URLSearchParams(window.location.search);
+        currentId = parseInt(params.get('id'));
 
-let currentId=null;
-let currentFontSize=18;
-
-
-
-async function init(){
-
-const params=new URLSearchParams(window.location.search);
-
-currentId=parseInt(params.get('id'));
-
-const story=stories.find(s=>s.id===currentId);
-
-if(!story){
-
-document.getElementById("content").innerText="Record not found.";
-
-return;
-
-}
-
-document.getElementById("title").innerText=story.title;
-document.getElementById("synopsis").innerText=story.synopsis;
-document.getElementById("content").innerHTML=story.text;
-
-loadLikeState();
-fetchComments();
-
-}
-
-
-
-async function loadLikeState(){
-
-const btn=document.getElementById("like-btn");
-const count=document.getElementById("like-count");
-
-const liked=localStorage.getItem(`liked_story_${currentId}`)==="true";
-
-if(liked){
-
-btn.innerText="♥";
-btn.classList.add("active");
-count.innerText="1 LIKE";
-
-}else{
-
-btn.innerText="♡";
-btn.classList.remove("active");
-count.innerText="0 LIKES";
-
-}
-
-}
-async function handleLike() {
-    const docRef = db.collection("stories_meta").doc(currentId.toString());
-    const btn = document.getElementById('like-btn');
-    const hasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
-
-    try {
-        if (hasLiked) {
-            // 1. REMOVE LIKE (Global)
-            await docRef.update({
-                likes: firebase.firestore.FieldValue.increment(-1)
-            }).catch(async (error) => {
-                // If document doesn't exist, create it at 0
-                if (error.code === 'not-found') {
-                    await docRef.set({ likes: 0 });
-                }
-            });
-
-            localStorage.setItem(`liked_story_${currentId}`, "false");
-            btn.classList.remove('active-shine');
-            btn.innerText = '♡';
-        } else {
-            // 2. ADD LIKE (Global)
-            await docRef.update({
-                likes: firebase.firestore.FieldValue.increment(1)
-            }).catch(async (error) => {
-                // If document doesn't exist, create it at 1
-                if (error.code === 'not-found') {
-                    await docRef.set({ likes: 1 });
-                }
-            });
-
-            localStorage.setItem(`liked_story_${currentId}`, "true");
-            btn.classList.add('active-shine');
-            btn.innerText = '♥';
+        if (typeof stories === 'undefined') {
+            document.getElementById("content").innerText = "Archive link severed (stories.js missing).";
+            return;
         }
-    } catch (err) {
-        console.error("Archive Error:", err);
+
+        const story = stories.find(s => s.id === currentId);
+
+        if (!story) {
+            document.getElementById("content").innerText = "Record not found.";
+            return;
+        }
+
+        document.getElementById("title").innerText = story.title;
+        document.getElementById("synopsis").innerText = story.synopsis;
+        document.getElementById("content").innerHTML = story.text;
+
+        fetchMetadata(); // Gets global likes
+        fetchComments();
     }
-    
-    // 3. Refresh display for everyone
-    fetchMetadata();
-}
 
-  }
-async function postComment(){
+    // Fetches the REAL global like count from Firebase
+    async function fetchMetadata() {
+        if (!currentId) return;
+        const docRef = db.collection("stories_meta").doc(currentId.toString());
+        
+        docRef.onSnapshot((doc) => {
+            const btn = document.getElementById('like-btn');
+            const countSpan = document.getElementById('like-count');
+            
+            const currentLikes = doc.exists ? (doc.data().likes || 0) : 0;
+            countSpan.innerText = `${currentLikes} LIKES`;
 
-const input=document.getElementById("comment-input");
+            // Local state check for the heart color
+            if (localStorage.getItem(`liked_story_${currentId}`) === "true") {
+                btn.innerText = '♥';
+                btn.classList.add('active-shine');
+            } else {
+                btn.innerText = '♡';
+                btn.classList.remove('active-shine');
+            }
+        });
+    }
 
-if(!input.value.trim()) return;
+    async function handleLike() {
+        const docRef = db.collection("stories_meta").doc(currentId.toString());
+        const hasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
 
-await db.collection("comments").add({
+        try {
+            if (hasLiked) {
+                await docRef.set({ 
+                    likes: firebase.firestore.FieldValue.increment(-1) 
+                }, { merge: true });
+                localStorage.setItem(`liked_story_${currentId}`, "false");
+            } else {
+                await docRef.set({ 
+                    likes: firebase.firestore.FieldValue.increment(1) 
+                }, { merge: true });
+                localStorage.setItem(`liked_story_${currentId}`, "true");
+            }
+        } catch (err) {
+            console.error("Archive Error:", err);
+        }
+    }
 
-story_id:currentId,
-content:input.value,
-created_at:firebase.firestore.Timestamp.now()
+    async function postComment() {
+        const input = document.getElementById("comment-input");
+        if (!input.value.trim()) return;
 
-});
+        await db.collection("comments").add({
+            story_id: currentId,
+            content: input.value,
+            created_at: firebase.firestore.Timestamp.now()
+        });
 
-input.value="";
+        input.value = "";
+        fetchComments();
+    }
 
-fetchComments();
+    async function fetchComments() {
+        const list = document.getElementById("comment-list");
+        const snapshot = await db.collection("comments")
+            .where("story_id", "==", currentId)
+            .get();
 
-}
+        let data = [];
+        snapshot.forEach(doc => data.push(doc.data()));
+        data.sort((a, b) => b.created_at - a.created_at);
 
+        list.innerHTML = data.length ? data.map(c => `
+            <div class="comment-item">
+                <p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">
+                    ${c.created_at?.toDate().toLocaleDateString() || "RECENT"}
+                </p>
+                <p class="reading-font text-gray-300 text-sm">${c.content}</p>
+            </div>
+        `).join("") : "<p class='text-gray-700 text-[9px] uppercase tracking-widest'>Empty archives.</p>";
+    }
 
+    function adjustFont(delta) {
+        currentFontSize = Math.min(Math.max(currentFontSize + delta, 12), 32);
+        document.getElementById("content").style.fontSize = currentFontSize + "px";
+    }
 
-async function fetchComments(){
+    window.onscroll = function() {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
 
-const list=document.getElementById("comment-list");
-
-const snapshot=await db.collection("comments")
-.where("story_id","==",currentId)
-.get();
-
-let data=[];
-
-snapshot.forEach(doc=>data.push(doc.data()));
-
-data.sort((a,b)=>b.created_at-a.created_at);
-
-list.innerHTML=data.length?
-
-data.map(c=>`
-
-<div class="comment-item">
-
-<p class="text-[8px] text-gray-600 font-mono mb-2 uppercase tracking-widest">
-
-${c.created_at?.toDate().toLocaleDateString()}
-
-</p>
-
-<p class="reading-font text-gray-300 text-sm">${c.content}</p>
-
-</div>
-
-`).join("")
-
-:
-
-"<p class='text-gray-700 text-[9px] uppercase tracking-widest'>Empty archives.</p>";
-
-}
-
-
-
-function adjustFont(delta){
-
-currentFontSize=Math.min(Math.max(currentFontSize+delta,12),32);
-
-document.getElementById("content").style.fontSize=currentFontSize+"px";
-
-}
-
-
-
-window.onscroll=function(){
-
-const winScroll=document.documentElement.scrollTop;
-
-const height=document.documentElement.scrollHeight-document.documentElement.clientHeight;
-
-const scrolled=(winScroll/height)*100;
-
-document.getElementById("scroll-progress").style.width=scrolled+"%";
-
-};
-
-
-
-window.onload=init;
-
+    window.onload = init;
 </script>
-
-</body>
-</html>
