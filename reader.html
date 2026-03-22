@@ -57,8 +57,6 @@
 
     <section class="border-t border-white/5 pt-16">
         <div class="flex flex-col items-center mb-20">
-            <div id="like-btn" onclick="handleLike()">♡</div>
-            <span id="like-count" class="text-[10px] text-[#d4af37] mt-4 tracking-[0.3em] uppercase">0 LIKES</span>
         </div>
 
         <div class="space-y-10">
@@ -111,49 +109,6 @@
         fetchMetadata(); // Gets global likes
         fetchComments();
     }
-
-    // Fetches the REAL global like count from Firebase
-    async function fetchMetadata() {
-        if (!currentId) return;
-        const docRef = db.collection("stories_meta").doc(currentId.toString());
-        
-        docRef.onSnapshot((doc) => {
-            const btn = document.getElementById('like-btn');
-            const countSpan = document.getElementById('like-count');
-            
-            const currentLikes = doc.exists ? (doc.data().likes || 0) : 0;
-            countSpan.innerText = `${currentLikes} LIKES`;
-
-            // Local state check for the heart color
-            if (localStorage.getItem(`liked_story_${currentId}`) === "true") {
-                btn.innerText = '♥';
-                btn.classList.add('active-shine');
-            } else {
-                btn.innerText = '♡';
-                btn.classList.remove('active-shine');
-            }
-        });
-    }
-
-    async function handleLike() {
-        const docRef = db.collection("stories_meta").doc(currentId.toString());
-        const hasLiked = localStorage.getItem(`liked_story_${currentId}`) === "true";
-
-        try {
-            if (hasLiked) {
-                await docRef.set({ 
-                    likes: firebase.firestore.FieldValue.increment(-1) 
-                }, { merge: true });
-                localStorage.setItem(`liked_story_${currentId}`, "false");
-            } else {
-                await docRef.set({ 
-                    likes: firebase.firestore.FieldValue.increment(1) 
-                }, { merge: true });
-                localStorage.setItem(`liked_story_${currentId}`, "true");
-            }
-        } catch (err) {
-            console.error("Archive Error:", err);
-        }
     }
 
     async function postComment() {
