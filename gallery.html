@@ -1,86 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE VAULT | GALLERY</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="stories.js"></script>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital@0;1&display=swap');
-        
-        body { background: #0a0a0b; color: #e2e2e2; font-family: 'Lora', serif; }
-        .card { 
-            border: 1px solid rgba(255,255,255,0.05); 
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-            overflow: hidden; 
-            background: #111;
-        }
-        .card:hover {
-            border-color: rgba(212, 175, 55, 0.3);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .card:hover img { filter: grayscale(0%); transform: scale(1.05); }
-        img { filter: grayscale(100%); transition: all 0.8s ease; }
-        .serif { font-family: 'Playfair Display', serif; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE VAULT | GALLERY</title>
+
+<!-- SEO & Share Card -->
+<meta name="description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:title" content="THE VAULT | ManuscriptZero">
+<meta property="og:description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/gallery.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+<meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
+<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+<script src="stories.js" defer></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital@0;1&display=swap');
+
+body { background: #0a0a0b; color: #e2e2e2; font-family: 'Lora', serif; }
+
+.card {
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  background: #111;
+}
+
+.card:hover {
+  border-color: rgba(212, 175, 55, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.card:hover img { filter: grayscale(0%); transform: scale(1.05); }
+img { filter: grayscale(100%); transition: all 0.8s ease; }
+.serif { font-family: 'Playfair Display', serif; }
+</style>
 </head>
 <body class="p-8">
 
-    <nav class="mb-20 max-w-6xl mx-auto flex justify-between items-center">
-        <h1 class="serif text-[#d4af37] text-3xl tracking-tighter cursor-pointer" onclick="location.href='index.html'">V.</h1>
-        
-        <button onclick="goToLatest()" class="text-[9px] uppercase tracking-[0.4em] text-[#d4af37] border border-[#d4af37]/30 px-6 py-2 hover:bg-[#d4af37] hover:text-black transition-all">
-            Access Latest Artifact
-        </button>
-    </nav>
+<nav class="mb-20 max-w-6xl mx-auto flex justify-between items-center">
+  <h1 class="serif text-[#d4af37] text-3xl tracking-tighter cursor-pointer" onclick="location.href='index.html'">V.</h1>
+  <button onclick="goToLatest()" class="text-[9px] uppercase tracking-[0.4em] text-[#d4af37] border border-[#d4af37]/30 px-6 py-2 hover:bg-[#d4af37] hover:text-black transition-all">
+    Access Latest Artifact
+  </button>
+</nav>
 
-    <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto"></div>
+<div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto"></div>
 
-    <script>
-        // Logic to build the grid
-        function renderGrid() {
-            const gridElement = document.getElementById('grid');
-            
-            // Check if the stories.js file actually loaded the array
-            if (typeof stories === 'undefined' || !stories.length) {
-                gridElement.innerHTML = "<p class='text-gray-600 uppercase tracking-widest text-[10px]'>Archives unavailable. Check stories.js connection.</p>";
-                return;
-            }
+<script>
+  function renderGrid() {
+    const gridElement = document.getElementById('grid');
 
-            gridElement.innerHTML = stories.map(s => `
-                <div onclick="location.href='reader.html?id=${s.id}'" class="card cursor-pointer group">
-                    <div class="aspect-[2/3] w-full overflow-hidden">
-                        <img src="${s.cover}" alt="${s.title}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-2">
-                             <h3 class="serif text-lg text-[#d4af37] group-hover:text-white transition-colors">${s.title}</h3>
-                             <span class="text-[8px] text-gray-600 font-mono">#${s.id}</span>
-                        </div>
-                        <p class="text-xs text-gray-500 leading-relaxed italic line-clamp-2">${s.synopsis || "No data decrypted."}</p>
-                        <div class="mt-4 pt-4 border-t border-white/5 flex justify-end items-center">
-                            <span class="text-[8px] uppercase tracking-widest text-[#d4af37] opacity-0 group-hover:opacity-100 transition-opacity">Access Record →</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
+    if (typeof stories === 'undefined' || !stories.length) {
+      gridElement.innerHTML = "<p class='text-gray-600 uppercase tracking-widest text-[10px]'>Archives unavailable. Check stories.js connection.</p>";
+      return;
+    }
 
-        // Logic for the 'Latest' button
-        function goToLatest() {
-            if (typeof stories !== 'undefined' && stories.length > 0) {
-                const latestId = Math.max(...stories.map(s => s.id));
-                window.location.href = `reader.html?id=${latestId}`;
-            }
-        }
+    gridElement.innerHTML = stories.map(s => `
+      <div onclick="location.href='reader.html?id=${s.id}'" class="card cursor-pointer group">
+        <div class="aspect-[2/3] w-full overflow-hidden">
+          <img src="${s.cover}" alt="${s.title}" class="w-full h-full object-cover"
+               onerror="this.style.background='#1a1a1a'">
+        </div>
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="serif text-lg text-[#d4af37] group-hover:text-white transition-colors">${s.title}</h3>
+            <span class="text-[8px] text-gray-600 font-mono">#${s.id}</span>
+          </div>
+          <p class="text-xs text-gray-500 leading-relaxed italic line-clamp-2">${s.synopsis || "No data decrypted."}</p>
+          <div class="mt-4 pt-4 border-t border-white/5 flex justify-end items-center">
+            <span class="text-[8px] uppercase tracking-widest text-[#d4af37] opacity-0 group-hover:opacity-100 transition-opacity">Access Record →</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
 
-        // Run the render function immediately
-        renderGrid();
-    </script>
+  function goToLatest() {
+    if (typeof stories !== 'undefined' && stories.length > 0) {
+      const latestId = Math.max(...stories.map(s => s.id));
+      window.location.href = `reader.html?id=${latestId}`;
+    }
+  }
+
+  window.onload = renderGrid;
+</script>
+
 </body>
 </html>
-
