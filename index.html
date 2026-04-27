@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>THE VAULT | ENTRY</title>
+
+<!-- SEO & Share Card -->
+<meta name="description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:title" content="THE VAULT | ManuscriptZero">
+<meta property="og:description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+<meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
+<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300&display=swap');
@@ -92,7 +105,6 @@ body {
 </div>
 
 <script>
-  // If already unlocked this session, skip straight to gallery
   if (sessionStorage.getItem('vaultUnlocked')) {
     window.location.href = 'gallery.html';
   }
@@ -100,7 +112,6 @@ body {
   let currentRotation = 0;
   const unlockThreshold = 360;
 
-  // Keyboard support
   document.getElementById('gear-container').addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') rotateGear();
   });
@@ -126,7 +137,6 @@ body {
       statusText.classList.add('text-unlock-glow');
       gear.classList.add('unlock-glow');
 
-      // Mark as unlocked for this browser session
       sessionStorage.setItem('vaultUnlocked', 'true');
 
       setTimeout(() => {
