@@ -1,130 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>THE VAULT | ENTRY</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300&display=swap');
-        
-        body { 
-            background: #0a0a0b; 
-            color: #d4af37; 
-            font-family: 'Montserrat', sans-serif;
-            overflow: hidden; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>THE VAULT | ENTRY</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300&display=swap');
 
-        .serif { font-family: 'Playfair Display', serif; }
+body {
+  background: #0a0a0b;
+  color: #d4af37;
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
 
-        #gear-container { 
-            width: 240px; 
-            height: 240px; 
-            cursor: pointer; 
-            position: relative;
-        }
+.serif { font-family: 'Playfair Display', serif; }
 
-        #vault-gear { 
-            width: 100%; 
-            height: 100%; 
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); 
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2));
-        }
+#gear-container {
+  width: 240px;
+  height: 240px;
+  cursor: pointer;
+  position: relative;
+}
 
-        /* Access Granted Glow for Text */
-        .text-unlock-glow {
-            animation: textGlow 0.8s ease-out forwards;
-            color: #d4af37 !important;
-        }
+#vault-gear {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2));
+}
 
-        @keyframes textGlow {
-            0% { text-shadow: 0 0 0px rgba(212, 175, 55, 0); }
-            100% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.8), 0 0 40px rgba(212, 175, 55, 0.4); transform: scale(1.05); }
-        }
+.text-unlock-glow {
+  animation: textGlow 0.8s ease-out forwards;
+  color: #d4af37 !important;
+}
 
-        /* Access Granted Glow for Gear */
-        .unlock-glow { 
-            animation: gearGlow 0.8s ease-out forwards; 
-        }
+@keyframes textGlow {
+  0% { text-shadow: 0 0 0px rgba(212, 175, 55, 0); }
+  100% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.8), 0 0 40px rgba(212, 175, 55, 0.4); transform: scale(1.05); }
+}
 
-        @keyframes gearGlow {
-            0% { filter: brightness(1) drop-shadow(0 0 15px #d4af37); }
-            100% { filter: brightness(2) drop-shadow(0 0 60px #d4af37); transform: scale(1.1); }
-        }
+.unlock-glow {
+  animation: gearGlow 0.8s ease-out forwards;
+}
 
-        .fade-out {
-            opacity: 0;
-            transition: opacity 0.8s ease;
-            pointer-events: none;
-        }
-    </style>
+@keyframes gearGlow {
+  0% { filter: brightness(1) drop-shadow(0 0 15px #d4af37); }
+  100% { filter: brightness(2) drop-shadow(0 0 60px #d4af37); transform: scale(1.1); }
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+</style>
 </head>
 <body>
 
-    <div id="ui-wrapper" class="flex flex-col items-center">
-        <div class="mb-12 text-center">
-            <h2 class="serif tracking-[0.6em] text-[10px] uppercase mb-2">Vault</h2>
-            <p id="unlock-progress" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">
-                Two-Phase Verification Required
-            </p>
-        </div>
+<div id="ui-wrapper" class="flex flex-col items-center">
+  <div class="mb-12 text-center">
+    <h2 class="serif tracking-[0.6em] text-[10px] uppercase mb-2">Vault</h2>
+    <p id="unlock-progress" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">
+      Two-Phase Verification Required
+    </p>
+  </div>
 
-        <div id="gear-container" class="relative group" onclick="rotateGear()">
-            <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-60 h-60">
-                <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
-                <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
-                <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
-            </svg>
-        </div>
+  <div id="gear-container" class="relative group"
+       role="button"
+       aria-label="Turn the vault gear to unlock"
+       tabindex="0"
+       onclick="rotateGear()">
+    <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-60 h-60">
+      <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
+      <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="50" cy="50" r="20" stroke="#d4af37" stroke-width="2"/>
+      <path d="M45 50L50 45L55 50L50 55Z" fill="#d4af37"/>
+    </svg>
+  </div>
 
-        <div id="status-text" class="mt-12 text-gray-700 font-mono text-[9px] tracking-[0.2em] uppercase">
-            Status: Secured
-        </div>
-    </div>
+  <div id="status-text" class="mt-12 text-gray-700 font-mono text-[9px] tracking-[0.2em] uppercase">
+    Status: Secured
+  </div>
+</div>
 
-    <script>
-        let currentRotation = 0;
-        const unlockThreshold = 360;
+<script>
+  // If already unlocked this session, skip straight to gallery
+  if (sessionStorage.getItem('vaultUnlocked')) {
+    window.location.href = 'gallery.html';
+  }
 
-        function rotateGear() {
-            currentRotation += 180; 
-            
-            const gear = document.getElementById('vault-gear');
-            const statusText = document.getElementById('status-text');
-            const progressHint = document.getElementById('unlock-progress');
-            
-            gear.style.transform = `rotate(${currentRotation}deg)`;
-            
-            if (currentRotation === 180) {
-                statusText.innerText = "STATUS: HALF-LOCKED";
-                progressHint.innerText = "One Final Step";
-            }
+  let currentRotation = 0;
+  const unlockThreshold = 360;
 
-            if (currentRotation >= unlockThreshold) {
-                document.getElementById('gear-container').onclick = null;
-                
-                // Final reveal and glow
-                statusText.innerText = "ACCESS GRANTED TO MANUSCRIPT ZERO";
-                statusText.classList.remove('text-gray-700'); // Remove the dim color
-                statusText.classList.add('text-unlock-glow');
-                
-                gear.classList.add('unlock-glow');
-                
-                setTimeout(() => {
-                    document.body.classList.add('fade-out');
-                    setTimeout(() => {
-                        window.location.href = 'gallery.html';
-                    }, 800);
-                }, 1000); // Slightly longer delay to appreciate the glow
-            }
-        }
-    </script>
+  // Keyboard support
+  document.getElementById('gear-container').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') rotateGear();
+  });
+
+  function rotateGear() {
+    currentRotation += 180;
+    const gear = document.getElementById('vault-gear');
+    const statusText = document.getElementById('status-text');
+    const progressHint = document.getElementById('unlock-progress');
+
+    gear.style.transform = `rotate(${currentRotation}deg)`;
+
+    if (currentRotation === 180) {
+      statusText.innerText = "STATUS: HALF-LOCKED";
+      progressHint.innerText = "One Final Step";
+    }
+
+    if (currentRotation >= unlockThreshold) {
+      document.getElementById('gear-container').onclick = null;
+
+      statusText.innerText = "ACCESS GRANTED TO MANUSCRIPT ZERO";
+      statusText.classList.remove('text-gray-700');
+      statusText.classList.add('text-unlock-glow');
+      gear.classList.add('unlock-glow');
+
+      // Mark as unlocked for this browser session
+      sessionStorage.setItem('vaultUnlocked', 'true');
+
+      setTimeout(() => {
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.href = 'gallery.html';
+        }, 800);
+      }, 1000);
+    }
+  }
+</script>
+
 </body>
 </html>
