@@ -33,7 +33,6 @@ body {
 
 body.light { background: #f5f0e8; color: #1a1a1a; }
 
-/* NAV */
 #top-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -62,13 +61,8 @@ body.light #top-nav {
   border: none;
 }
 
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+.nav-right { display: flex; align-items: center; gap: 0.75rem; }
 
-/* Font pill — taller on mobile so fingers can tap easily */
 .font-pill {
   display: flex;
   align-items: center;
@@ -76,49 +70,30 @@ body.light #top-nav {
   border-radius: 999px;
   background: rgba(255,255,255,0.03);
   transition: border-color 0.4s, background 0.4s;
-  overflow: hidden; /* keeps rounded corners on buttons */
+  overflow: hidden;
 }
 
-body.light .font-pill {
-  border-color: rgba(0,0,0,0.1);
-  background: rgba(0,0,0,0.04);
-}
+body.light .font-pill { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.04); }
 
-/* Each font button is its own full tap zone — 44px tall minimum (Apple HIG standard) */
 .font-pill button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 11px;
-  color: #666;
+  background: none; border: none; cursor: pointer;
+  font-weight: 700; font-size: 11px; color: #666;
   font-family: 'Montserrat', sans-serif;
-  /* Generous tap target */
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 44px; min-height: 44px;
   padding: 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   transition: color 0.2s, background 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
 .font-pill button:hover { color: #d4af37; }
 .font-pill button:active { background: rgba(212,175,55,0.1); }
-
 body.light .font-pill button { color: #888; }
 body.light .font-pill button:hover { color: #d4af37; }
 
-.font-sep {
-  width: 1px;
-  height: 20px;
-  background: rgba(255,255,255,0.08);
-  flex-shrink: 0;
-}
+.font-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.08); flex-shrink: 0; }
 body.light .font-sep { background: rgba(0,0,0,0.1); }
 
-/* Theme toggle — also full tap height */
 #theme-btn {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 999px;
@@ -127,13 +102,9 @@ body.light .font-sep { background: rgba(0,0,0,0.1); }
   background: rgba(255,255,255,0.03);
   color: #888;
   font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
+  font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -141,65 +112,44 @@ body.light .font-sep { background: rgba(0,0,0,0.1); }
 #theme-btn:active { background: rgba(212,175,55,0.08); }
 body.light #theme-btn { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.04); color: #666; }
 
-/* SCROLL BAR */
 #scroll-bar {
-  position: fixed;
-  top: 0; left: 0;
-  height: 2px;
-  background: #d4af37;
-  width: 0%;
-  z-index: 100;
+  position: fixed; top: 0; left: 0;
+  height: 2px; background: #d4af37;
+  width: 0%; z-index: 100;
   box-shadow: 0 0 8px #d4af37;
   transition: width 0.1s linear;
 }
 
-/* MAIN */
 #story-container {
-  max-width: 660px;
-  margin: 0 auto;
+  max-width: 660px; margin: 0 auto;
   padding: 6.5rem 1.75rem 5rem;
-  opacity: 0;
-  transition: opacity 0.7s ease;
+  opacity: 0; transition: opacity 0.7s ease;
 }
 
 #story-container.loaded { opacity: 1; }
 
 #chapter-eyebrow {
-  font-size: 9px;
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
-  color: #d4af37;
-  opacity: 0.65;
-  margin-bottom: 0.6rem;
+  font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase;
+  color: #d4af37; opacity: 0.65; margin-bottom: 0.6rem;
   font-family: 'Montserrat', sans-serif;
 }
 
 #story-title {
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.9rem, 5vw, 3.2rem);
-  color: #d4af37;
-  line-height: 1.15;
-  margin-bottom: 1rem;
+  color: #d4af37; line-height: 1.15; margin-bottom: 1rem;
 }
 
 #story-synopsis {
-  font-family: 'Lora', serif;
-  font-style: italic;
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 2.5rem;
-  line-height: 1.7;
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 1rem; color: #555; margin-bottom: 2.5rem; line-height: 1.7;
 }
 
 body.light #story-synopsis { color: #777; }
 
-/* CHAPTER NAV BAR */
 #ch-bar {
-  display: none;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.65rem 1rem;
-  margin-bottom: 2rem;
+  display: none; justify-content: space-between; align-items: center;
+  padding: 0.65rem 1rem; margin-bottom: 2rem;
   border: 1px solid rgba(255,255,255,0.06);
   background: rgba(255,255,255,0.02);
   transition: background 0.4s, border-color 0.4s;
@@ -213,8 +163,7 @@ body.light #ch-bar { border-color: rgba(0,0,0,0.08); background: rgba(0,0,0,0.02
   font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
   color: #555; font-family: 'Montserrat', sans-serif;
   transition: color 0.2s;
-  min-width: 44px; min-height: 44px;
-  padding: 0 8px;
+  min-width: 44px; min-height: 44px; padding: 0 8px;
   display: flex; align-items: center;
   -webkit-tap-highlight-color: transparent;
 }
@@ -222,17 +171,13 @@ body.light #ch-bar { border-color: rgba(0,0,0,0.08); background: rgba(0,0,0,0.02
 .ch-btn:disabled { opacity: 0.2; cursor: default; }
 
 #ch-label {
-  font-size: 9px; letter-spacing: 0.35em;
-  text-transform: uppercase; color: #d4af37;
-  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase;
+  color: #d4af37; font-family: 'Montserrat', sans-serif;
 }
 
-/* STORY CONTENT */
 #story-content {
-  font-family: 'Lora', serif;
-  line-height: 1.95;
-  font-size: 18px;
-  transition: font-size 0.2s, color 0.4s;
+  font-family: 'Lora', serif; line-height: 1.95;
+  font-size: 18px; transition: font-size 0.2s, color 0.4s;
   color: #a8a8a8;
 }
 
@@ -247,23 +192,15 @@ body.light #story-content .text-gray-500 { color: #2a2a2a !important; }
 body.light #story-content .text-\[#d4af37\] { color: #d4af37 !important; }
 
 #story-content blockquote {
-  border-left: 2px solid #d4af37;
-  padding: 0.5rem 1rem;
-  margin: 2rem 0;
-  font-style: italic;
-  color: rgba(212,175,55,0.8);
+  border-left: 2px solid #d4af37; padding: 0.5rem 1rem;
+  margin: 2rem 0; font-style: italic; color: rgba(212,175,55,0.8);
 }
 
 body.light #story-content .bg-black\/20 { background: rgba(0,0,0,0.05) !important; }
 
-/* CHAPTER FOOTER */
 #ch-footer {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 3rem 0 2rem;
-  margin-top: 3rem;
+  display: none; flex-direction: column; align-items: center;
+  gap: 1rem; padding: 3rem 0 2rem; margin-top: 3rem;
   border-top: 1px solid rgba(255,255,255,0.05);
 }
 
@@ -271,33 +208,27 @@ body.light #story-content .bg-black\/20 { background: rgba(0,0,0,0.05) !importan
 body.light #ch-footer { border-top-color: rgba(0,0,0,0.08); }
 
 .ch-end-label {
-  font-size: 9px; letter-spacing: 0.5em;
-  text-transform: uppercase; color: #555;
-  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase;
+  color: #555; font-family: 'Montserrat', sans-serif;
 }
 
 #next-ch-btn {
-  border: 1px solid rgba(212,175,55,0.4);
-  color: #d4af37; background: none;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px; letter-spacing: 0.4em;
-  text-transform: uppercase; padding: 13px 30px;
-  cursor: pointer; transition: all 0.25s;
+  border: 1px solid rgba(212,175,55,0.4); color: #d4af37; background: none;
+  font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 0.4em;
+  text-transform: uppercase; padding: 13px 30px; cursor: pointer; transition: all 0.25s;
 }
 #next-ch-btn:hover { background: #d4af37; color: #000; }
 
 #prev-ch-link {
   background: none; border: none; cursor: pointer;
-  font-size: 9px; letter-spacing: 0.3em;
-  text-transform: uppercase; color: #555;
-  font-family: 'Montserrat', sans-serif; transition: color 0.2s;
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #555; font-family: 'Montserrat', sans-serif; transition: color 0.2s;
 }
 #prev-ch-link:hover { color: #d4af37; }
 
 /* RESUME POPUP */
 #resume-popup {
-  display: none;
-  position: fixed; inset: 0; z-index: 200;
+  display: none; position: fixed; inset: 0; z-index: 200;
   background: rgba(0,0,0,0.75);
   align-items: center; justify-content: center;
   backdrop-filter: blur(6px);
@@ -305,11 +236,8 @@ body.light #ch-footer { border-top-color: rgba(0,0,0,0.08); }
 #resume-popup.show { display: flex; }
 
 .popup-inner {
-  background: #0f0f10;
-  border: 1px solid rgba(212,175,55,0.25);
-  padding: 2.5rem 2rem;
-  max-width: 340px; width: 90%;
-  text-align: center;
+  background: #0f0f10; border: 1px solid rgba(212,175,55,0.25);
+  padding: 2.5rem 2rem; max-width: 340px; width: 90%; text-align: center;
 }
 body.light .popup-inner { background: #ede8de; border-color: rgba(212,175,55,0.35); }
 
@@ -319,20 +247,17 @@ body.light .popup-inner { background: #ede8de; border-color: rgba(212,175,55,0.3
 
 .popup-yes {
   background: #d4af37; color: #000; border: none;
-  font-family: 'Montserrat', sans-serif; font-size: 9px;
-  letter-spacing: 0.35em; text-transform: uppercase;
-  padding: 12px 22px; cursor: pointer; transition: background 0.2s;
-  min-height: 44px;
+  font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 0.35em;
+  text-transform: uppercase; padding: 12px 22px; cursor: pointer;
+  transition: background 0.2s; min-height: 44px;
 }
 .popup-yes:hover { background: #c9a227; }
 
 .popup-no {
-  background: transparent; color: #666;
-  border: 1px solid rgba(255,255,255,0.08);
-  font-family: 'Montserrat', sans-serif; font-size: 9px;
-  letter-spacing: 0.35em; text-transform: uppercase;
-  padding: 12px 22px; cursor: pointer; transition: all 0.2s;
-  min-height: 44px;
+  background: transparent; color: #666; border: 1px solid rgba(255,255,255,0.08);
+  font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 0.35em;
+  text-transform: uppercase; padding: 12px 22px; cursor: pointer;
+  transition: all 0.2s; min-height: 44px;
 }
 body.light .popup-no { border-color: rgba(0,0,0,0.12); }
 .popup-no:hover { color: #d4af37; border-color: rgba(212,175,55,0.4); }
@@ -420,7 +345,11 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     if (!storyId) return;
     clearTimeout(scrollTimer);
     scrollTimer = setTimeout(function() {
-      localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: pct.toFixed(2), ch: chIndex }));
+      localStorage.setItem('progress_' + storyId, JSON.stringify({
+        pct: pct.toFixed(2),
+        ch: chIndex,
+        opened: true   // ← stays true forever once opened
+      }));
     }, 1000);
   });
 
@@ -482,7 +411,7 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     if (!story || !story.chapters) return;
     if (i < 0 || i >= story.chapters.length) return;
     chIndex = i;
-    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: '0', ch: chIndex }));
+    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: '0', ch: chIndex, opened: true }));
     renderChapter();
   }
 
@@ -500,11 +429,24 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
       document.getElementById('story-container').classList.add('loaded');
       return;
     }
+
     isNovella = story.type === 'novella' && Array.isArray(story.chapters);
+
+    // Load existing progress
     try {
       var raw = localStorage.getItem('progress_' + storyId);
       if (raw) savedData = JSON.parse(raw);
     } catch(e) {}
+
+    // ── Mark as opened immediately on visit ──
+    // This is what makes Active work — saved the moment the reader arrives
+    var currentPct = savedData ? savedData.pct : '0';
+    var currentCh  = savedData ? savedData.ch  : 0;
+    localStorage.setItem('progress_' + storyId, JSON.stringify({
+      pct: currentPct,
+      ch: currentCh,
+      opened: true
+    }));
 
     if (isNovella) {
       document.getElementById('ch-bar').classList.add('show');
