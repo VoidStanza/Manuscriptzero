@@ -226,7 +226,7 @@ body.light #ch-footer { border-top-color: rgba(0,0,0,0.08); }
 }
 #prev-ch-link:hover { color: #d4af37; }
 
-/* RESUME POPUP */
+/* ── RESUME POPUP ── */
 #resume-popup {
   display: none; position: fixed; inset: 0; z-index: 200;
   background: rgba(0,0,0,0.75);
@@ -261,12 +261,159 @@ body.light .popup-inner { background: #ede8de; border-color: rgba(212,175,55,0.3
 }
 body.light .popup-no { border-color: rgba(0,0,0,0.12); }
 .popup-no:hover { color: #d4af37; border-color: rgba(212,175,55,0.4); }
+
+/* ── COMMENT SECTION ── */
+#comment-section {
+  max-width: 660px; margin: 0 auto;
+  padding: 0 1.75rem 6rem;
+  border-top: 1px solid rgba(212,175,55,0.12);
+}
+
+body.light #comment-section { border-top-color: rgba(212,175,55,0.2); }
+
+.comment-section-title {
+  font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase;
+  color: #d4af37; opacity: 0.6; margin-bottom: 2rem; padding-top: 3rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Comment Form */
+.comment-form {
+  margin-bottom: 3rem;
+}
+
+.comment-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  color: #c9c9c9;
+  font-family: 'Lora', serif;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  padding: 1rem 1.2rem;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.2s, background 0.4s;
+  outline: none;
+}
+.comment-textarea:focus { border-color: rgba(212,175,55,0.35); background: rgba(255,255,255,0.03); }
+body.light .comment-textarea { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); color: #1a1a1a; }
+body.light .comment-textarea:focus { border-color: rgba(212,175,55,0.4); }
+.comment-textarea::placeholder { color: #444; font-style: italic; }
+body.light .comment-textarea::placeholder { color: #999; }
+
+.passphrase-row {
+  display: flex; gap: 0.75rem; margin-top: 0.75rem; align-items: stretch;
+}
+
+.passphrase-input {
+  flex: 1;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  color: #c9c9c9;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  padding: 0 1rem;
+  height: 44px;
+  outline: none;
+  transition: border-color 0.2s, background 0.4s;
+}
+.passphrase-input:focus { border-color: rgba(212,175,55,0.35); }
+body.light .passphrase-input { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); color: #1a1a1a; }
+body.light .passphrase-input:focus { border-color: rgba(212,175,55,0.4); }
+.passphrase-input::placeholder { color: #444; letter-spacing: 0.08em; font-style: italic; }
+body.light .passphrase-input::placeholder { color: #999; }
+
+.comment-submit {
+  background: none;
+  border: 1px solid rgba(212,175,55,0.35);
+  color: #d4af37;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase;
+  padding: 0 1.4rem; height: 44px;
+  cursor: pointer; transition: all 0.2s;
+  white-space: nowrap;
+}
+.comment-submit:hover { background: #d4af37; color: #000; }
+.comment-submit:disabled { opacity: 0.4; cursor: default; }
+
+.comment-msg {
+  margin-top: 0.65rem;
+  font-size: 10px; letter-spacing: 0.15em;
+  font-family: 'Montserrat', sans-serif;
+  min-height: 18px;
+  transition: color 0.2s;
+}
+.comment-msg.ok { color: rgba(212,175,55,0.75); }
+.comment-msg.err { color: #c0504d; }
+
+/* Comment List */
+.comments-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.comment-card {
+  padding: 1.2rem 1.4rem;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.015);
+  transition: background 0.4s, border-color 0.4s;
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+body.light .comment-card {
+  border-color: rgba(0,0,0,0.07);
+  background: rgba(0,0,0,0.025);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.comment-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.comment-anon {
+  font-size: 8px; letter-spacing: 0.45em; text-transform: uppercase;
+  color: #d4af37; opacity: 0.5;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.comment-date {
+  font-size: 8px; letter-spacing: 0.2em;
+  color: #444; font-family: 'Montserrat', sans-serif;
+}
+body.light .comment-date { color: #aaa; }
+
+.comment-text {
+  font-family: 'Lora', serif;
+  font-size: 0.88rem; line-height: 1.75;
+  color: #888;
+}
+body.light .comment-text { color: #444; }
+
+.comments-empty {
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #333; font-family: 'Montserrat', sans-serif;
+  text-align: center; padding: 2.5rem 0;
+}
+body.light .comments-empty { color: #bbb; }
+
+.comments-loading {
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #333; font-family: 'Montserrat', sans-serif;
+  text-align: center; padding: 2rem 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:0.8} }
 </style>
 </head>
 <body>
 
 <div id="scroll-bar"></div>
 
+<!-- Resume Popup -->
 <div id="resume-popup">
   <div class="popup-inner">
     <div class="popup-heading">Welcome back.</div>
@@ -310,7 +457,42 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
   </div>
 </main>
 
+<!-- Comment Section -->
+<section id="comment-section" style="display:none;">
+  <div class="comment-section-title">✦ Transmissions</div>
+
+  <div class="comment-form">
+    <textarea
+      class="comment-textarea"
+      id="comment-text"
+      placeholder="Leave a transmission…"
+      maxlength="1000"
+    ></textarea>
+    <div class="passphrase-row">
+      <input
+        type="password"
+        class="passphrase-input"
+        id="comment-pass"
+        placeholder="Passphrase"
+        autocomplete="off"
+      />
+      <button class="comment-submit" id="comment-btn" onclick="submitComment()">Send</button>
+    </div>
+    <div class="comment-msg" id="comment-msg"></div>
+  </div>
+
+  <div class="comments-list" id="comments-list">
+    <div class="comments-loading">Loading transmissions…</div>
+  </div>
+</section>
+
 <script>
+  /* ── CONFIG ── */
+  var SUPABASE_URL = 'https://iakkxwghbczalryylqzg.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_WL-bPgOrYIK-PGgHk3-6YQ_Re7SIb1-';
+  var SECRET_PASSPHRASE = 'YOUR_SECRET_WORD'; // ← replace with your passphrase
+
+  /* ── STATE ── */
   var fontSize  = parseInt(localStorage.getItem('readerFontSize')) || 18;
   var storyId   = null;
   var story     = null;
@@ -319,6 +501,7 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
   var scrollTimer = null;
   var savedData = null;
 
+  /* ── THEME ── */
   (function() {
     var t = localStorage.getItem('vaultTheme') || 'dark';
     if (t === 'light') document.body.classList.add('light');
@@ -337,6 +520,7 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     localStorage.setItem('readerFontSize', fontSize);
   }
 
+  /* ── SCROLL ── */
   window.addEventListener('scroll', function() {
     var scrolled = document.documentElement.scrollTop;
     var total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -346,13 +530,12 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     clearTimeout(scrollTimer);
     scrollTimer = setTimeout(function() {
       localStorage.setItem('progress_' + storyId, JSON.stringify({
-        pct: pct.toFixed(2),
-        ch: chIndex,
-        opened: true   // ← stays true forever once opened
+        pct: pct.toFixed(2), ch: chIndex, opened: true
       }));
     }, 1000);
   });
 
+  /* ── SWIPE ── */
   var touchY = 0;
   document.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; });
   document.addEventListener('touchend', function(e) {
@@ -364,6 +547,7 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     if (dy < -80 && atTop)   goChapter(chIndex - 1);
   });
 
+  /* ── RESUME POPUP ── */
   function showPopup() {
     var pct = Math.round(parseFloat(savedData.pct));
     var msg = isNovella && savedData.ch > 0
@@ -388,6 +572,7 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     window.scrollTo({ top: 0 });
   }
 
+  /* ── CHAPTER RENDER ── */
   function renderChapter() {
     var ch = story.chapters[chIndex];
     var total = story.chapters.length;
@@ -405,6 +590,8 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     document.getElementById('prev-ch-link').style.display = chIndex > 0 ? 'block' : 'none';
     document.getElementById('ch-footer').classList.add('show');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Reload comments for this chapter
+    loadComments();
   }
 
   function goChapter(i) {
@@ -415,6 +602,113 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     renderChapter();
   }
 
+  /* ── SUPABASE HELPERS ── */
+  function sbHeaders() {
+    return {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY
+    };
+  }
+
+  /* story_id stored as "storyId" for short stories, "storyId_chN" for novella chapters */
+  function commentKey() {
+    return isNovella ? storyId + '_ch' + chIndex : storyId;
+  }
+
+  /* ── LOAD COMMENTS ── */
+  function loadComments() {
+    var list = document.getElementById('comments-list');
+    list.innerHTML = '<div class="comments-loading">Loading transmissions…</div>';
+
+    var key = commentKey();
+    var url = SUPABASE_URL + '/rest/v1/comments?story_id=eq.' + encodeURIComponent(key) +
+              '&order=created_at.asc&select=content,created_at';
+
+    fetch(url, { headers: sbHeaders() })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        list.innerHTML = '';
+        if (!data || data.length === 0) {
+          list.innerHTML = '<div class="comments-empty">No transmissions yet. Be the first.</div>';
+          return;
+        }
+        data.forEach(function(c) {
+          var card = document.createElement('div');
+          card.className = 'comment-card';
+          var date = new Date(c.created_at);
+          var formatted = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+          card.innerHTML =
+            '<div class="comment-meta">' +
+              '<span class="comment-anon">Anonymous</span>' +
+              '<span class="comment-date">' + formatted + '</span>' +
+            '</div>' +
+            '<div class="comment-text">' + escapeHtml(c.content) + '</div>';
+          list.appendChild(card);
+        });
+      })
+      .catch(function() {
+        list.innerHTML = '<div class="comments-empty">Could not load transmissions.</div>';
+      });
+  }
+
+  /* ── SUBMIT COMMENT ── */
+  function submitComment() {
+    var content = document.getElementById('comment-text').value.trim();
+    var pass    = document.getElementById('comment-pass').value.trim();
+    var msg     = document.getElementById('comment-msg');
+    var btn     = document.getElementById('comment-btn');
+
+    if (!content) { showMsg('Write something first.', 'err'); return; }
+    if (!pass)    { showMsg('Enter the passphrase.', 'err'); return; }
+    if (pass !== SECRET_PASSPHRASE) { showMsg('Wrong passphrase.', 'err'); return; }
+
+    btn.disabled = true;
+    showMsg('Sending…', '');
+
+    var payload = {
+      story_id: commentKey(),
+      content:  content,
+      passphrase: pass
+    };
+
+    fetch(SUPABASE_URL + '/rest/v1/comments', {
+      method: 'POST',
+      headers: Object.assign({}, sbHeaders(), { 'Prefer': 'return=minimal' }),
+      body: JSON.stringify(payload)
+    })
+    .then(function(r) {
+      if (r.ok) {
+        document.getElementById('comment-text').value = '';
+        document.getElementById('comment-pass').value = '';
+        showMsg('Transmission received.', 'ok');
+        loadComments();
+      } else {
+        return r.json().then(function(e) {
+          showMsg('Error: ' + (e.message || 'Could not send.'), 'err');
+        });
+      }
+    })
+    .catch(function() { showMsg('Network error. Try again.', 'err'); })
+    .finally(function() { btn.disabled = false; });
+  }
+
+  function showMsg(text, type) {
+    var el = document.getElementById('comment-msg');
+    el.textContent = text;
+    el.className = 'comment-msg' + (type ? ' ' + type : '');
+  }
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/\n/g, '<br>');
+  }
+
+  /* ── INIT ── */
   function init() {
     var params = new URLSearchParams(window.location.search);
     storyId = params.get('id');
@@ -432,26 +726,24 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
 
     isNovella = story.type === 'novella' && Array.isArray(story.chapters);
 
-    // Load existing progress
     try {
       var raw = localStorage.getItem('progress_' + storyId);
       if (raw) savedData = JSON.parse(raw);
     } catch(e) {}
 
-    // ── Mark as opened immediately on visit ──
-    // This is what makes Active work — saved the moment the reader arrives
     var currentPct = savedData ? savedData.pct : '0';
     var currentCh  = savedData ? savedData.ch  : 0;
     localStorage.setItem('progress_' + storyId, JSON.stringify({
-      pct: currentPct,
-      ch: currentCh,
-      opened: true
+      pct: currentPct, ch: currentCh, opened: true
     }));
+
+    // Show comment section
+    document.getElementById('comment-section').style.display = 'block';
 
     if (isNovella) {
       document.getElementById('ch-bar').classList.add('show');
       chIndex = 0;
-      renderChapter();
+      renderChapter(); // also calls loadComments
       document.getElementById('story-container').classList.add('loaded');
       if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) setTimeout(showPopup, 700);
     } else {
@@ -461,6 +753,7 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
       document.getElementById('story-content').innerHTML = story.text || story.content || '';
       document.getElementById('story-content').style.fontSize = fontSize + 'px';
       document.getElementById('story-container').classList.add('loaded');
+      loadComments();
       if (savedData && parseFloat(savedData.pct) > 2) setTimeout(showPopup, 700);
     }
   }
