@@ -1,11 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>THE VAULT | RECORD</title>
 
-<!-- SEO & Share Card -->
 <meta name="description" content="Accessing the sanctum of Void Stanza.">
 <meta property="og:title" content="THE VAULT | ManuscriptZero">
 <meta property="og:description" content="Accessing the sanctum of Void Stanza.">
@@ -22,138 +22,605 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400&family=Montserrat:wght@300;400;600&display=swap');
 
-body { background:#0a0a0b; color:#e2e2e2; font-family:'Montserrat',sans-serif; margin:0; overflow-x:hidden; }
-.serif { font-family:'Playfair Display',serif; }
-.reading-font { font-family:'Lora',serif; line-height:1.9; transition:font-size .2s; }
-#scroll-progress { position:fixed; top:0; left:0; height:2px; background:#d4af37; z-index:100; width:0%; box-shadow:0 0 10px #d4af37; }
-#story-container { opacity: 0; transition: opacity 0.8s ease-in; }
+/* ── THEME VARIABLES ── */
+:root {
+–gold: #d4af37;
+–bg: #0a0a0b;
+–surface: #0f0f10;
+–nav-bg: rgba(10,10,11,0.96);
+–text: #e2e2e2;
+–text-dim: #9ca3af;
+–border: rgba(255,255,255,0.05);
+}
+
+body.light-mode {
+–bg: #f5f0e8;
+–surface: #ede8de;
+–nav-bg: rgba(245,240,232,0.96);
+–text: #1a1a1a;
+–text-dim: #666;
+–border: rgba(0,0,0,0.08);
+}
+
+- { box-sizing: border-box; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘Montserrat’, sans-serif;
+margin: 0;
+overflow-x: hidden;
+transition: background 0.4s, color 0.4s;
+}
+
+.serif  { font-family: ‘Playfair Display’, serif; }
+.reading-font { font-family: ‘Lora’, serif; line-height: 1.9; transition: font-size 0.2s; }
+
+/* ── SCROLL PROGRESS ── */
+#scroll-progress {
+position: fixed; top: 0; left: 0;
+height: 2px; background: var(–gold);
+z-index: 100; width: 0%;
+box-shadow: 0 0 10px var(–gold);
+transition: width 0.1s linear;
+}
+
+/* ── NAV ── */
+nav {
+position: fixed; top: 0; width: 100%;
+padding: 1.25rem 1.75rem;
+background: var(–nav-bg);
+backdrop-filter: blur(12px);
+border-bottom: 1px solid var(–border);
+z-index: 50;
+display: flex;
+justify-content: space-between;
+align-items: center;
+transition: background 0.4s;
+}
+
+.nav-logo {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.5rem;
+color: var(–gold) !important;
+cursor: pointer;
+}
+
+.nav-controls {
+display: flex;
+align-items: center;
+gap: 1rem;
+}
+
+.nav-label {
+font-size: 9px;
+letter-spacing: 0.4em;
+text-transform: uppercase;
+color: var(–text-dim);
+}
+
+/* Font size control */
+.font-control {
+display: flex;
+align-items: center;
+border: 1px solid var(–border);
+border-radius: 999px;
+padding: 4px 12px;
+background: var(–surface);
+gap: 6px;
+}
+
+.font-control button {
+background: none;
+border: none;
+cursor: pointer;
+font-weight: 700;
+font-size: 11px;
+color: var(–text-dim);
+transition: color 0.2s;
+padding: 0 4px;
+font-family: ‘Montserrat’, sans-serif;
+}
+
+.font-control button:hover { color: var(–gold); }
+.font-divider { width: 1px; height: 12px; background: var(–border); }
+
+/* Theme toggle */
+.theme-toggle {
+background: none;
+border: 1px solid var(–border);
+border-radius: 999px;
+padding: 5px 14px;
+cursor: pointer;
+font-size: 9px;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(–text-dim);
+font-family: ‘Montserrat’, sans-serif;
+transition: all 0.2s;
+background: var(–surface);
+}
+
+.theme-toggle:hover { color: var(–gold); border-color: var(–gold); }
+
+/* ── STORY CONTAINER ── */
+#story-container {
+opacity: 0;
+transition: opacity 0.8s ease-in;
+max-width: 680px;
+margin: 0 auto;
+padding: 7rem 1.75rem 6rem;
+}
+
 #story-container.loaded { opacity: 1; }
 
-#resume-banner {
-  display: none;
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #111;
-  border: 1px solid rgba(212,175,55,0.3);
-  color: #d4af37;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  padding: 12px 24px;
-  cursor: pointer;
-  z-index: 200;
-  white-space: nowrap;
-  transition: background 0.3s;
+/* ── CHAPTER HEADER ── */
+.chapter-eyebrow {
+font-size: 9px;
+letter-spacing: 0.5em;
+text-transform: uppercase;
+color: var(–gold);
+margin-bottom: 0.5rem;
+opacity: 0.7;
 }
-#resume-banner:hover { background: #1a1a1a; }
+
+#title {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2rem, 5vw, 3.5rem);
+color: var(–gold);
+line-height: 1.15;
+margin-bottom: 1rem;
+}
+
+#synopsis {
+font-family: ‘Lora’, serif;
+font-style: italic;
+color: var(–text-dim);
+font-size: 1.05rem;
+margin-bottom: 3rem;
+}
+
+/* ── CHAPTER NAV (novella) ── */
+#chapter-nav {
+display: none;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 2rem;
+padding: 0.75rem 1rem;
+border: 1px solid var(–border);
+background: var(–surface);
+}
+
+#chapter-nav.visible { display: flex; }
+
+.ch-nav-btn {
+background: none;
+border: none;
+cursor: pointer;
+font-size: 9px;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(–text-dim);
+font-family: ‘Montserrat’, sans-serif;
+transition: color 0.2s;
+padding: 4px 8px;
+}
+
+.ch-nav-btn:hover { color: var(–gold); }
+.ch-nav-btn:disabled { opacity: 0.2; cursor: default; }
+
+#chapter-indicator {
+font-size: 9px;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(–gold);
+font-family: ‘Montserrat’, sans-serif;
+}
+
+/* ── CONTENT ── */
+#content { color: var(–text-dim); }
+#content p { margin-bottom: 1.5rem; }
+
+/* ── CHAPTER END FOOTER ── */
+#chapter-footer {
+display: none;
+flex-direction: column;
+align-items: center;
+gap: 1rem;
+padding: 3rem 0 2rem;
+border-top: 1px solid var(–border);
+margin-top: 3rem;
+}
+
+#chapter-footer.visible { display: flex; }
+
+.chapter-end-label {
+font-size: 9px;
+letter-spacing: 0.5em;
+text-transform: uppercase;
+color: var(–text-dim);
+}
+
+.next-chapter-btn {
+background: none;
+border: 1px solid rgba(212,175,55,0.4);
+color: var(–gold) !important;
+font-family: ‘Montserrat’, sans-serif;
+font-size: 10px;
+letter-spacing: 0.4em;
+text-transform: uppercase;
+padding: 14px 32px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.next-chapter-btn:hover {
+background: var(–gold);
+color: #000 !important;
+}
+
+.prev-chapter-link {
+font-size: 9px;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(–text-dim);
+cursor: pointer;
+background: none;
+border: none;
+font-family: ‘Montserrat’, sans-serif;
+transition: color 0.2s;
+}
+
+.prev-chapter-link:hover { color: var(–gold); }
+
+/* ── RESUME POPUP ── */
+#resume-popup {
+display: none;
+position: fixed;
+inset: 0;
+z-index: 200;
+background: rgba(0,0,0,0.7);
+align-items: center;
+justify-content: center;
+backdrop-filter: blur(4px);
+}
+
+#resume-popup.visible { display: flex; }
+
+.popup-box {
+background: var(–surface);
+border: 1px solid rgba(212,175,55,0.25);
+padding: 2.5rem 2rem;
+max-width: 360px;
+width: 90%;
+text-align: center;
+}
+
+.popup-title {
+font-family: ‘Playfair Display’, serif;
+color: var(–gold);
+font-size: 1.25rem;
+margin-bottom: 0.75rem;
+}
+
+.popup-sub {
+font-size: 11px;
+color: var(–text-dim);
+letter-spacing: 0.1em;
+margin-bottom: 2rem;
+line-height: 1.6;
+}
+
+.popup-btns {
+display: flex;
+gap: 1rem;
+justify-content: center;
+}
+
+.popup-btn {
+font-family: ‘Montserrat’, sans-serif;
+font-size: 9px;
+letter-spacing: 0.35em;
+text-transform: uppercase;
+padding: 10px 22px;
+cursor: pointer;
+border: none;
+transition: all 0.2s;
+}
+
+.popup-btn-yes {
+background: var(–gold);
+color: #000;
+}
+
+.popup-btn-yes:hover { background: #c9a227; }
+
+.popup-btn-no {
+background: transparent;
+color: var(–text-dim);
+border: 1px solid var(–border);
+}
+
+.popup-btn-no:hover { color: var(–gold); border-color: var(–gold); }
 </style>
+
 </head>
 <body>
 
 <div id="scroll-progress"></div>
 
-<nav class="fixed top-0 w-full p-6 bg-[#0a0a0b]/95 backdrop-blur-md border-b border-white/5 z-50 flex justify-between items-center">
-  <h2 class="serif text-2xl text-[#d4af37] cursor-pointer hover:opacity-70" onclick="location.href='gallery.html'">V.</h2>
-  <div class="flex items-center space-x-6">
-    <span class="text-[9px] uppercase tracking-[0.4em] text-gray-500 hidden md:block">Record Decrypted</span>
-    <div class="flex items-center border border-white/10 rounded-full px-3 py-1 bg-black/50">
-      <button onclick="adjustFont(-2)" class="text-gray-500 text-xs px-2 font-bold">A-</button>
-      <div class="w-[1px] h-3 bg-white/10 mx-1"></div>
-      <button onclick="adjustFont(2)" class="text-gray-200 text-xs px-2 font-bold">A+</button>
+<!-- RESUME POPUP -->
+
+<div id="resume-popup">
+  <div class="popup-box">
+    <div class="popup-title">Welcome back.</div>
+    <div class="popup-sub" id="popup-sub">Resume from where you left off?</div>
+    <div class="popup-btns">
+      <button class="popup-btn popup-btn-yes" onclick="confirmResume()">Resume</button>
+      <button class="popup-btn popup-btn-no" onclick="dismissResume()">Start Over</button>
     </div>
+  </div>
+</div>
+
+<!-- NAV -->
+
+<nav>
+  <span class="nav-logo" onclick="location.href='gallery.html'">V.</span>
+  <div class="nav-controls">
+    <span class="nav-label hidden md:block">Record Decrypted</span>
+    <div class="font-control">
+      <button onclick="adjustFont(-2)">A−</button>
+      <div class="font-divider"></div>
+      <button onclick="adjustFont(2)">A+</button>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☽ Dark</button>
   </div>
 </nav>
 
-<!-- Resume banner -->
-<div id="resume-banner" onclick="resumeReading()">
-  ↓ Resume where you left off
-</div>
+<!-- STORY -->
 
-<main id="story-container" class="max-w-2xl mx-auto px-6 pt-48 pb-24">
-  <header class="mb-20 text-center">
-    <h1 id="title" class="serif text-5xl text-[#d4af37] mb-6"></h1>
-    <p id="synopsis" class="reading-font italic text-gray-500 text-lg"></p>
-  </header>
-  <article id="content" class="reading-font text-gray-300 text-lg mb-32"></article>
+<main id="story-container">
+  <div class="chapter-eyebrow" id="chapterEyebrow"></div>
+  <h1 id="title"></h1>
+  <p id="synopsis"></p>
+
+  <!-- Chapter nav bar (novella only) -->
+
+  <div id="chapter-nav">
+    <button class="ch-nav-btn" id="prevChBtn" onclick="goToChapter(currentChapter - 1)">← Prev</button>
+    <span id="chapter-indicator"></span>
+    <button class="ch-nav-btn" id="nextChBtn" onclick="goToChapter(currentChapter + 1)">Next →</button>
+  </div>
+
+  <article id="content" class="reading-font text-lg"></article>
+
+  <!-- Chapter footer (novella only) -->
+
+  <div id="chapter-footer">
+    <div class="chapter-end-label">✦ End of Chapter <span id="footerChNum"></span> ✦</div>
+    <button class="next-chapter-btn" id="footerNextBtn" onclick="goToChapter(currentChapter + 1)">
+      Next Chapter →
+    </button>
+    <button class="prev-chapter-link" id="footerPrevBtn" onclick="goToChapter(currentChapter - 1)">
+      ← Previous Chapter
+    </button>
+  </div>
 </main>
 
 <script>
+  // ── STATE ──
   let currentFontSize = parseInt(localStorage.getItem('readerFontSize')) || 18;
   let currentId = null;
+  let currentStory = null;
+  let currentChapter = 0; // index, 0-based
+  let isNovella = false;
   let saveTimer = null;
+  let savedScrollPos = null;
+  let savedChapter = null;
 
+  // ── THEME ──
+  function applyTheme(theme) {
+    document.body.classList.toggle('light-mode', theme === 'light');
+    document.getElementById('themeBtn').textContent = theme === 'light' ? '☀ Light' : '☽ Dark';
+  }
+
+  function toggleTheme() {
+    const current = localStorage.getItem('vaultTheme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('vaultTheme', next);
+    applyTheme(next);
+  }
+
+  // Apply saved theme immediately
+  applyTheme(localStorage.getItem('vaultTheme') || 'dark');
+
+  // ── FONT ──
+  function adjustFont(delta) {
+    currentFontSize = Math.min(Math.max(currentFontSize + delta, 12), 32);
+    document.getElementById('content').style.fontSize = currentFontSize + 'px';
+    localStorage.setItem('readerFontSize', currentFontSize);
+  }
+
+  // ── SCROLL PROGRESS ──
+  let scrollTimer = null;
+  window.onscroll = function () {
+    const winScroll = document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+    document.getElementById('scroll-progress').style.width = scrolled + '%';
+
+    if (currentId) {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const key = isNovella
+          ? 'progress_' + currentId + '_ch' + currentChapter
+          : 'progress_' + currentId;
+        localStorage.setItem(key, JSON.stringify({
+          scroll: scrolled.toFixed(2),
+          chapter: currentChapter
+        }));
+      }, 1000);
+    }
+  };
+
+  // ── SWIPE (novella) ──
+  let touchStartY = 0;
+  document.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; });
+  document.addEventListener('touchend', e => {
+    if (!isNovella) return;
+    const delta = touchStartY - e.changedTouches[0].clientY;
+    const atBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 60;
+    const atTop = window.scrollY <= 10;
+
+    if (delta > 80 && atBottom) goToChapter(currentChapter + 1); // swipe up at bottom → next
+    if (delta < -80 && atTop) goToChapter(currentChapter - 1);   // swipe down at top → prev
+  });
+
+  // ── RESUME POPUP ──
+  function showResumePopup(savedData) {
+    const sub = isNovella
+      ? `You were on Chapter ${savedData.chapter + 1}. Pick up from there?`
+      : `You were ${Math.round(savedData.scroll)}% through. Resume?`;
+    document.getElementById('popup-sub').textContent = sub;
+    document.getElementById('resume-popup').classList.add('visible');
+  }
+
+  function confirmResume() {
+    document.getElementById('resume-popup').classList.remove('visible');
+    if (isNovella && savedChapter !== null) {
+      currentChapter = savedChapter;
+      renderChapter();
+      // scroll after render settles
+      setTimeout(() => {
+        if (savedScrollPos) {
+          const scrollTarget = (parseFloat(savedScrollPos) / 100) *
+            (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+          window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+        }
+      }, 300);
+    } else if (savedScrollPos) {
+      setTimeout(() => {
+        const scrollTarget = (parseFloat(savedScrollPos) / 100) *
+          (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+        window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+      }, 300);
+    }
+  }
+
+  function dismissResume() {
+    document.getElementById('resume-popup').classList.remove('visible');
+    window.scrollTo({ top: 0 });
+  }
+
+  // ── CHAPTER RENDER ──
+  function renderChapter() {
+    const chapter = currentStory.chapters[currentChapter];
+    const totalCh = currentStory.chapters.length;
+
+    // Eyebrow + title
+    document.getElementById('chapterEyebrow').textContent =
+      `${currentStory.title}  ·  Chapter ${currentChapter + 1} of ${totalCh}`;
+    document.getElementById('title').textContent = chapter.title || `Chapter ${currentChapter + 1}`;
+    document.getElementById('synopsis').textContent = chapter.synopsis || '';
+    document.getElementById('content').innerHTML = chapter.text;
+    document.getElementById('content').style.fontSize = currentFontSize + 'px';
+    document.title = `THE VAULT | ${currentStory.title} · Ch.${currentChapter + 1}`;
+
+    // Chapter nav bar
+    document.getElementById('chapter-indicator').textContent =
+      `${currentChapter + 1} / ${totalCh}`;
+    document.getElementById('prevChBtn').disabled = currentChapter === 0;
+    document.getElementById('nextChBtn').disabled = currentChapter === totalCh - 1;
+
+    // Chapter footer
+    const footer = document.getElementById('chapter-footer');
+    const footerNext = document.getElementById('footerNextBtn');
+    const footerPrev = document.getElementById('footerPrevBtn');
+    document.getElementById('footerChNum').textContent = currentChapter + 1;
+
+    footer.classList.add('visible');
+    footerNext.style.display = currentChapter < totalCh - 1 ? 'block' : 'none';
+    footerPrev.style.display = currentChapter > 0 ? 'block' : 'none';
+
+    // Scroll to top of content
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goToChapter(index) {
+    if (!currentStory || !currentStory.chapters) return;
+    const total = currentStory.chapters.length;
+    if (index < 0 || index >= total) return;
+    currentChapter = index;
+
+    // Save chapter position
+    localStorage.setItem('progress_' + currentId, JSON.stringify({
+      scroll: '0',
+      chapter: currentChapter
+    }));
+
+    renderChapter();
+  }
+
+  // ── INIT ──
   function init() {
     const params = new URLSearchParams(window.location.search);
     currentId = params.get('id');
 
     if (!currentId || typeof stories === 'undefined') {
-      document.getElementById("content").innerText = "Archive error: Missing ID or Stories list.";
-      document.getElementById("story-container").classList.add('loaded');
+      document.getElementById('content').innerText = 'Archive error: Missing ID or stories.js.';
+      document.getElementById('story-container').classList.add('loaded');
       return;
     }
 
-    const story = stories.find(s => s.id == currentId);
+    currentStory = stories.find(s => s.id == currentId);
 
-    if (!story) {
-      document.getElementById("content").innerText = "Record " + currentId + " not found.";
-      document.getElementById("story-container").classList.add('loaded');
+    if (!currentStory) {
+      document.getElementById('content').innerText = 'Record ' + currentId + ' not found.';
+      document.getElementById('story-container').classList.add('loaded');
       return;
     }
 
-    document.title = "THE VAULT | " + story.title;
-    document.getElementById("title").innerText = story.title;
-    document.getElementById("synopsis").innerText = story.synopsis;
-    document.getElementById("content").innerHTML = story.text || story.content;
+    isNovella = currentStory.type === 'novella' && Array.isArray(currentStory.chapters);
 
-    document.getElementById("content").style.fontSize = currentFontSize + "px";
-    document.getElementById("story-container").classList.add('loaded');
+    // Check saved progress
+    const rawSaved = localStorage.getItem('progress_' + currentId);
+    let savedData = null;
+    if (rawSaved) {
+      try { savedData = JSON.parse(rawSaved); } catch(e) {}
+    }
 
-    // Check for saved progress
-    const savedProgress = localStorage.getItem('progress_' + currentId);
-    if (savedProgress && parseFloat(savedProgress) > 2) {
-      document.getElementById('resume-banner').style.display = 'block';
-      // Auto-hide banner after 6 seconds
-      setTimeout(() => {
-        document.getElementById('resume-banner').style.display = 'none';
-      }, 6000);
+    if (isNovella) {
+      // Show novella UI
+      document.getElementById('chapter-nav').classList.add('visible');
+
+      if (savedData && (savedData.chapter > 0 || parseFloat(savedData.scroll) > 2)) {
+        savedChapter = savedData.chapter || 0;
+        savedScrollPos = savedData.scroll;
+        currentChapter = 0;
+        renderChapter();
+        document.getElementById('story-container').classList.add('loaded');
+        setTimeout(() => showResumePopup(savedData), 600);
+      } else {
+        currentChapter = 0;
+        renderChapter();
+        document.getElementById('story-container').classList.add('loaded');
+      }
+
+    } else {
+      // Standard story
+      document.title = 'THE VAULT | ' + currentStory.title;
+      document.getElementById('title').textContent = currentStory.title;
+      document.getElementById('synopsis').textContent = currentStory.synopsis || '';
+      document.getElementById('content').innerHTML = currentStory.text || currentStory.content || '';
+      document.getElementById('content').style.fontSize = currentFontSize + 'px';
+      document.getElementById('story-container').classList.add('loaded');
+
+      if (savedData && parseFloat(savedData.scroll) > 2) {
+        savedScrollPos = savedData.scroll;
+        setTimeout(() => showResumePopup(savedData), 600);
+      }
     }
   }
-
-  function resumeReading() {
-    const savedProgress = localStorage.getItem('progress_' + currentId);
-    if (savedProgress) {
-      const scrollTarget = (parseFloat(savedProgress) / 100) *
-        (document.documentElement.scrollHeight - document.documentElement.clientHeight);
-      window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-    }
-    document.getElementById('resume-banner').style.display = 'none';
-  }
-
-  function adjustFont(delta) {
-    currentFontSize = Math.min(Math.max(currentFontSize + delta, 12), 32);
-    document.getElementById("content").style.fontSize = currentFontSize + "px";
-    localStorage.setItem('readerFontSize', currentFontSize);
-  }
-
-  window.onscroll = function () {
-    const winScroll = document.documentElement.scrollTop;
-    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = (winScroll / height) * 100;
-
-    // Update progress bar
-    document.getElementById("scroll-progress").style.width = scrolled + "%";
-
-    // Save progress per story (debounced — saves 1 second after scrolling stops)
-    if (currentId) {
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => {
-        localStorage.setItem('progress_' + currentId, scrolled.toFixed(2));
-      }, 1000);
-    }
-  };
 
   window.onload = init;
 </script>
