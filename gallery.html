@@ -65,7 +65,6 @@ nav {
   font-family: 'Montserrat', sans-serif;
   transition: background 0.2s, color 0.2s;
 }
-
 .nav-btn:hover { background: #d4af37; color: #000; }
 
 /* HEADER */
@@ -116,7 +115,7 @@ nav {
   transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
-  height: 340px;
+  height: 380px; /* slightly taller to fit status row */
 }
 
 .card:hover {
@@ -171,6 +170,8 @@ nav {
   overflow: hidden;
 }
 
+.card-top { overflow: hidden; }
+
 .card-id {
   font-size: 8px;
   letter-spacing: 0.3em;
@@ -179,7 +180,6 @@ nav {
   margin-bottom: 3px;
 }
 
-/* TITLE — dark grey, not gold */
 .card-title {
   font-family: 'Playfair Display', serif;
   font-size: 14px;
@@ -195,7 +195,6 @@ nav {
 
 .card:hover .card-title { color: #e8e8e8; }
 
-/* SYNOPSIS — grey */
 .card-synopsis {
   font-family: 'Lora', serif;
   font-size: 10px;
@@ -208,7 +207,47 @@ nav {
   overflow: hidden;
 }
 
-.card-footer {
+/* CARD BOTTOM ROW — status + open record */
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+/* STATUS BADGE */
+.status-badge {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+/* Open — untouched, dim */
+.status-open {
+  color: #333;
+  border: 1px solid #222;
+}
+
+/* Active — gold, reader is mid-story */
+.status-active {
+  color: #d4af37;
+  border: 1px solid rgba(212,175,55,0.35);
+  background: rgba(212,175,55,0.05);
+}
+
+/* Sealed — muted green, done */
+.status-sealed {
+  color: #6a9a6a;
+  border: 1px solid rgba(106,154,106,0.35);
+  background: rgba(106,154,106,0.05);
+}
+
+.card-cta {
   font-size: 8px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -218,7 +257,7 @@ nav {
   font-family: 'Montserrat', sans-serif;
 }
 
-.card:hover .card-footer { opacity: 1; }
+.card:hover .card-cta { opacity: 1; }
 </style>
 </head>
 <body>
@@ -238,9 +277,36 @@ nav {
 </div>
 
 <script>
+  // ── READ STATUS FROM LOCALSTORAGE ──
+  // Returns 'open' | 'active' | 'sealed'
+  function getStatus(storyId) {
+    try {
+      var raw = localStorage.getItem('progress_' + storyId);
+      if (!raw) return 'open';
+      var data = JSON.parse(raw);
+      var pct = parseFloat(data.pct || 0);
+      if (pct >= 90) return 'sealed';   // 90%+ = sealed
+      if (pct > 2)   return 'active';   // any real progress = active
+      return 'open';
+    } catch(e) {
+      return 'open';
+    }
+  }
+
+  function statusBadge(storyId) {
+    var s = getStatus(storyId);
+    var map = {
+      open:   { cls: 'status-open',   label: 'Open'   },
+      active: { cls: 'status-active', label: 'Active' },
+      sealed: { cls: 'status-sealed', label: 'Sealed' }
+    };
+    var m = map[s];
+    return '<span class="status-badge ' + m.cls + '">' + m.label + '</span>';
+  }
+
   function renderGrid() {
-    const grid = document.getElementById('grid');
-    const countEl = document.getElementById('record-count');
+    var grid = document.getElementById('grid');
+    var countEl = document.getElementById('record-count');
 
     if (typeof stories === 'undefined' || !stories.length) {
       grid.innerHTML = "<p style='color:#333;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;'>Archives unavailable.</p>";
@@ -250,29 +316,31 @@ nav {
     countEl.textContent = stories.length + ' record' + (stories.length !== 1 ? 's' : '') + ' in the vault';
 
     grid.innerHTML = stories.map(function(s) {
-      const hasCover = s.cover && s.cover.trim() !== '';
-      const imgBlock = hasCover
-        ? `<div class="card-img"><img src="${s.cover}" alt="${s.title}" loading="lazy"
-             onerror="this.parentElement.className='card-img no-cover';this.remove();this.parentElement.innerHTML='<span>No Image</span>';"></div>`
-        : `<div class="card-img no-cover"><span>No Image</span></div>`;
+      var hasCover = s.cover && s.cover.trim() !== '';
+      var imgBlock = hasCover
+        ? '<div class="card-img"><img src="' + s.cover + '" alt="' + s.title + '" loading="lazy" onerror="this.parentElement.className=\'card-img no-cover\';this.remove();this.parentElement.innerHTML=\'<span>No Image</span>\';"></div>'
+        : '<div class="card-img no-cover"><span>No Image</span></div>';
 
-      return `<div class="card" onclick="location.href='reader.html?id=${s.id}'">
-        ${imgBlock}
-        <div class="card-body">
-          <div>
-            <div class="card-id">#${String(s.id).padStart(3,'0')}</div>
-            <div class="card-title">${s.title}</div>
-            <div class="card-synopsis">${s.synopsis || ''}</div>
-          </div>
-          <div class="card-footer">Open Record →</div>
-        </div>
-      </div>`;
+      return '<div class="card" onclick="location.href=\'reader.html?id=' + s.id + '\'">'
+        + imgBlock
+        + '<div class="card-body">'
+        +   '<div class="card-top">'
+        +     '<div class="card-id">#' + String(s.id).padStart(3,'0') + '</div>'
+        +     '<div class="card-title">' + s.title + '</div>'
+        +     '<div class="card-synopsis">' + (s.synopsis || '') + '</div>'
+        +   '</div>'
+        +   '<div class="card-bottom">'
+        +     statusBadge(s.id)
+        +     '<span class="card-cta">Open Record →</span>'
+        +   '</div>'
+        + '</div>'
+        + '</div>';
     }).join('');
   }
 
   function goToLatest() {
     if (typeof stories !== 'undefined' && stories.length > 0) {
-      const latestId = Math.max.apply(null, stories.map(function(s) { return s.id; }));
+      var latestId = Math.max.apply(null, stories.map(function(s) { return s.id; }));
       window.location.href = 'reader.html?id=' + latestId;
     }
   }
