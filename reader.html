@@ -24,19 +24,14 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── DARK (default) ── */
 body {
   background: #0a0a0b;
   color: #c9c9c9;
   font-family: 'Montserrat', sans-serif;
-  transition: background 0.4s ease, color 0.4s ease;
+  transition: background 0.4s, color 0.4s;
 }
 
-/* ── LIGHT ── */
-body.light {
-  background: #f5f0e8;
-  color: #2a2a2a;
-}
+body.light { background: #f5f0e8; color: #1a1a1a; }
 
 /* NAV */
 #top-nav {
@@ -63,9 +58,8 @@ body.light #top-nav {
   font-size: 1.5rem;
   color: #d4af37;
   cursor: pointer;
-  text-decoration: none;
-  border: none;
   background: none;
+  border: none;
 }
 
 .nav-right {
@@ -74,16 +68,15 @@ body.light #top-nav {
   gap: 0.75rem;
 }
 
-/* Font buttons */
+/* Font pill — taller on mobile so fingers can tap easily */
 .font-pill {
   display: flex;
   align-items: center;
-  gap: 4px;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 999px;
-  padding: 4px 12px;
   background: rgba(255,255,255,0.03);
   transition: border-color 0.4s, background 0.4s;
+  overflow: hidden; /* keeps rounded corners on buttons */
 }
 
 body.light .font-pill {
@@ -91,6 +84,7 @@ body.light .font-pill {
   background: rgba(0,0,0,0.04);
 }
 
+/* Each font button is its own full tap zone — 44px tall minimum (Apple HIG standard) */
 .font-pill button {
   background: none;
   border: none;
@@ -99,23 +93,37 @@ body.light .font-pill {
   font-size: 11px;
   color: #666;
   font-family: 'Montserrat', sans-serif;
-  padding: 0 4px;
-  transition: color 0.2s;
+  /* Generous tap target */
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .font-pill button:hover { color: #d4af37; }
+.font-pill button:active { background: rgba(212,175,55,0.1); }
 
 body.light .font-pill button { color: #888; }
 body.light .font-pill button:hover { color: #d4af37; }
 
-.font-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.08); }
+.font-sep {
+  width: 1px;
+  height: 20px;
+  background: rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
 body.light .font-sep { background: rgba(0,0,0,0.1); }
 
-/* Theme button */
+/* Theme toggle — also full tap height */
 #theme-btn {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 999px;
-  padding: 5px 16px;
+  padding: 0 16px;
+  min-height: 44px;
   background: rgba(255,255,255,0.03);
   color: #888;
   font-family: 'Montserrat', sans-serif;
@@ -124,15 +132,14 @@ body.light .font-sep { background: rgba(0,0,0,0.1); }
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #theme-btn:hover { color: #d4af37; border-color: rgba(212,175,55,0.4); }
-
-body.light #theme-btn {
-  border-color: rgba(0,0,0,0.1);
-  background: rgba(0,0,0,0.04);
-  color: #666;
-}
+#theme-btn:active { background: rgba(212,175,55,0.08); }
+body.light #theme-btn { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.04); color: #666; }
 
 /* SCROLL BAR */
 #scroll-bar {
@@ -146,7 +153,7 @@ body.light #theme-btn {
   transition: width 0.1s linear;
 }
 
-/* MAIN CONTENT */
+/* MAIN */
 #story-container {
   max-width: 660px;
   margin: 0 auto;
@@ -157,7 +164,6 @@ body.light #theme-btn {
 
 #story-container.loaded { opacity: 1; }
 
-/* Chapter eyebrow */
 #chapter-eyebrow {
   font-size: 9px;
   letter-spacing: 0.5em;
@@ -168,7 +174,6 @@ body.light #theme-btn {
   font-family: 'Montserrat', sans-serif;
 }
 
-/* Title */
 #story-title {
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.9rem, 5vw, 3.2rem);
@@ -177,19 +182,18 @@ body.light #theme-btn {
   margin-bottom: 1rem;
 }
 
-/* Synopsis */
 #story-synopsis {
   font-family: 'Lora', serif;
   font-style: italic;
   font-size: 1rem;
-  color: #666;
+  color: #555;
   margin-bottom: 2.5rem;
   line-height: 1.7;
 }
 
-body.light #story-synopsis { color: #888; }
+body.light #story-synopsis { color: #777; }
 
-/* Chapter nav bar */
+/* CHAPTER NAV BAR */
 #ch-bar {
   display: none;
   justify-content: space-between;
@@ -202,50 +206,57 @@ body.light #story-synopsis { color: #888; }
 }
 
 #ch-bar.show { display: flex; }
-
-body.light #ch-bar {
-  border-color: rgba(0,0,0,0.08);
-  background: rgba(0,0,0,0.02);
-}
+body.light #ch-bar { border-color: rgba(0,0,0,0.08); background: rgba(0,0,0,0.02); }
 
 .ch-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #666;
-  font-family: 'Montserrat', sans-serif;
+  background: none; border: none; cursor: pointer;
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #555; font-family: 'Montserrat', sans-serif;
   transition: color 0.2s;
-  padding: 4px 6px;
+  min-width: 44px; min-height: 44px;
+  padding: 0 8px;
+  display: flex; align-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
-
 .ch-btn:hover { color: #d4af37; }
 .ch-btn:disabled { opacity: 0.2; cursor: default; }
 
 #ch-label {
-  font-size: 9px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: #d4af37;
+  font-size: 9px; letter-spacing: 0.35em;
+  text-transform: uppercase; color: #d4af37;
   font-family: 'Montserrat', sans-serif;
 }
 
-/* Content */
+/* STORY CONTENT */
 #story-content {
   font-family: 'Lora', serif;
   line-height: 1.95;
   font-size: 18px;
   transition: font-size 0.2s, color 0.4s;
-  color: #b0b0b0;
+  color: #a8a8a8;
 }
 
-body.light #story-content { color: #3a3a3a; }
-
+body.light #story-content { color: #1c1c1c; }
 #story-content p { margin-bottom: 1.5rem; }
 
-/* Chapter footer */
+body.light #story-content .text-gray-300,
+body.light #story-content .text-gray-400,
+body.light #story-content .text-gray-500 { color: #2a2a2a !important; }
+
+#story-content .text-\[#d4af37\],
+body.light #story-content .text-\[#d4af37\] { color: #d4af37 !important; }
+
+#story-content blockquote {
+  border-left: 2px solid #d4af37;
+  padding: 0.5rem 1rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: rgba(212,175,55,0.8);
+}
+
+body.light #story-content .bg-black\/20 { background: rgba(0,0,0,0.05) !important; }
+
+/* CHAPTER FOOTER */
 #ch-footer {
   display: none;
   flex-direction: column;
@@ -257,134 +268,79 @@ body.light #story-content { color: #3a3a3a; }
 }
 
 #ch-footer.show { display: flex; }
-
 body.light #ch-footer { border-top-color: rgba(0,0,0,0.08); }
 
 .ch-end-label {
-  font-size: 9px;
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
-  color: #555;
+  font-size: 9px; letter-spacing: 0.5em;
+  text-transform: uppercase; color: #555;
   font-family: 'Montserrat', sans-serif;
 }
 
 #next-ch-btn {
   border: 1px solid rgba(212,175,55,0.4);
-  color: #d4af37;
-  background: none;
+  color: #d4af37; background: none;
   font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  padding: 13px 30px;
-  cursor: pointer;
-  transition: all 0.25s;
+  font-size: 10px; letter-spacing: 0.4em;
+  text-transform: uppercase; padding: 13px 30px;
+  cursor: pointer; transition: all 0.25s;
 }
-
 #next-ch-btn:hover { background: #d4af37; color: #000; }
 
 #prev-ch-link {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #555;
-  font-family: 'Montserrat', sans-serif;
-  transition: color 0.2s;
+  background: none; border: none; cursor: pointer;
+  font-size: 9px; letter-spacing: 0.3em;
+  text-transform: uppercase; color: #555;
+  font-family: 'Montserrat', sans-serif; transition: color 0.2s;
 }
-
 #prev-ch-link:hover { color: #d4af37; }
 
-/* ── RESUME POPUP ── */
+/* RESUME POPUP */
 #resume-popup {
   display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 200;
+  position: fixed; inset: 0; z-index: 200;
   background: rgba(0,0,0,0.75);
-  align-items: center;
-  justify-content: center;
+  align-items: center; justify-content: center;
   backdrop-filter: blur(6px);
 }
-
 #resume-popup.show { display: flex; }
 
 .popup-inner {
   background: #0f0f10;
   border: 1px solid rgba(212,175,55,0.25);
   padding: 2.5rem 2rem;
-  max-width: 340px;
-  width: 90%;
+  max-width: 340px; width: 90%;
   text-align: center;
 }
+body.light .popup-inner { background: #ede8de; border-color: rgba(212,175,55,0.35); }
 
-body.light .popup-inner {
-  background: #ede8de;
-  border-color: rgba(212,175,55,0.35);
-}
-
-.popup-heading {
-  font-family: 'Playfair Display', serif;
-  color: #d4af37;
-  font-size: 1.3rem;
-  margin-bottom: 0.65rem;
-}
-
-.popup-body {
-  font-size: 11px;
-  color: #666;
-  letter-spacing: 0.08em;
-  margin-bottom: 1.75rem;
-  line-height: 1.65;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.popup-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-}
+.popup-heading { font-family: 'Playfair Display', serif; color: #d4af37; font-size: 1.3rem; margin-bottom: 0.65rem; }
+.popup-body { font-size: 11px; color: #666; letter-spacing: 0.08em; margin-bottom: 1.75rem; line-height: 1.65; font-family: 'Montserrat', sans-serif; }
+.popup-actions { display: flex; gap: 0.75rem; justify-content: center; }
 
 .popup-yes {
-  background: #d4af37;
-  color: #000;
-  border: none;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  padding: 10px 22px;
-  cursor: pointer;
-  transition: background 0.2s;
+  background: #d4af37; color: #000; border: none;
+  font-family: 'Montserrat', sans-serif; font-size: 9px;
+  letter-spacing: 0.35em; text-transform: uppercase;
+  padding: 12px 22px; cursor: pointer; transition: background 0.2s;
+  min-height: 44px;
 }
-
 .popup-yes:hover { background: #c9a227; }
 
 .popup-no {
-  background: transparent;
-  color: #666;
+  background: transparent; color: #666;
   border: 1px solid rgba(255,255,255,0.08);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  padding: 10px 22px;
-  cursor: pointer;
-  transition: all 0.2s;
+  font-family: 'Montserrat', sans-serif; font-size: 9px;
+  letter-spacing: 0.35em; text-transform: uppercase;
+  padding: 12px 22px; cursor: pointer; transition: all 0.2s;
+  min-height: 44px;
 }
-
 body.light .popup-no { border-color: rgba(0,0,0,0.12); }
 .popup-no:hover { color: #d4af37; border-color: rgba(212,175,55,0.4); }
 </style>
-
 </head>
 <body>
 
 <div id="scroll-bar"></div>
-
-<!-- RESUME POPUP -->
 
 <div id="resume-popup">
   <div class="popup-inner">
@@ -397,21 +353,17 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
   </div>
 </div>
 
-<!-- NAV -->
-
 <nav id="top-nav">
   <button class="nav-logo" onclick="location.href='gallery.html'">V.</button>
   <div class="nav-right">
     <div class="font-pill">
-      <button onclick="changeFont(-2)">A−</button>
+      <button onclick="changeFont(-2)" aria-label="Decrease font size">A−</button>
       <div class="font-sep"></div>
-      <button onclick="changeFont(2)">A+</button>
+      <button onclick="changeFont(2)" aria-label="Increase font size">A+</button>
     </div>
     <button id="theme-btn" onclick="toggleTheme()">☽ Dark</button>
   </div>
 </nav>
-
-<!-- STORY -->
 
 <main id="story-container">
   <div id="chapter-eyebrow"></div>
@@ -434,87 +386,69 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
 </main>
 
 <script>
-  // ── GLOBALS ──
-  let fontSize   = parseInt(localStorage.getItem('readerFontSize')) || 18;
-  let storyId    = null;
-  let story      = null;
-  let isNovella  = false;
-  let chIndex    = 0;
-  let scrollTimer = null;
-  let savedData   = null;
+  var fontSize  = parseInt(localStorage.getItem('readerFontSize')) || 18;
+  var storyId   = null;
+  var story     = null;
+  var isNovella = false;
+  var chIndex   = 0;
+  var scrollTimer = null;
+  var savedData = null;
 
-  // ── THEME — applied immediately before page renders ──
-  (function () {
-    const t = localStorage.getItem('vaultTheme') || 'dark';
+  (function() {
+    var t = localStorage.getItem('vaultTheme') || 'dark';
     if (t === 'light') document.body.classList.add('light');
     document.getElementById('theme-btn').textContent = t === 'light' ? '☀ Light' : '☽ Dark';
   })();
 
   function toggleTheme() {
-    const isLight = document.body.classList.toggle('light');
-    const next = isLight ? 'light' : 'dark';
-    localStorage.setItem('vaultTheme', next);
+    var isLight = document.body.classList.toggle('light');
+    localStorage.setItem('vaultTheme', isLight ? 'light' : 'dark');
     document.getElementById('theme-btn').textContent = isLight ? '☀ Light' : '☽ Dark';
   }
 
-  // ── FONT ──
   function changeFont(d) {
     fontSize = Math.min(Math.max(fontSize + d, 12), 32);
     document.getElementById('story-content').style.fontSize = fontSize + 'px';
     localStorage.setItem('readerFontSize', fontSize);
   }
 
-  // ── SCROLL PROGRESS + AUTO-SAVE ──
-  window.addEventListener('scroll', function () {
-    const scrolled = document.documentElement.scrollTop;
-    const total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const pct = total > 0 ? (scrolled / total) * 100 : 0;
+  window.addEventListener('scroll', function() {
+    var scrolled = document.documentElement.scrollTop;
+    var total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = total > 0 ? (scrolled / total) * 100 : 0;
     document.getElementById('scroll-bar').style.width = pct + '%';
-
     if (!storyId) return;
     clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(function () {
-      localStorage.setItem('progress_' + storyId, JSON.stringify({
-        pct: pct.toFixed(2),
-        ch: chIndex
-      }));
+    scrollTimer = setTimeout(function() {
+      localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: pct.toFixed(2), ch: chIndex }));
     }, 1000);
   });
 
-  // ── SWIPE ──
-  let touchY = 0;
+  var touchY = 0;
   document.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; });
   document.addEventListener('touchend', function(e) {
     if (!isNovella) return;
-    const dy = touchY - e.changedTouches[0].clientY;
-    const atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 80;
-    const atTop = window.scrollY <= 10;
+    var dy = touchY - e.changedTouches[0].clientY;
+    var atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 80;
+    var atTop = window.scrollY <= 10;
     if (dy > 80 && atBottom) goChapter(chIndex + 1);
     if (dy < -80 && atTop)   goChapter(chIndex - 1);
   });
 
-  // ── RESUME POPUP ──
   function showPopup() {
-    const isNovellaResume = isNovella && savedData.ch > 0;
-    const pct = Math.round(parseFloat(savedData.pct));
-    let msg = '';
-    if (isNovellaResume) {
-      msg = 'You were on Chapter ' + (savedData.ch + 1) + '. Pick up from there?';
-    } else {
-      msg = 'You were ' + pct + '% through. Resume from there?';
-    }
+    var pct = Math.round(parseFloat(savedData.pct));
+    var msg = isNovella && savedData.ch > 0
+      ? 'You were on Chapter ' + (savedData.ch + 1) + '. Pick up from there?'
+      : 'You were ' + pct + '% through. Resume from there?';
     document.getElementById('popup-msg').textContent = msg;
     document.getElementById('resume-popup').classList.add('show');
   }
 
   function doResume() {
     document.getElementById('resume-popup').classList.remove('show');
-    if (isNovella) {
-      chIndex = savedData.ch || 0;
-      renderChapter();
-    }
-    setTimeout(function () {
-      const total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    if (isNovella) { chIndex = savedData.ch || 0; renderChapter(); }
+    setTimeout(function() {
+      var total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       window.scrollTo({ top: (parseFloat(savedData.pct) / 100) * total, behavior: 'smooth' });
     }, 300);
   }
@@ -525,30 +459,22 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     window.scrollTo({ top: 0 });
   }
 
-  // ── CHAPTER RENDER ──
   function renderChapter() {
-    const ch = story.chapters[chIndex];
-    const total = story.chapters.length;
-
-    document.getElementById('chapter-eyebrow').textContent =
-      story.title + '  ·  Chapter ' + (chIndex + 1) + ' of ' + total;
+    var ch = story.chapters[chIndex];
+    var total = story.chapters.length;
+    document.getElementById('chapter-eyebrow').textContent = story.title + '  ·  Chapter ' + (chIndex + 1) + ' of ' + total;
     document.getElementById('story-title').textContent = ch.title || ('Chapter ' + (chIndex + 1));
     document.getElementById('story-synopsis').textContent = ch.synopsis || '';
     document.getElementById('story-content').innerHTML = ch.text || '';
     document.getElementById('story-content').style.fontSize = fontSize + 'px';
     document.title = 'THE VAULT | ' + story.title + ' · Ch.' + (chIndex + 1);
-
-    // Ch bar
     document.getElementById('ch-label').textContent = (chIndex + 1) + ' / ' + total;
     document.getElementById('prev-ch-top').disabled = chIndex === 0;
     document.getElementById('next-ch-top').disabled = chIndex === total - 1;
-
-    // Footer
     document.getElementById('ch-footer-num').textContent = chIndex + 1;
     document.getElementById('next-ch-btn').style.display = chIndex < total - 1 ? 'block' : 'none';
     document.getElementById('prev-ch-link').style.display = chIndex > 0 ? 'block' : 'none';
     document.getElementById('ch-footer').classList.add('show');
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -560,30 +486,23 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
     renderChapter();
   }
 
-  // ── INIT ──
   function init() {
-    const params = new URLSearchParams(window.location.search);
+    var params = new URLSearchParams(window.location.search);
     storyId = params.get('id');
-
     if (!storyId || typeof stories === 'undefined') {
       document.getElementById('story-content').textContent = 'Archive error.';
       document.getElementById('story-container').classList.add('loaded');
       return;
     }
-
     story = stories.find(function(s) { return s.id == storyId; });
-
     if (!story) {
       document.getElementById('story-content').textContent = 'Record not found.';
       document.getElementById('story-container').classList.add('loaded');
       return;
     }
-
     isNovella = story.type === 'novella' && Array.isArray(story.chapters);
-
-    // Load saved progress
     try {
-      const raw = localStorage.getItem('progress_' + storyId);
+      var raw = localStorage.getItem('progress_' + storyId);
       if (raw) savedData = JSON.parse(raw);
     } catch(e) {}
 
@@ -592,9 +511,7 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
       chIndex = 0;
       renderChapter();
       document.getElementById('story-container').classList.add('loaded');
-      if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) {
-        setTimeout(showPopup, 700);
-      }
+      if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) setTimeout(showPopup, 700);
     } else {
       document.title = 'THE VAULT | ' + story.title;
       document.getElementById('story-title').textContent = story.title;
@@ -602,14 +519,11 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
       document.getElementById('story-content').innerHTML = story.text || story.content || '';
       document.getElementById('story-content').style.fontSize = fontSize + 'px';
       document.getElementById('story-container').classList.add('loaded');
-      if (savedData && parseFloat(savedData.pct) > 2) {
-        setTimeout(showPopup, 700);
-      }
+      if (savedData && parseFloat(savedData.pct) > 2) setTimeout(showPopup, 700);
     }
   }
 
   window.onload = init;
 </script>
-
 </body>
 </html>
