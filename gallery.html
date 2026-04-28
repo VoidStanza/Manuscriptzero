@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>THE VAULT | GALLERY</title>
-
-<!-- SEO & Share Card -->
 
 <meta name="description" content="Accessing the sanctum of Void Stanza.">
 <meta property="og:title" content="THE VAULT | ManuscriptZero">
@@ -21,234 +18,213 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 <script src="stories.js" defer></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital@0;1&family=Montserrat:wght@300;400&display=swap');
 
-:root {
-–gold: #d4af37;
-–bg: #0a0a0b;
-–card-bg: #0f0f10;
-–border: rgba(255,255,255,0.06);
-–border-hover: rgba(212,175,55,0.35);
-}
-
-- { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-background: var(–bg);
-color: #e2e2e2;
-font-family: ‘Montserrat’, sans-serif;
-margin: 0;
-padding: 0;
+  background: #0a0a0b;
+  color: #e2e2e2;
+  font-family: 'Montserrat', sans-serif;
 }
-
-.serif { font-family: ‘Playfair Display’, serif; }
-.lora  { font-family: ‘Lora’, serif; }
-
-/* Force gold — never let Tailwind override */
-.gold { color: var(–gold) !important; }
 
 /* NAV */
 nav {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 1.5rem 2.5rem;
-border-bottom: 1px solid var(–border);
-position: sticky;
-top: 0;
-background: rgba(10,10,11,0.97);
-backdrop-filter: blur(12px);
-z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.4rem 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  position: sticky;
+  top: 0;
+  background: rgba(10,10,11,0.97);
+  backdrop-filter: blur(12px);
+  z-index: 50;
 }
 
 .nav-logo {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.75rem;
-color: var(–gold) !important;
-cursor: pointer;
-text-decoration: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  color: #d4af37;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
 .nav-btn {
-font-size: 9px;
-letter-spacing: 0.4em;
-text-transform: uppercase;
-color: var(–gold) !important;
-border: 1px solid rgba(212,175,55,0.3);
-padding: 8px 20px;
-background: transparent;
-cursor: pointer;
-transition: background 0.2s, color 0.2s;
-font-family: ‘Montserrat’, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #d4af37;
+  border: 1px solid rgba(212,175,55,0.3);
+  padding: 8px 20px;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: background 0.2s, color 0.2s;
 }
 
-.nav-btn:hover {
-background: var(–gold);
-color: #000 !important;
-}
+.nav-btn:hover { background: #d4af37; color: #000; }
 
 /* HEADER */
 .gallery-header {
-text-align: center;
-padding: 3rem 2rem 2rem;
-border-bottom: 1px solid var(–border);
+  text-align: center;
+  padding: 2.5rem 2rem 1.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 
 .gallery-header h2 {
-font-family: ‘Playfair Display’, serif;
-font-size: 11px;
-letter-spacing: 0.6em;
-text-transform: uppercase;
-color: var(–gold) !important;
-margin-bottom: 0.5rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 11px;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  color: #d4af37;
+  margin-bottom: 0.4rem;
 }
 
 .gallery-header p {
-font-size: 9px;
-letter-spacing: 0.3em;
-text-transform: uppercase;
-color: #444;
-font-family: ‘Montserrat’, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #333;
 }
 
 /* GRID */
-.grid-wrapper {
-padding: 2rem 2.5rem 4rem;
-max-width: 1400px;
-margin: 0 auto;
+.grid-wrap {
+  padding: 2rem 2.5rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .story-grid {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
 }
 
 @media (max-width: 1100px) { .story-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px)  { .story-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px)  { .story-grid { grid-template-columns: repeat(1, 1fr); } }
+@media (max-width: 480px)  { .story-grid { grid-template-columns: 1fr; } }
 
-/* CARD — fixed height, no variation */
+/* CARD */
 .card {
-background: var(–card-bg);
-border: 1px solid var(–border);
-cursor: pointer;
-transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
-display: flex;
-flex-direction: column;
-height: 340px; /* fixed — every card identical */
+  background: #0f0f10;
+  border: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  height: 340px;
 }
 
 .card:hover {
-border-color: var(–border-hover);
-transform: translateY(-4px);
-box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+  border-color: rgba(212,175,55,0.35);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.6);
 }
 
-/* IMAGE — fixed height, never stretches card */
-.card-img-wrap {
-width: 100%;
-height: 200px;
-flex-shrink: 0;
-overflow: hidden;
-background: #111;
+/* IMAGE */
+.card-img {
+  width: 100%;
+  height: 200px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #111;
 }
 
-.card-img-wrap img {
-width: 100%;
-height: 100%;
-object-fit: cover;
-filter: grayscale(80%);
-transition: filter 0.5s, transform 0.5s;
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(80%);
+  transition: filter 0.5s, transform 0.5s;
 }
 
-.card:hover .card-img-wrap img {
-filter: grayscale(0%);
-transform: scale(1.05);
+.card:hover .card-img img {
+  filter: grayscale(0%);
+  transform: scale(1.05);
 }
 
-/* No image fallback */
-.card-img-wrap.no-img {
-display: flex;
-align-items: center;
-justify-content: center;
-background: repeating-linear-gradient(
-45deg, #111 0, #111 1px, #0f0f10 0, #0f0f10 50%
-) center / 8px 8px;
+.card-img.no-cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(45deg, #111 0, #111 1px, #0f0f10 0, #0f0f10 50%) center / 8px 8px;
 }
 
-.card-img-wrap.no-img span {
-font-size: 9px;
-letter-spacing: 0.3em;
-color: #333;
-text-transform: uppercase;
+.card-img.no-cover span {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: #2a2a2a;
+  text-transform: uppercase;
 }
 
-/* TEXT AREA — fills remaining card height, clips overflow */
+/* BODY */
 .card-body {
-padding: 0.85rem 1rem;
-flex: 1;
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-overflow: hidden;
+  padding: 0.85rem 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
 }
-
-.card-top { overflow: hidden; }
 
 .card-id {
-font-size: 8px;
-letter-spacing: 0.3em;
-color: #333;
-font-family: ‘Montserrat’, sans-serif;
-margin-bottom: 4px;
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: #2a2a2a;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 3px;
 }
 
+/* TITLE — dark grey, not gold */
 .card-title {
-font-family: ‘Playfair Display’, serif;
-font-size: 14px;
-color: var(–gold) !important;
-line-height: 1.3;
-margin-bottom: 6px;
-/* clamp to 2 lines */
-display: -webkit-box;
--webkit-line-clamp: 2;
--webkit-box-orient: vertical;
-overflow: hidden;
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  color: #c0c0c0;
+  line-height: 1.3;
+  margin-bottom: 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s;
 }
 
+.card:hover .card-title { color: #e8e8e8; }
+
+/* SYNOPSIS — grey */
 .card-synopsis {
-font-family: ‘Lora’, serif;
-font-size: 10px;
-color: #555;
-line-height: 1.6;
-font-style: italic;
-/* clamp to 2 lines */
-display: -webkit-box;
--webkit-line-clamp: 2;
--webkit-box-orient: vertical;
-overflow: hidden;
+  font-family: 'Lora', serif;
+  font-size: 10px;
+  color: #4a4a4a;
+  line-height: 1.6;
+  font-style: italic;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .card-footer {
-font-size: 8px;
-letter-spacing: 0.25em;
-text-transform: uppercase;
-color: var(–gold) !important;
-opacity: 0;
-transition: opacity 0.3s;
-font-family: ‘Montserrat’, sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #d4af37;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .card:hover .card-footer { opacity: 1; }
 </style>
-
 </head>
 <body>
 
 <nav>
-  <span class="nav-logo" onclick="location.href='index.html'">V.</span>
+  <button class="nav-logo" onclick="location.href='index.html'">V.</button>
   <button class="nav-btn" onclick="goToLatest()">Access Latest Artifact</button>
 </nav>
 
@@ -257,7 +233,7 @@ font-family: ‘Montserrat’, sans-serif;
   <p id="record-count">Decrypting records...</p>
 </div>
 
-<div class="grid-wrapper">
+<div class="grid-wrap">
   <div id="grid" class="story-grid"></div>
 </div>
 
@@ -273,37 +249,35 @@ font-family: ‘Montserrat’, sans-serif;
 
     countEl.textContent = stories.length + ' record' + (stories.length !== 1 ? 's' : '') + ' in the vault';
 
-    grid.innerHTML = stories.map(s => {
+    grid.innerHTML = stories.map(function(s) {
       const hasCover = s.cover && s.cover.trim() !== '';
       const imgBlock = hasCover
-        ? `<div class="card-img-wrap"><img src="${s.cover}" alt="${s.title}" loading="lazy" onerror="this.parentElement.classList.add('no-img');this.remove();this.parentElement.innerHTML='<span>No Image</span>';"></div>`
-        : `<div class="card-img-wrap no-img"><span>No Image</span></div>`;
+        ? `<div class="card-img"><img src="${s.cover}" alt="${s.title}" loading="lazy"
+             onerror="this.parentElement.className='card-img no-cover';this.remove();this.parentElement.innerHTML='<span>No Image</span>';"></div>`
+        : `<div class="card-img no-cover"><span>No Image</span></div>`;
 
-      return `
-        <div class="card" onclick="location.href='reader.html?id=${s.id}'">
-          ${imgBlock}
-          <div class="card-body">
-            <div class="card-top">
-              <div class="card-id">#${String(s.id).padStart(3,'0')}</div>
-              <div class="card-title">${s.title}</div>
-              <div class="card-synopsis">${s.synopsis || ''}</div>
-            </div>
-            <div class="card-footer">Open Record →</div>
+      return `<div class="card" onclick="location.href='reader.html?id=${s.id}'">
+        ${imgBlock}
+        <div class="card-body">
+          <div>
+            <div class="card-id">#${String(s.id).padStart(3,'0')}</div>
+            <div class="card-title">${s.title}</div>
+            <div class="card-synopsis">${s.synopsis || ''}</div>
           </div>
+          <div class="card-footer">Open Record →</div>
         </div>
-      `;
+      </div>`;
     }).join('');
   }
 
   function goToLatest() {
     if (typeof stories !== 'undefined' && stories.length > 0) {
-      const latestId = Math.max(...stories.map(s => s.id));
+      const latestId = Math.max.apply(null, stories.map(function(s) { return s.id; }));
       window.location.href = 'reader.html?id=' + latestId;
     }
   }
 
   window.onload = renderGrid;
 </script>
-
 </body>
 </html>
