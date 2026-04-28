@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -19,605 +18,592 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 <script src="stories.js" defer></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400&family=Montserrat:wght@300;400;600&display=swap');
 
-/* ── THEME VARIABLES ── */
-:root {
-–gold: #d4af37;
-–bg: #0a0a0b;
-–surface: #0f0f10;
-–nav-bg: rgba(10,10,11,0.96);
-–text: #e2e2e2;
-–text-dim: #9ca3af;
-–border: rgba(255,255,255,0.05);
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-body.light-mode {
-–bg: #f5f0e8;
-–surface: #ede8de;
-–nav-bg: rgba(245,240,232,0.96);
-–text: #1a1a1a;
-–text-dim: #666;
-–border: rgba(0,0,0,0.08);
-}
-
-- { box-sizing: border-box; }
-
+/* ── DARK (default) ── */
 body {
-background: var(–bg);
-color: var(–text);
-font-family: ‘Montserrat’, sans-serif;
-margin: 0;
-overflow-x: hidden;
-transition: background 0.4s, color 0.4s;
+  background: #0a0a0b;
+  color: #c9c9c9;
+  font-family: 'Montserrat', sans-serif;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
-.serif  { font-family: ‘Playfair Display’, serif; }
-.reading-font { font-family: ‘Lora’, serif; line-height: 1.9; transition: font-size 0.2s; }
-
-/* ── SCROLL PROGRESS ── */
-#scroll-progress {
-position: fixed; top: 0; left: 0;
-height: 2px; background: var(–gold);
-z-index: 100; width: 0%;
-box-shadow: 0 0 10px var(–gold);
-transition: width 0.1s linear;
+/* ── LIGHT ── */
+body.light {
+  background: #f5f0e8;
+  color: #2a2a2a;
 }
 
-/* ── NAV ── */
-nav {
-position: fixed; top: 0; width: 100%;
-padding: 1.25rem 1.75rem;
-background: var(–nav-bg);
-backdrop-filter: blur(12px);
-border-bottom: 1px solid var(–border);
-z-index: 50;
-display: flex;
-justify-content: space-between;
-align-items: center;
-transition: background 0.4s;
+/* NAV */
+#top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  padding: 1.1rem 1.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: rgba(10,10,11,0.96);
+  backdrop-filter: blur(12px);
+  transition: background 0.4s, border-color 0.4s;
+}
+
+body.light #top-nav {
+  background: rgba(245,240,232,0.97);
+  border-bottom-color: rgba(0,0,0,0.08);
 }
 
 .nav-logo {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.5rem;
-color: var(–gold) !important;
-cursor: pointer;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #d4af37;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  background: none;
 }
 
-.nav-controls {
-display: flex;
-align-items: center;
-gap: 1rem;
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.nav-label {
-font-size: 9px;
-letter-spacing: 0.4em;
-text-transform: uppercase;
-color: var(–text-dim);
+/* Font buttons */
+.font-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  padding: 4px 12px;
+  background: rgba(255,255,255,0.03);
+  transition: border-color 0.4s, background 0.4s;
 }
 
-/* Font size control */
-.font-control {
-display: flex;
-align-items: center;
-border: 1px solid var(–border);
-border-radius: 999px;
-padding: 4px 12px;
-background: var(–surface);
-gap: 6px;
+body.light .font-pill {
+  border-color: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.04);
 }
 
-.font-control button {
-background: none;
-border: none;
-cursor: pointer;
-font-weight: 700;
-font-size: 11px;
-color: var(–text-dim);
-transition: color 0.2s;
-padding: 0 4px;
-font-family: ‘Montserrat’, sans-serif;
+.font-pill button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  color: #666;
+  font-family: 'Montserrat', sans-serif;
+  padding: 0 4px;
+  transition: color 0.2s;
 }
 
-.font-control button:hover { color: var(–gold); }
-.font-divider { width: 1px; height: 12px; background: var(–border); }
+.font-pill button:hover { color: #d4af37; }
 
-/* Theme toggle */
-.theme-toggle {
-background: none;
-border: 1px solid var(–border);
-border-radius: 999px;
-padding: 5px 14px;
-cursor: pointer;
-font-size: 9px;
-letter-spacing: 0.25em;
-text-transform: uppercase;
-color: var(–text-dim);
-font-family: ‘Montserrat’, sans-serif;
-transition: all 0.2s;
-background: var(–surface);
+body.light .font-pill button { color: #888; }
+body.light .font-pill button:hover { color: #d4af37; }
+
+.font-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.08); }
+body.light .font-sep { background: rgba(0,0,0,0.1); }
+
+/* Theme button */
+#theme-btn {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  padding: 5px 16px;
+  background: rgba(255,255,255,0.03);
+  color: #888;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.theme-toggle:hover { color: var(–gold); border-color: var(–gold); }
+#theme-btn:hover { color: #d4af37; border-color: rgba(212,175,55,0.4); }
 
-/* ── STORY CONTAINER ── */
+body.light #theme-btn {
+  border-color: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.04);
+  color: #666;
+}
+
+/* SCROLL BAR */
+#scroll-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: #d4af37;
+  width: 0%;
+  z-index: 100;
+  box-shadow: 0 0 8px #d4af37;
+  transition: width 0.1s linear;
+}
+
+/* MAIN CONTENT */
 #story-container {
-opacity: 0;
-transition: opacity 0.8s ease-in;
-max-width: 680px;
-margin: 0 auto;
-padding: 7rem 1.75rem 6rem;
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 6.5rem 1.75rem 5rem;
+  opacity: 0;
+  transition: opacity 0.7s ease;
 }
 
 #story-container.loaded { opacity: 1; }
 
-/* ── CHAPTER HEADER ── */
-.chapter-eyebrow {
-font-size: 9px;
-letter-spacing: 0.5em;
-text-transform: uppercase;
-color: var(–gold);
-margin-bottom: 0.5rem;
-opacity: 0.7;
+/* Chapter eyebrow */
+#chapter-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: #d4af37;
+  opacity: 0.65;
+  margin-bottom: 0.6rem;
+  font-family: 'Montserrat', sans-serif;
 }
 
-#title {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(2rem, 5vw, 3.5rem);
-color: var(–gold);
-line-height: 1.15;
-margin-bottom: 1rem;
+/* Title */
+#story-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
+  color: #d4af37;
+  line-height: 1.15;
+  margin-bottom: 1rem;
 }
 
-#synopsis {
-font-family: ‘Lora’, serif;
-font-style: italic;
-color: var(–text-dim);
-font-size: 1.05rem;
-margin-bottom: 3rem;
+/* Synopsis */
+#story-synopsis {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2.5rem;
+  line-height: 1.7;
 }
 
-/* ── CHAPTER NAV (novella) ── */
-#chapter-nav {
-display: none;
-align-items: center;
-justify-content: space-between;
-margin-bottom: 2rem;
-padding: 0.75rem 1rem;
-border: 1px solid var(–border);
-background: var(–surface);
+body.light #story-synopsis { color: #888; }
+
+/* Chapter nav bar */
+#ch-bar {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  transition: background 0.4s, border-color 0.4s;
 }
 
-#chapter-nav.visible { display: flex; }
+#ch-bar.show { display: flex; }
 
-.ch-nav-btn {
-background: none;
-border: none;
-cursor: pointer;
-font-size: 9px;
-letter-spacing: 0.3em;
-text-transform: uppercase;
-color: var(–text-dim);
-font-family: ‘Montserrat’, sans-serif;
-transition: color 0.2s;
-padding: 4px 8px;
+body.light #ch-bar {
+  border-color: rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.02);
 }
 
-.ch-nav-btn:hover { color: var(–gold); }
-.ch-nav-btn:disabled { opacity: 0.2; cursor: default; }
-
-#chapter-indicator {
-font-size: 9px;
-letter-spacing: 0.3em;
-text-transform: uppercase;
-color: var(–gold);
-font-family: ‘Montserrat’, sans-serif;
+.ch-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #666;
+  font-family: 'Montserrat', sans-serif;
+  transition: color 0.2s;
+  padding: 4px 6px;
 }
 
-/* ── CONTENT ── */
-#content { color: var(–text-dim); }
-#content p { margin-bottom: 1.5rem; }
+.ch-btn:hover { color: #d4af37; }
+.ch-btn:disabled { opacity: 0.2; cursor: default; }
 
-/* ── CHAPTER END FOOTER ── */
-#chapter-footer {
-display: none;
-flex-direction: column;
-align-items: center;
-gap: 1rem;
-padding: 3rem 0 2rem;
-border-top: 1px solid var(–border);
-margin-top: 3rem;
+#ch-label {
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #d4af37;
+  font-family: 'Montserrat', sans-serif;
 }
 
-#chapter-footer.visible { display: flex; }
-
-.chapter-end-label {
-font-size: 9px;
-letter-spacing: 0.5em;
-text-transform: uppercase;
-color: var(–text-dim);
+/* Content */
+#story-content {
+  font-family: 'Lora', serif;
+  line-height: 1.95;
+  font-size: 18px;
+  transition: font-size 0.2s, color 0.4s;
+  color: #b0b0b0;
 }
 
-.next-chapter-btn {
-background: none;
-border: 1px solid rgba(212,175,55,0.4);
-color: var(–gold) !important;
-font-family: ‘Montserrat’, sans-serif;
-font-size: 10px;
-letter-spacing: 0.4em;
-text-transform: uppercase;
-padding: 14px 32px;
-cursor: pointer;
-transition: all 0.3s;
+body.light #story-content { color: #3a3a3a; }
+
+#story-content p { margin-bottom: 1.5rem; }
+
+/* Chapter footer */
+#ch-footer {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 0 2rem;
+  margin-top: 3rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 
-.next-chapter-btn:hover {
-background: var(–gold);
-color: #000 !important;
+#ch-footer.show { display: flex; }
+
+body.light #ch-footer { border-top-color: rgba(0,0,0,0.08); }
+
+.ch-end-label {
+  font-size: 9px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: #555;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.prev-chapter-link {
-font-size: 9px;
-letter-spacing: 0.3em;
-text-transform: uppercase;
-color: var(–text-dim);
-cursor: pointer;
-background: none;
-border: none;
-font-family: ‘Montserrat’, sans-serif;
-transition: color 0.2s;
+#next-ch-btn {
+  border: 1px solid rgba(212,175,55,0.4);
+  color: #d4af37;
+  background: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  padding: 13px 30px;
+  cursor: pointer;
+  transition: all 0.25s;
 }
 
-.prev-chapter-link:hover { color: var(–gold); }
+#next-ch-btn:hover { background: #d4af37; color: #000; }
+
+#prev-ch-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #555;
+  font-family: 'Montserrat', sans-serif;
+  transition: color 0.2s;
+}
+
+#prev-ch-link:hover { color: #d4af37; }
 
 /* ── RESUME POPUP ── */
 #resume-popup {
-display: none;
-position: fixed;
-inset: 0;
-z-index: 200;
-background: rgba(0,0,0,0.7);
-align-items: center;
-justify-content: center;
-backdrop-filter: blur(4px);
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.75);
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
 }
 
-#resume-popup.visible { display: flex; }
+#resume-popup.show { display: flex; }
 
-.popup-box {
-background: var(–surface);
-border: 1px solid rgba(212,175,55,0.25);
-padding: 2.5rem 2rem;
-max-width: 360px;
-width: 90%;
-text-align: center;
+.popup-inner {
+  background: #0f0f10;
+  border: 1px solid rgba(212,175,55,0.25);
+  padding: 2.5rem 2rem;
+  max-width: 340px;
+  width: 90%;
+  text-align: center;
 }
 
-.popup-title {
-font-family: ‘Playfair Display’, serif;
-color: var(–gold);
-font-size: 1.25rem;
-margin-bottom: 0.75rem;
+body.light .popup-inner {
+  background: #ede8de;
+  border-color: rgba(212,175,55,0.35);
 }
 
-.popup-sub {
-font-size: 11px;
-color: var(–text-dim);
-letter-spacing: 0.1em;
-margin-bottom: 2rem;
-line-height: 1.6;
+.popup-heading {
+  font-family: 'Playfair Display', serif;
+  color: #d4af37;
+  font-size: 1.3rem;
+  margin-bottom: 0.65rem;
 }
 
-.popup-btns {
-display: flex;
-gap: 1rem;
-justify-content: center;
+.popup-body {
+  font-size: 11px;
+  color: #666;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.75rem;
+  line-height: 1.65;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.popup-btn {
-font-family: ‘Montserrat’, sans-serif;
-font-size: 9px;
-letter-spacing: 0.35em;
-text-transform: uppercase;
-padding: 10px 22px;
-cursor: pointer;
-border: none;
-transition: all 0.2s;
+.popup-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
 }
 
-.popup-btn-yes {
-background: var(–gold);
-color: #000;
+.popup-yes {
+  background: #d4af37;
+  color: #000;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.popup-btn-yes:hover { background: #c9a227; }
+.popup-yes:hover { background: #c9a227; }
 
-.popup-btn-no {
-background: transparent;
-color: var(–text-dim);
-border: 1px solid var(–border);
+.popup-no {
+  background: transparent;
+  color: #666;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.popup-btn-no:hover { color: var(–gold); border-color: var(–gold); }
+body.light .popup-no { border-color: rgba(0,0,0,0.12); }
+.popup-no:hover { color: #d4af37; border-color: rgba(212,175,55,0.4); }
 </style>
 
 </head>
 <body>
 
-<div id="scroll-progress"></div>
+<div id="scroll-bar"></div>
 
 <!-- RESUME POPUP -->
 
 <div id="resume-popup">
-  <div class="popup-box">
-    <div class="popup-title">Welcome back.</div>
-    <div class="popup-sub" id="popup-sub">Resume from where you left off?</div>
-    <div class="popup-btns">
-      <button class="popup-btn popup-btn-yes" onclick="confirmResume()">Resume</button>
-      <button class="popup-btn popup-btn-no" onclick="dismissResume()">Start Over</button>
+  <div class="popup-inner">
+    <div class="popup-heading">Welcome back.</div>
+    <div class="popup-body" id="popup-msg">Resume from where you left off?</div>
+    <div class="popup-actions">
+      <button class="popup-yes" onclick="doResume()">Resume</button>
+      <button class="popup-no" onclick="doStartOver()">Start Over</button>
     </div>
   </div>
 </div>
 
 <!-- NAV -->
 
-<nav>
-  <span class="nav-logo" onclick="location.href='gallery.html'">V.</span>
-  <div class="nav-controls">
-    <span class="nav-label hidden md:block">Record Decrypted</span>
-    <div class="font-control">
-      <button onclick="adjustFont(-2)">A−</button>
-      <div class="font-divider"></div>
-      <button onclick="adjustFont(2)">A+</button>
+<nav id="top-nav">
+  <button class="nav-logo" onclick="location.href='gallery.html'">V.</button>
+  <div class="nav-right">
+    <div class="font-pill">
+      <button onclick="changeFont(-2)">A−</button>
+      <div class="font-sep"></div>
+      <button onclick="changeFont(2)">A+</button>
     </div>
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☽ Dark</button>
+    <button id="theme-btn" onclick="toggleTheme()">☽ Dark</button>
   </div>
 </nav>
 
 <!-- STORY -->
 
 <main id="story-container">
-  <div class="chapter-eyebrow" id="chapterEyebrow"></div>
-  <h1 id="title"></h1>
-  <p id="synopsis"></p>
+  <div id="chapter-eyebrow"></div>
+  <h1 id="story-title"></h1>
+  <p id="story-synopsis"></p>
 
-  <!-- Chapter nav bar (novella only) -->
-
-  <div id="chapter-nav">
-    <button class="ch-nav-btn" id="prevChBtn" onclick="goToChapter(currentChapter - 1)">← Prev</button>
-    <span id="chapter-indicator"></span>
-    <button class="ch-nav-btn" id="nextChBtn" onclick="goToChapter(currentChapter + 1)">Next →</button>
+  <div id="ch-bar">
+    <button class="ch-btn" id="prev-ch-top" onclick="goChapter(chIndex - 1)">← Prev</button>
+    <span id="ch-label"></span>
+    <button class="ch-btn" id="next-ch-top" onclick="goChapter(chIndex + 1)">Next →</button>
   </div>
 
-  <article id="content" class="reading-font text-lg"></article>
+  <div id="story-content"></div>
 
-  <!-- Chapter footer (novella only) -->
-
-  <div id="chapter-footer">
-    <div class="chapter-end-label">✦ End of Chapter <span id="footerChNum"></span> ✦</div>
-    <button class="next-chapter-btn" id="footerNextBtn" onclick="goToChapter(currentChapter + 1)">
-      Next Chapter →
-    </button>
-    <button class="prev-chapter-link" id="footerPrevBtn" onclick="goToChapter(currentChapter - 1)">
-      ← Previous Chapter
-    </button>
+  <div id="ch-footer">
+    <div class="ch-end-label">✦ End of Chapter <span id="ch-footer-num"></span> ✦</div>
+    <button id="next-ch-btn" onclick="goChapter(chIndex + 1)">Next Chapter →</button>
+    <button id="prev-ch-link" onclick="goChapter(chIndex - 1)">← Previous Chapter</button>
   </div>
 </main>
 
 <script>
-  // ── STATE ──
-  let currentFontSize = parseInt(localStorage.getItem('readerFontSize')) || 18;
-  let currentId = null;
-  let currentStory = null;
-  let currentChapter = 0; // index, 0-based
-  let isNovella = false;
-  let saveTimer = null;
-  let savedScrollPos = null;
-  let savedChapter = null;
+  // ── GLOBALS ──
+  let fontSize   = parseInt(localStorage.getItem('readerFontSize')) || 18;
+  let storyId    = null;
+  let story      = null;
+  let isNovella  = false;
+  let chIndex    = 0;
+  let scrollTimer = null;
+  let savedData   = null;
 
-  // ── THEME ──
-  function applyTheme(theme) {
-    document.body.classList.toggle('light-mode', theme === 'light');
-    document.getElementById('themeBtn').textContent = theme === 'light' ? '☀ Light' : '☽ Dark';
-  }
+  // ── THEME — applied immediately before page renders ──
+  (function () {
+    const t = localStorage.getItem('vaultTheme') || 'dark';
+    if (t === 'light') document.body.classList.add('light');
+    document.getElementById('theme-btn').textContent = t === 'light' ? '☀ Light' : '☽ Dark';
+  })();
 
   function toggleTheme() {
-    const current = localStorage.getItem('vaultTheme') || 'dark';
-    const next = current === 'dark' ? 'light' : 'dark';
+    const isLight = document.body.classList.toggle('light');
+    const next = isLight ? 'light' : 'dark';
     localStorage.setItem('vaultTheme', next);
-    applyTheme(next);
+    document.getElementById('theme-btn').textContent = isLight ? '☀ Light' : '☽ Dark';
   }
-
-  // Apply saved theme immediately
-  applyTheme(localStorage.getItem('vaultTheme') || 'dark');
 
   // ── FONT ──
-  function adjustFont(delta) {
-    currentFontSize = Math.min(Math.max(currentFontSize + delta, 12), 32);
-    document.getElementById('content').style.fontSize = currentFontSize + 'px';
-    localStorage.setItem('readerFontSize', currentFontSize);
+  function changeFont(d) {
+    fontSize = Math.min(Math.max(fontSize + d, 12), 32);
+    document.getElementById('story-content').style.fontSize = fontSize + 'px';
+    localStorage.setItem('readerFontSize', fontSize);
   }
 
-  // ── SCROLL PROGRESS ──
-  let scrollTimer = null;
-  window.onscroll = function () {
-    const winScroll = document.documentElement.scrollTop;
-    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
-    document.getElementById('scroll-progress').style.width = scrolled + '%';
+  // ── SCROLL PROGRESS + AUTO-SAVE ──
+  window.addEventListener('scroll', function () {
+    const scrolled = document.documentElement.scrollTop;
+    const total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const pct = total > 0 ? (scrolled / total) * 100 : 0;
+    document.getElementById('scroll-bar').style.width = pct + '%';
 
-    if (currentId) {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        const key = isNovella
-          ? 'progress_' + currentId + '_ch' + currentChapter
-          : 'progress_' + currentId;
-        localStorage.setItem(key, JSON.stringify({
-          scroll: scrolled.toFixed(2),
-          chapter: currentChapter
-        }));
-      }, 1000);
-    }
-  };
+    if (!storyId) return;
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(function () {
+      localStorage.setItem('progress_' + storyId, JSON.stringify({
+        pct: pct.toFixed(2),
+        ch: chIndex
+      }));
+    }, 1000);
+  });
 
-  // ── SWIPE (novella) ──
-  let touchStartY = 0;
-  document.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; });
-  document.addEventListener('touchend', e => {
+  // ── SWIPE ──
+  let touchY = 0;
+  document.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; });
+  document.addEventListener('touchend', function(e) {
     if (!isNovella) return;
-    const delta = touchStartY - e.changedTouches[0].clientY;
-    const atBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 60;
+    const dy = touchY - e.changedTouches[0].clientY;
+    const atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 80;
     const atTop = window.scrollY <= 10;
-
-    if (delta > 80 && atBottom) goToChapter(currentChapter + 1); // swipe up at bottom → next
-    if (delta < -80 && atTop) goToChapter(currentChapter - 1);   // swipe down at top → prev
+    if (dy > 80 && atBottom) goChapter(chIndex + 1);
+    if (dy < -80 && atTop)   goChapter(chIndex - 1);
   });
 
   // ── RESUME POPUP ──
-  function showResumePopup(savedData) {
-    const sub = isNovella
-      ? `You were on Chapter ${savedData.chapter + 1}. Pick up from there?`
-      : `You were ${Math.round(savedData.scroll)}% through. Resume?`;
-    document.getElementById('popup-sub').textContent = sub;
-    document.getElementById('resume-popup').classList.add('visible');
-  }
-
-  function confirmResume() {
-    document.getElementById('resume-popup').classList.remove('visible');
-    if (isNovella && savedChapter !== null) {
-      currentChapter = savedChapter;
-      renderChapter();
-      // scroll after render settles
-      setTimeout(() => {
-        if (savedScrollPos) {
-          const scrollTarget = (parseFloat(savedScrollPos) / 100) *
-            (document.documentElement.scrollHeight - document.documentElement.clientHeight);
-          window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-        }
-      }, 300);
-    } else if (savedScrollPos) {
-      setTimeout(() => {
-        const scrollTarget = (parseFloat(savedScrollPos) / 100) *
-          (document.documentElement.scrollHeight - document.documentElement.clientHeight);
-        window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-      }, 300);
+  function showPopup() {
+    const isNovellaResume = isNovella && savedData.ch > 0;
+    const pct = Math.round(parseFloat(savedData.pct));
+    let msg = '';
+    if (isNovellaResume) {
+      msg = 'You were on Chapter ' + (savedData.ch + 1) + '. Pick up from there?';
+    } else {
+      msg = 'You were ' + pct + '% through. Resume from there?';
     }
+    document.getElementById('popup-msg').textContent = msg;
+    document.getElementById('resume-popup').classList.add('show');
   }
 
-  function dismissResume() {
-    document.getElementById('resume-popup').classList.remove('visible');
+  function doResume() {
+    document.getElementById('resume-popup').classList.remove('show');
+    if (isNovella) {
+      chIndex = savedData.ch || 0;
+      renderChapter();
+    }
+    setTimeout(function () {
+      const total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      window.scrollTo({ top: (parseFloat(savedData.pct) / 100) * total, behavior: 'smooth' });
+    }, 300);
+  }
+
+  function doStartOver() {
+    document.getElementById('resume-popup').classList.remove('show');
+    if (isNovella) { chIndex = 0; renderChapter(); }
     window.scrollTo({ top: 0 });
   }
 
   // ── CHAPTER RENDER ──
   function renderChapter() {
-    const chapter = currentStory.chapters[currentChapter];
-    const totalCh = currentStory.chapters.length;
+    const ch = story.chapters[chIndex];
+    const total = story.chapters.length;
 
-    // Eyebrow + title
-    document.getElementById('chapterEyebrow').textContent =
-      `${currentStory.title}  ·  Chapter ${currentChapter + 1} of ${totalCh}`;
-    document.getElementById('title').textContent = chapter.title || `Chapter ${currentChapter + 1}`;
-    document.getElementById('synopsis').textContent = chapter.synopsis || '';
-    document.getElementById('content').innerHTML = chapter.text;
-    document.getElementById('content').style.fontSize = currentFontSize + 'px';
-    document.title = `THE VAULT | ${currentStory.title} · Ch.${currentChapter + 1}`;
+    document.getElementById('chapter-eyebrow').textContent =
+      story.title + '  ·  Chapter ' + (chIndex + 1) + ' of ' + total;
+    document.getElementById('story-title').textContent = ch.title || ('Chapter ' + (chIndex + 1));
+    document.getElementById('story-synopsis').textContent = ch.synopsis || '';
+    document.getElementById('story-content').innerHTML = ch.text || '';
+    document.getElementById('story-content').style.fontSize = fontSize + 'px';
+    document.title = 'THE VAULT | ' + story.title + ' · Ch.' + (chIndex + 1);
 
-    // Chapter nav bar
-    document.getElementById('chapter-indicator').textContent =
-      `${currentChapter + 1} / ${totalCh}`;
-    document.getElementById('prevChBtn').disabled = currentChapter === 0;
-    document.getElementById('nextChBtn').disabled = currentChapter === totalCh - 1;
+    // Ch bar
+    document.getElementById('ch-label').textContent = (chIndex + 1) + ' / ' + total;
+    document.getElementById('prev-ch-top').disabled = chIndex === 0;
+    document.getElementById('next-ch-top').disabled = chIndex === total - 1;
 
-    // Chapter footer
-    const footer = document.getElementById('chapter-footer');
-    const footerNext = document.getElementById('footerNextBtn');
-    const footerPrev = document.getElementById('footerPrevBtn');
-    document.getElementById('footerChNum').textContent = currentChapter + 1;
+    // Footer
+    document.getElementById('ch-footer-num').textContent = chIndex + 1;
+    document.getElementById('next-ch-btn').style.display = chIndex < total - 1 ? 'block' : 'none';
+    document.getElementById('prev-ch-link').style.display = chIndex > 0 ? 'block' : 'none';
+    document.getElementById('ch-footer').classList.add('show');
 
-    footer.classList.add('visible');
-    footerNext.style.display = currentChapter < totalCh - 1 ? 'block' : 'none';
-    footerPrev.style.display = currentChapter > 0 ? 'block' : 'none';
-
-    // Scroll to top of content
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function goToChapter(index) {
-    if (!currentStory || !currentStory.chapters) return;
-    const total = currentStory.chapters.length;
-    if (index < 0 || index >= total) return;
-    currentChapter = index;
-
-    // Save chapter position
-    localStorage.setItem('progress_' + currentId, JSON.stringify({
-      scroll: '0',
-      chapter: currentChapter
-    }));
-
+  function goChapter(i) {
+    if (!story || !story.chapters) return;
+    if (i < 0 || i >= story.chapters.length) return;
+    chIndex = i;
+    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: '0', ch: chIndex }));
     renderChapter();
   }
 
   // ── INIT ──
   function init() {
     const params = new URLSearchParams(window.location.search);
-    currentId = params.get('id');
+    storyId = params.get('id');
 
-    if (!currentId || typeof stories === 'undefined') {
-      document.getElementById('content').innerText = 'Archive error: Missing ID or stories.js.';
+    if (!storyId || typeof stories === 'undefined') {
+      document.getElementById('story-content').textContent = 'Archive error.';
       document.getElementById('story-container').classList.add('loaded');
       return;
     }
 
-    currentStory = stories.find(s => s.id == currentId);
+    story = stories.find(function(s) { return s.id == storyId; });
 
-    if (!currentStory) {
-      document.getElementById('content').innerText = 'Record ' + currentId + ' not found.';
+    if (!story) {
+      document.getElementById('story-content').textContent = 'Record not found.';
       document.getElementById('story-container').classList.add('loaded');
       return;
     }
 
-    isNovella = currentStory.type === 'novella' && Array.isArray(currentStory.chapters);
+    isNovella = story.type === 'novella' && Array.isArray(story.chapters);
 
-    // Check saved progress
-    const rawSaved = localStorage.getItem('progress_' + currentId);
-    let savedData = null;
-    if (rawSaved) {
-      try { savedData = JSON.parse(rawSaved); } catch(e) {}
-    }
+    // Load saved progress
+    try {
+      const raw = localStorage.getItem('progress_' + storyId);
+      if (raw) savedData = JSON.parse(raw);
+    } catch(e) {}
 
     if (isNovella) {
-      // Show novella UI
-      document.getElementById('chapter-nav').classList.add('visible');
-
-      if (savedData && (savedData.chapter > 0 || parseFloat(savedData.scroll) > 2)) {
-        savedChapter = savedData.chapter || 0;
-        savedScrollPos = savedData.scroll;
-        currentChapter = 0;
-        renderChapter();
-        document.getElementById('story-container').classList.add('loaded');
-        setTimeout(() => showResumePopup(savedData), 600);
-      } else {
-        currentChapter = 0;
-        renderChapter();
-        document.getElementById('story-container').classList.add('loaded');
-      }
-
-    } else {
-      // Standard story
-      document.title = 'THE VAULT | ' + currentStory.title;
-      document.getElementById('title').textContent = currentStory.title;
-      document.getElementById('synopsis').textContent = currentStory.synopsis || '';
-      document.getElementById('content').innerHTML = currentStory.text || currentStory.content || '';
-      document.getElementById('content').style.fontSize = currentFontSize + 'px';
+      document.getElementById('ch-bar').classList.add('show');
+      chIndex = 0;
+      renderChapter();
       document.getElementById('story-container').classList.add('loaded');
-
-      if (savedData && parseFloat(savedData.scroll) > 2) {
-        savedScrollPos = savedData.scroll;
-        setTimeout(() => showResumePopup(savedData), 600);
+      if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) {
+        setTimeout(showPopup, 700);
+      }
+    } else {
+      document.title = 'THE VAULT | ' + story.title;
+      document.getElementById('story-title').textContent = story.title;
+      document.getElementById('story-synopsis').textContent = story.synopsis || '';
+      document.getElementById('story-content').innerHTML = story.text || story.content || '';
+      document.getElementById('story-content').style.fontSize = fontSize + 'px';
+      document.getElementById('story-container').classList.add('loaded');
+      if (savedData && parseFloat(savedData.pct) > 2) {
+        setTimeout(showPopup, 700);
       }
     }
   }
