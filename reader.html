@@ -520,8 +520,293 @@ body.light .comments-empty { color: #ccc; }
     if (dy < -80 && atTop)   goChapter(chIndex - 1);
   });
 
-  /* ── RESUME POPUP ── */
+   /* ── RESUME POPUP ── */
   function showPopup() {
     var pct = Math.round(parseFloat(savedData.pct));
     var msg = isNovella && savedData.ch > 0
-      ? 'You were on Chapter ' + (savedData.ch + 1) + '. Pi
+      ? 'You were on Chapter ' + (savedData.ch + 1) + '. Pick up from there?'
+      : 'You were ' + pct + '% through. Resume from there?';
+    document.getElementById('popup-msg').textContent = msg;
+    document.getElementById('resume-popup').classList.add('show');
+  }
+
+  function doResume() {
+    document.getElementById('resume-popup').classList.remove('show');
+    if (isNovella) { chIndex = savedData.ch || 0; renderChapter(); }
+    setTimeout(function() {
+      var total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      window.scrollTo({ top: (parseFloat(savedData.pct) / 100) * total, behavior: 'smooth' });
+    }, 300);
+  }
+
+  function doStartOver() {
+    document.getElementById('resume-popup').classList.remove('show');
+    if (isNovella) { chIndex = 0; renderChapter(); }
+    window.scrollTo({ top: 0 });
+  }
+
+  /* ── CHAPTER RENDER ── */
+  function renderChapter() {
+    var ch = story.chapters[chIndex];
+    var total = story.chapters.length;
+    document.getElementById('chapter-eyebrow').textContent = story.title + '  ·  Chapter ' + (chIndex + 1) + ' of ' + total;
+    document.getElementById('story-title').textContent = ch.title || ('Chapter ' + (chIndex + 1));
+    document.getElementById('story-synopsis').textContent = ch.synopsis || '';
+    document.getElementById('story-content').innerHTML = ch.text || '';
+    document.getElementById('story-content').style.fontSize = fontSize + 'px';
+    document.title = 'THE VAULT | ' + story.title + ' · Ch.' + (chIndex + 1);
+    document.getElementById('ch-label').textContent = (chIndex + 1) + ' / ' + total;
+    document.getElementById('prev-ch-top').disabled = chIndex === 0;
+    document.getElementById('next-ch-top').disabled = chIndex === total - 1;
+    document.getElementById('ch-footer-num').textContent = chIndex + 1;
+    document.getElementById('next-ch-btn').style.display = chIndex < total - 1 ? 'block' : 'none';
+    document.getElementById('prev-ch-link').style.display = chIndex > 0 ? 'block' : 'none';
+    document.getElementById('ch-footer').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    loadComments();
+  }
+
+  function goChapter(i) {
+    if (!story || !story.chapters) return;
+    if (i < 0 || i >= story.chapters.length) return;
+    chIndex = i;
+    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: '0', ch: chIndex, opened: true }));
+    renderChapter();
+  }
+
+  /* ── SUPABASE HELPERS ── */
+  function sbHeaders(extra) {
+    return Object.assign({
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY
+    }, extra || {});
+  }
+
+  function commentKey() {
+    return isNovella ? String(storyId) + '_ch' + chIndex : String(storyId);
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+  }
+
+  function formatDate(iso) {
+    return new Date(iso).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+  }
+
+  /* ── LOAD COMMENTS ── */
+  function loadComments() {
+    var list = document.getElementById('comments-list');
+    list.innerHTML = '<div class="comments-loading">Loading transmissions…</div>';
+
+    fetch(
+      SUPABASE_URL + '/rest/v1/comments'
+      + '?story_id=eq.' + encodeURIComponent(commentKey())
+      + '&parent_id=is.null'
+      + '&order=created_at.asc'
+      + '&select=id,content,created_at',
+      { headers: sbHeaders() }
+    )
+    .then(function(r) { return r.json(); })
+    .then(function(comments) {
+      list.innerHTML = '';
+      if (!comments || comments.length === 0) {
+        list.innerHTML = '<div class="comments-empty">No transmissions yet. Be the first.</div>';
+        return;
+      }
+      comments.forEach(function(c) {
+        var card = buildCommentCard(c);
+        list.appendChild(card);
+        loadReplies(c.id, card.querySelector('.replies-list'));
+      });
+    })
+    .catch(function() {
+      list.innerHTML = '<div class="comments-empty">Could not load transmissions.</div>';
+    });
+  }
+
+  /* ── BUILD COMMENT CARD ── */
+  function buildCommentCard(c) {
+    var div = document.createElement('div');
+    div.className = 'comment-card';
+    div.dataset.id = c.id;
+    div.innerHTML =
+      '<div class="comment-meta">' +
+        '<span class="comment-anon">Anonymous</span>' +
+        '<span class="comment-date">' + formatDate(c.created_at) + '</span>' +
+      '</div>' +
+      '<div class="comment-text">' + escapeHtml(c.content) + '</div>' +
+      '<button class="reply-btn" onclick="toggleReplyForm(this)">↩ Reply</button>' +
+      '<div class="reply-form">' +
+        '<textarea class="reply-textarea" placeholder="Your reply…" maxlength="1000"></textarea>' +
+        '<div class="reply-actions">' +
+          '<button class="reply-submit" onclick="submitReply(this,' + c.id + ')">Send</button>' +
+          '<button class="reply-cancel" onclick="closeReplyForm(this)">Cancel</button>' +
+        '</div>' +
+        '<div class="comment-msg"></div>' +
+      '</div>' +
+      '<div class="replies-list"></div>';
+    return div;
+  }
+
+  /* ── TOGGLE / CLOSE REPLY FORM ── */
+  function toggleReplyForm(btn) {
+    var form = btn.nextElementSibling;
+    var isOpen = form.classList.toggle('open');
+    btn.textContent = isOpen ? '✕ Close' : '↩ Reply';
+    if (isOpen) form.querySelector('textarea').focus();
+    else { form.querySelector('textarea').value = ''; form.querySelector('.comment-msg').textContent = ''; }
+  }
+
+  function closeReplyForm(cancelBtn) {
+    var form = cancelBtn.closest('.reply-form');
+    form.classList.remove('open');
+    form.querySelector('textarea').value = '';
+    form.querySelector('.comment-msg').textContent = '';
+    var replyBtn = form.previousElementSibling;
+    replyBtn.textContent = '↩ Reply';
+  }
+
+  /* ── LOAD REPLIES ── */
+  function loadReplies(parentId, container) {
+    fetch(
+      SUPABASE_URL + '/rest/v1/comments'
+      + '?parent_id=eq.' + parentId
+      + '&order=created_at.asc'
+      + '&select=id,content,created_at',
+      { headers: sbHeaders() }
+    )
+    .then(function(r) { return r.json(); })
+    .then(function(replies) {
+      container.innerHTML = '';
+      if (!replies || replies.length === 0) return;
+      replies.forEach(function(r) {
+        var rc = document.createElement('div');
+        rc.className = 'reply-card';
+        rc.innerHTML =
+          '<div class="reply-meta">' +
+            '<span class="reply-anon">Anonymous</span>' +
+            '<span class="reply-date">' + formatDate(r.created_at) + '</span>' +
+          '</div>' +
+          '<div class="reply-text">' + escapeHtml(r.content) + '</div>';
+        container.appendChild(rc);
+      });
+    });
+  }
+
+  /* ── SUBMIT TOP-LEVEL COMMENT ── */
+  function submitComment() {
+    var content = document.getElementById('comment-text').value.trim();
+    var btn     = document.getElementById('comment-btn');
+    if (!content) { showRootMsg('Write something first.', 'err'); return; }
+    btn.disabled = true;
+    showRootMsg('Sending…', '');
+    fetch(SUPABASE_URL + '/rest/v1/comments', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ story_id: commentKey(), content: content, author: 'Anonymous' })
+    })
+    .then(function(r) {
+      if (r.ok) {
+        document.getElementById('comment-text').value = '';
+        showRootMsg('Transmission received.', 'ok');
+        loadComments();
+      } else {
+        return r.json().then(function(e) { showRootMsg('Error: ' + (e.message || 'Could not send.'), 'err'); });
+      }
+    })
+    .catch(function() { showRootMsg('Network error. Try again.', 'err'); })
+    .finally(function() { btn.disabled = false; });
+  }
+
+  /* ── SUBMIT REPLY ── */
+  function submitReply(btn, parentId) {
+    var form    = btn.closest('.reply-form');
+    var textarea = form.querySelector('textarea');
+    var msgEl   = form.querySelector('.comment-msg');
+    var content = textarea.value.trim();
+    if (!content) { msgEl.textContent = 'Write something first.'; msgEl.className = 'comment-msg err'; return; }
+    btn.disabled = true;
+    msgEl.textContent = 'Sending…'; msgEl.className = 'comment-msg';
+    fetch(SUPABASE_URL + '/rest/v1/comments', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ story_id: commentKey(), parent_id: parentId, content: content, author: 'Anonymous' })
+    })
+    .then(function(r) {
+      if (r.ok) {
+        textarea.value = '';
+        msgEl.textContent = 'Reply sent.'; msgEl.className = 'comment-msg ok';
+        var repliesContainer = btn.closest('.comment-card').querySelector('.replies-list');
+        loadReplies(parentId, repliesContainer);
+        setTimeout(function() { closeReplyForm(btn); }, 1200);
+      } else {
+        return r.json().then(function(e) {
+          msgEl.textContent = 'Error: ' + (e.message || 'Could not send.'); msgEl.className = 'comment-msg err';
+        });
+      }
+    })
+    .catch(function() { msgEl.textContent = 'Network error.'; msgEl.className = 'comment-msg err'; })
+    .finally(function() { btn.disabled = false; });
+  }
+
+  function showRootMsg(text, type) {
+    var el = document.getElementById('comment-msg');
+    el.textContent = text;
+    el.className = 'comment-msg' + (type ? ' ' + type : '');
+  }
+
+  /* ── INIT ── */
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    storyId = params.get('id');
+    if (!storyId || typeof stories === 'undefined') {
+      document.getElementById('story-content').textContent = 'Archive error.';
+      document.getElementById('story-container').classList.add('loaded');
+      return;
+    }
+    story = stories.find(function(s) { return s.id == storyId; });
+    if (!story) {
+      document.getElementById('story-content').textContent = 'Record not found.';
+      document.getElementById('story-container').classList.add('loaded');
+      return;
+    }
+
+    isNovella = story.type === 'novella' && Array.isArray(story.chapters);
+
+    try {
+      var raw = localStorage.getItem('progress_' + storyId);
+      if (raw) savedData = JSON.parse(raw);
+    } catch(e) {}
+
+    var currentPct = savedData ? savedData.pct : '0';
+    var currentCh  = savedData ? savedData.ch  : 0;
+    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: currentPct, ch: currentCh, opened: true }));
+
+    document.getElementById('comment-section').style.display = 'block';
+
+    if (isNovella) {
+      document.getElementById('ch-bar').classList.add('show');
+      chIndex = 0;
+      renderChapter();
+      document.getElementById('story-container').classList.add('loaded');
+      if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) setTimeout(showPopup, 700);
+    } else {
+      document.title = 'THE VAULT | ' + story.title;
+      document.getElementById('story-title').textContent = story.title;
+      document.getElementById('story-synopsis').textContent = story.synopsis || '';
+      document.getElementById('story-content').innerHTML = story.text || story.content || '';
+      document.getElementById('story-content').style.fontSize = fontSize + 'px';
+      document.getElementById('story-container').classList.add('loaded');
+      loadComments();
+      if (savedData && parseFloat(savedData.pct) > 2) setTimeout(showPopup, 700);
+    }
+  }
+
+  window.onload = init;
+</script>
+</body>
+</html>
