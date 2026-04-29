@@ -30,62 +30,43 @@ body {
   font-family: 'Montserrat', sans-serif;
   transition: background 0.4s, color 0.4s;
 }
-
 body.light { background: #f5f0e8; color: #1a1a1a; }
 
 #top-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
+  position: fixed; top: 0; left: 0; right: 0;
   padding: 1.1rem 1.75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: flex; justify-content: space-between; align-items: center;
   z-index: 50;
   border-bottom: 1px solid rgba(255,255,255,0.05);
   background: rgba(10,10,11,0.96);
   backdrop-filter: blur(12px);
   transition: background 0.4s, border-color 0.4s;
 }
-
-body.light #top-nav {
-  background: rgba(245,240,232,0.97);
-  border-bottom-color: rgba(0,0,0,0.08);
-}
+body.light #top-nav { background: rgba(245,240,232,0.97); border-bottom-color: rgba(0,0,0,0.08); }
 
 .nav-logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  color: #d4af37;
-  cursor: pointer;
-  background: none;
-  border: none;
+  font-family: 'Playfair Display', serif; font-size: 1.5rem;
+  color: #d4af37; cursor: pointer; background: none; border: none;
 }
-
 .nav-right { display: flex; align-items: center; gap: 0.75rem; }
 
 .font-pill {
-  display: flex;
-  align-items: center;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 999px;
+  display: flex; align-items: center;
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 999px;
   background: rgba(255,255,255,0.03);
-  transition: border-color 0.4s, background 0.4s;
-  overflow: hidden;
+  transition: border-color 0.4s, background 0.4s; overflow: hidden;
 }
-
 body.light .font-pill { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.04); }
 
 .font-pill button {
   background: none; border: none; cursor: pointer;
   font-weight: 700; font-size: 11px; color: #666;
   font-family: 'Montserrat', sans-serif;
-  min-width: 44px; min-height: 44px;
-  padding: 0 10px;
+  min-width: 44px; min-height: 44px; padding: 0 10px;
   display: flex; align-items: center; justify-content: center;
   transition: color 0.2s, background 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
-
 .font-pill button:hover { color: #d4af37; }
 .font-pill button:active { background: rgba(212,175,55,0.1); }
 body.light .font-pill button { color: #888; }
@@ -95,29 +76,22 @@ body.light .font-pill button:hover { color: #d4af37; }
 body.light .font-sep { background: rgba(0,0,0,0.1); }
 
 #theme-btn {
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 999px;
-  padding: 0 16px;
-  min-height: 44px;
-  background: rgba(255,255,255,0.03);
-  color: #888;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
-  cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center;
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 999px;
+  padding: 0 16px; min-height: 44px;
+  background: rgba(255,255,255,0.03); color: #888;
+  font-family: 'Montserrat', sans-serif; font-size: 9px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s; display: flex; align-items: center;
   -webkit-tap-highlight-color: transparent;
 }
-
 #theme-btn:hover { color: #d4af37; border-color: rgba(212,175,55,0.4); }
 #theme-btn:active { background: rgba(212,175,55,0.08); }
 body.light #theme-btn { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.04); color: #666; }
 
 #scroll-bar {
   position: fixed; top: 0; left: 0;
-  height: 2px; background: #d4af37;
-  width: 0%; z-index: 100;
-  box-shadow: 0 0 8px #d4af37;
-  transition: width 0.1s linear;
+  height: 2px; background: #d4af37; width: 0%; z-index: 100;
+  box-shadow: 0 0 8px #d4af37; transition: width 0.1s linear;
 }
 
 #story-container {
@@ -125,7 +99,6 @@ body.light #theme-btn { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.
   padding: 6.5rem 1.75rem 5rem;
   opacity: 0; transition: opacity 0.7s ease;
 }
-
 #story-container.loaded { opacity: 1; }
 
 #chapter-eyebrow {
@@ -133,18 +106,15 @@ body.light #theme-btn { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.
   color: #d4af37; opacity: 0.65; margin-bottom: 0.6rem;
   font-family: 'Montserrat', sans-serif;
 }
-
 #story-title {
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.9rem, 5vw, 3.2rem);
   color: #d4af37; line-height: 1.15; margin-bottom: 1rem;
 }
-
 #story-synopsis {
   font-family: 'Lora', serif; font-style: italic;
   font-size: 1rem; color: #555; margin-bottom: 2.5rem; line-height: 1.7;
 }
-
 body.light #story-synopsis { color: #777; }
 
 #ch-bar {
@@ -154,15 +124,13 @@ body.light #story-synopsis { color: #777; }
   background: rgba(255,255,255,0.02);
   transition: background 0.4s, border-color 0.4s;
 }
-
 #ch-bar.show { display: flex; }
 body.light #ch-bar { border-color: rgba(0,0,0,0.08); background: rgba(0,0,0,0.02); }
 
 .ch-btn {
   background: none; border: none; cursor: pointer;
   font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
-  color: #555; font-family: 'Montserrat', sans-serif;
-  transition: color 0.2s;
+  color: #555; font-family: 'Montserrat', sans-serif; transition: color 0.2s;
   min-width: 44px; min-height: 44px; padding: 0 8px;
   display: flex; align-items: center;
   -webkit-tap-highlight-color: transparent;
@@ -177,25 +145,19 @@ body.light #ch-bar { border-color: rgba(0,0,0,0.08); background: rgba(0,0,0,0.02
 
 #story-content {
   font-family: 'Lora', serif; line-height: 1.95;
-  font-size: 18px; transition: font-size 0.2s, color 0.4s;
-  color: #a8a8a8;
+  font-size: 18px; transition: font-size 0.2s, color 0.4s; color: #a8a8a8;
 }
-
 body.light #story-content { color: #1c1c1c; }
 #story-content p { margin-bottom: 1.5rem; }
-
 body.light #story-content .text-gray-300,
 body.light #story-content .text-gray-400,
 body.light #story-content .text-gray-500 { color: #2a2a2a !important; }
-
 #story-content .text-\[#d4af37\],
 body.light #story-content .text-\[#d4af37\] { color: #d4af37 !important; }
-
 #story-content blockquote {
   border-left: 2px solid #d4af37; padding: 0.5rem 1rem;
   margin: 2rem 0; font-style: italic; color: rgba(212,175,55,0.8);
 }
-
 body.light #story-content .bg-black\/20 { background: rgba(0,0,0,0.05) !important; }
 
 #ch-footer {
@@ -203,7 +165,6 @@ body.light #story-content .bg-black\/20 { background: rgba(0,0,0,0.05) !importan
   gap: 1rem; padding: 3rem 0 2rem; margin-top: 3rem;
   border-top: 1px solid rgba(255,255,255,0.05);
 }
-
 #ch-footer.show { display: flex; }
 body.light #ch-footer { border-top-color: rgba(0,0,0,0.08); }
 
@@ -211,14 +172,12 @@ body.light #ch-footer { border-top-color: rgba(0,0,0,0.08); }
   font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase;
   color: #555; font-family: 'Montserrat', sans-serif;
 }
-
 #next-ch-btn {
   border: 1px solid rgba(212,175,55,0.4); color: #d4af37; background: none;
   font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 0.4em;
   text-transform: uppercase; padding: 13px 30px; cursor: pointer; transition: all 0.25s;
 }
 #next-ch-btn:hover { background: #d4af37; color: #000; }
-
 #prev-ch-link {
   background: none; border: none; cursor: pointer;
   font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
@@ -226,7 +185,7 @@ body.light #ch-footer { border-top-color: rgba(0,0,0,0.08); }
 }
 #prev-ch-link:hover { color: #d4af37; }
 
-/* ── RESUME POPUP ── */
+/* RESUME POPUP */
 #resume-popup {
   display: none; position: fixed; inset: 0; z-index: 200;
   background: rgba(0,0,0,0.75);
@@ -234,17 +193,14 @@ body.light #ch-footer { border-top-color: rgba(0,0,0,0.08); }
   backdrop-filter: blur(6px);
 }
 #resume-popup.show { display: flex; }
-
 .popup-inner {
   background: #0f0f10; border: 1px solid rgba(212,175,55,0.25);
   padding: 2.5rem 2rem; max-width: 340px; width: 90%; text-align: center;
 }
 body.light .popup-inner { background: #ede8de; border-color: rgba(212,175,55,0.35); }
-
 .popup-heading { font-family: 'Playfair Display', serif; color: #d4af37; font-size: 1.3rem; margin-bottom: 0.65rem; }
 .popup-body { font-size: 11px; color: #666; letter-spacing: 0.08em; margin-bottom: 1.75rem; line-height: 1.65; font-family: 'Montserrat', sans-serif; }
 .popup-actions { display: flex; gap: 0.75rem; justify-content: center; }
-
 .popup-yes {
   background: #d4af37; color: #000; border: none;
   font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 0.35em;
@@ -252,7 +208,6 @@ body.light .popup-inner { background: #ede8de; border-color: rgba(212,175,55,0.3
   transition: background 0.2s; min-height: 44px;
 }
 .popup-yes:hover { background: #c9a227; }
-
 .popup-no {
   background: transparent; color: #666; border: 1px solid rgba(255,255,255,0.08);
   font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 0.35em;
@@ -266,35 +221,26 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
 #comment-section {
   max-width: 660px; margin: 0 auto;
   padding: 0 1.75rem 6rem;
-  border-top: 1px solid rgba(212,175,55,0.12);
 }
-
-body.light #comment-section { border-top-color: rgba(212,175,55,0.2); }
 
 .comment-section-title {
   font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase;
   color: #d4af37; opacity: 0.6; margin-bottom: 2rem; padding-top: 3rem;
   font-family: 'Montserrat', sans-serif;
+  border-top: 1px solid rgba(212,175,55,0.12);
 }
+body.light .comment-section-title { border-top-color: rgba(212,175,55,0.2); }
 
-/* Comment Form */
-.comment-form {
-  margin-bottom: 3rem;
-}
+.comment-form { margin-bottom: 3rem; }
 
 .comment-textarea {
   width: 100%;
   background: rgba(255,255,255,0.02);
   border: 1px solid rgba(255,255,255,0.07);
   color: #c9c9c9;
-  font-family: 'Lora', serif;
-  font-size: 0.9rem;
-  line-height: 1.7;
-  padding: 1rem 1.2rem;
-  resize: vertical;
-  min-height: 100px;
-  transition: border-color 0.2s, background 0.4s;
-  outline: none;
+  font-family: 'Lora', serif; font-size: 0.9rem; line-height: 1.7;
+  padding: 1rem 1.2rem; resize: vertical; min-height: 100px;
+  transition: border-color 0.2s, background 0.4s; outline: none;
 }
 .comment-textarea:focus { border-color: rgba(212,175,55,0.35); background: rgba(255,255,255,0.03); }
 body.light .comment-textarea { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); color: #1a1a1a; }
@@ -302,107 +248,150 @@ body.light .comment-textarea:focus { border-color: rgba(212,175,55,0.4); }
 .comment-textarea::placeholder { color: #444; font-style: italic; }
 body.light .comment-textarea::placeholder { color: #999; }
 
-.passphrase-row {
-  display: flex; gap: 0.75rem; margin-top: 0.75rem; align-items: stretch;
-}
-
-.passphrase-input {
-  flex: 1;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.07);
-  color: #c9c9c9;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
-  padding: 0 1rem;
-  height: 44px;
-  outline: none;
-  transition: border-color 0.2s, background 0.4s;
-}
-.passphrase-input:focus { border-color: rgba(212,175,55,0.35); }
-body.light .passphrase-input { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); color: #1a1a1a; }
-body.light .passphrase-input:focus { border-color: rgba(212,175,55,0.4); }
-.passphrase-input::placeholder { color: #444; letter-spacing: 0.08em; font-style: italic; }
-body.light .passphrase-input::placeholder { color: #999; }
-
 .comment-submit {
-  background: none;
-  border: 1px solid rgba(212,175,55,0.35);
-  color: #d4af37;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase;
-  padding: 0 1.4rem; height: 44px;
+  margin-top: 0.75rem;
+  background: none; border: 1px solid rgba(212,175,55,0.35); color: #d4af37;
+  font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 0.4em;
+  text-transform: uppercase; padding: 0 1.4rem; height: 44px;
   cursor: pointer; transition: all 0.2s;
-  white-space: nowrap;
 }
 .comment-submit:hover { background: #d4af37; color: #000; }
 .comment-submit:disabled { opacity: 0.4; cursor: default; }
 
 .comment-msg {
-  margin-top: 0.65rem;
-  font-size: 10px; letter-spacing: 0.15em;
-  font-family: 'Montserrat', sans-serif;
-  min-height: 18px;
-  transition: color 0.2s;
+  margin-top: 0.55rem; font-size: 10px; letter-spacing: 0.15em;
+  font-family: 'Montserrat', sans-serif; min-height: 18px;
 }
-.comment-msg.ok { color: rgba(212,175,55,0.75); }
+.comment-msg.ok  { color: rgba(212,175,55,0.75); }
 .comment-msg.err { color: #c0504d; }
 
-/* Comment List */
-.comments-list { display: flex; flex-direction: column; gap: 1.5rem; }
+/* Comment list */
+.comments-list { display: flex; flex-direction: column; gap: 0; }
 
 .comment-card {
   padding: 1.2rem 1.4rem;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.05); border-bottom: none;
   background: rgba(255,255,255,0.015);
   transition: background 0.4s, border-color 0.4s;
-  animation: fadeInUp 0.4s ease forwards;
+  animation: fadeInUp 0.35s ease forwards;
 }
-
-body.light .comment-card {
-  border-color: rgba(0,0,0,0.07);
-  background: rgba(0,0,0,0.025);
-}
+.comment-card:last-child { border-bottom: 1px solid rgba(255,255,255,0.05); }
+body.light .comment-card { border-color: rgba(0,0,0,0.07); background: rgba(0,0,0,0.025); }
+body.light .comment-card:last-child { border-bottom-color: rgba(0,0,0,0.07); }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .comment-meta {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
 }
-
 .comment-anon {
   font-size: 8px; letter-spacing: 0.45em; text-transform: uppercase;
-  color: #d4af37; opacity: 0.5;
-  font-family: 'Montserrat', sans-serif;
+  color: #d4af37; opacity: 0.5; font-family: 'Montserrat', sans-serif;
 }
-
 .comment-date {
-  font-size: 8px; letter-spacing: 0.2em;
-  color: #444; font-family: 'Montserrat', sans-serif;
+  font-size: 8px; letter-spacing: 0.2em; color: #444;
+  font-family: 'Montserrat', sans-serif;
 }
 body.light .comment-date { color: #aaa; }
 
 .comment-text {
-  font-family: 'Lora', serif;
-  font-size: 0.88rem; line-height: 1.75;
-  color: #888;
+  font-family: 'Lora', serif; font-size: 0.88rem; line-height: 1.75; color: #888;
 }
 body.light .comment-text { color: #444; }
 
+/* Reply toggle button */
+.reply-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #3a3a3a; font-family: 'Montserrat', sans-serif;
+  margin-top: 0.75rem; padding: 0; transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.reply-btn:hover { color: #d4af37; }
+body.light .reply-btn { color: #bbb; }
+body.light .reply-btn:hover { color: #d4af37; }
+
+/* Inline reply form */
+.reply-form {
+  margin-top: 0.85rem; display: none;
+  flex-direction: column; gap: 0.5rem;
+}
+.reply-form.open { display: flex; }
+
+.reply-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.015);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #c9c9c9;
+  font-family: 'Lora', serif; font-size: 0.82rem; line-height: 1.65;
+  padding: 0.7rem 1rem; resize: vertical; min-height: 70px;
+  outline: none; transition: border-color 0.2s;
+}
+.reply-textarea:focus { border-color: rgba(212,175,55,0.3); }
+body.light .reply-textarea { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08); color: #1a1a1a; }
+.reply-textarea::placeholder { color: #444; font-style: italic; }
+body.light .reply-textarea::placeholder { color: #999; }
+
+.reply-actions { display: flex; gap: 0.5rem; align-items: center; }
+
+.reply-submit {
+  background: none; border: 1px solid rgba(212,175,55,0.3); color: #d4af37;
+  font-family: 'Montserrat', sans-serif; font-size: 8px; letter-spacing: 0.35em;
+  text-transform: uppercase; padding: 0 1rem; height: 36px;
+  cursor: pointer; transition: all 0.2s;
+}
+.reply-submit:hover { background: #d4af37; color: #000; }
+.reply-submit:disabled { opacity: 0.4; cursor: default; }
+
+.reply-cancel {
+  background: none; border: none; cursor: pointer;
+  font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #444; font-family: 'Montserrat', sans-serif; transition: color 0.2s;
+}
+.reply-cancel:hover { color: #888; }
+
+/* Threaded replies list */
+.replies-list {
+  margin-top: 0.85rem;
+  border-left: 1px solid rgba(212,175,55,0.14);
+  padding-left: 1rem;
+  display: flex; flex-direction: column; gap: 0.75rem;
+}
+body.light .replies-list { border-left-color: rgba(212,175,55,0.28); }
+
+.reply-card { animation: fadeInUp 0.3s ease forwards; }
+
+.reply-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 0.3rem;
+}
+.reply-anon {
+  font-size: 7px; letter-spacing: 0.4em; text-transform: uppercase;
+  color: #d4af37; opacity: 0.4; font-family: 'Montserrat', sans-serif;
+}
+.reply-date { font-size: 7px; letter-spacing: 0.15em; color: #3a3a3a; font-family: 'Montserrat', sans-serif; }
+body.light .reply-date { color: #bbb; }
+
+.reply-text {
+  font-family: 'Lora', serif; font-size: 0.82rem; line-height: 1.7; color: #666;
+}
+body.light .reply-text { color: #555; }
+
+/* Empty / loading states */
 .comments-empty {
   font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
-  color: #333; font-family: 'Montserrat', sans-serif;
+  color: #2e2e2e; font-family: 'Montserrat', sans-serif;
   text-align: center; padding: 2.5rem 0;
 }
-body.light .comments-empty { color: #bbb; }
+body.light .comments-empty { color: #ccc; }
 
 .comments-loading {
   font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
-  color: #333; font-family: 'Montserrat', sans-serif;
+  color: #2e2e2e; font-family: 'Montserrat', sans-serif;
   text-align: center; padding: 2rem 0;
   animation: pulse 1.5s ease-in-out infinite;
 }
@@ -413,7 +402,6 @@ body.light .comments-empty { color: #bbb; }
 
 <div id="scroll-bar"></div>
 
-<!-- Resume Popup -->
 <div id="resume-popup">
   <div class="popup-inner">
     <div class="popup-heading">Welcome back.</div>
@@ -462,22 +450,8 @@ body.light .comments-empty { color: #bbb; }
   <div class="comment-section-title">✦ Transmissions</div>
 
   <div class="comment-form">
-    <textarea
-      class="comment-textarea"
-      id="comment-text"
-      placeholder="Leave a transmission…"
-      maxlength="1000"
-    ></textarea>
-    <div class="passphrase-row">
-      <input
-        type="password"
-        class="passphrase-input"
-        id="comment-pass"
-        placeholder="Passphrase"
-        autocomplete="off"
-      />
-      <button class="comment-submit" id="comment-btn" onclick="submitComment()">Send</button>
-    </div>
+    <textarea class="comment-textarea" id="comment-text" placeholder="Leave a transmission…" maxlength="2000"></textarea>
+    <button class="comment-submit" id="comment-btn" onclick="submitComment()">Transmit</button>
     <div class="comment-msg" id="comment-msg"></div>
   </div>
 
@@ -490,7 +464,6 @@ body.light .comments-empty { color: #bbb; }
   /* ── CONFIG ── */
   var SUPABASE_URL = 'https://iakkxwghbczalryylqzg.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_WL-bPgOrYIK-PGgHk3-6YQ_Re7SIb1-';
-  var SECRET_PASSPHRASE = 'YOUR_SECRET_WORD'; // ← replace with your passphrase
 
   /* ── STATE ── */
   var fontSize  = parseInt(localStorage.getItem('readerFontSize')) || 18;
@@ -551,214 +524,4 @@ body.light .comments-empty { color: #bbb; }
   function showPopup() {
     var pct = Math.round(parseFloat(savedData.pct));
     var msg = isNovella && savedData.ch > 0
-      ? 'You were on Chapter ' + (savedData.ch + 1) + '. Pick up from there?'
-      : 'You were ' + pct + '% through. Resume from there?';
-    document.getElementById('popup-msg').textContent = msg;
-    document.getElementById('resume-popup').classList.add('show');
-  }
-
-  function doResume() {
-    document.getElementById('resume-popup').classList.remove('show');
-    if (isNovella) { chIndex = savedData.ch || 0; renderChapter(); }
-    setTimeout(function() {
-      var total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      window.scrollTo({ top: (parseFloat(savedData.pct) / 100) * total, behavior: 'smooth' });
-    }, 300);
-  }
-
-  function doStartOver() {
-    document.getElementById('resume-popup').classList.remove('show');
-    if (isNovella) { chIndex = 0; renderChapter(); }
-    window.scrollTo({ top: 0 });
-  }
-
-  /* ── CHAPTER RENDER ── */
-  function renderChapter() {
-    var ch = story.chapters[chIndex];
-    var total = story.chapters.length;
-    document.getElementById('chapter-eyebrow').textContent = story.title + '  ·  Chapter ' + (chIndex + 1) + ' of ' + total;
-    document.getElementById('story-title').textContent = ch.title || ('Chapter ' + (chIndex + 1));
-    document.getElementById('story-synopsis').textContent = ch.synopsis || '';
-    document.getElementById('story-content').innerHTML = ch.text || '';
-    document.getElementById('story-content').style.fontSize = fontSize + 'px';
-    document.title = 'THE VAULT | ' + story.title + ' · Ch.' + (chIndex + 1);
-    document.getElementById('ch-label').textContent = (chIndex + 1) + ' / ' + total;
-    document.getElementById('prev-ch-top').disabled = chIndex === 0;
-    document.getElementById('next-ch-top').disabled = chIndex === total - 1;
-    document.getElementById('ch-footer-num').textContent = chIndex + 1;
-    document.getElementById('next-ch-btn').style.display = chIndex < total - 1 ? 'block' : 'none';
-    document.getElementById('prev-ch-link').style.display = chIndex > 0 ? 'block' : 'none';
-    document.getElementById('ch-footer').classList.add('show');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    // Reload comments for this chapter
-    loadComments();
-  }
-
-  function goChapter(i) {
-    if (!story || !story.chapters) return;
-    if (i < 0 || i >= story.chapters.length) return;
-    chIndex = i;
-    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: '0', ch: chIndex, opened: true }));
-    renderChapter();
-  }
-
-  /* ── SUPABASE HELPERS ── */
-  function sbHeaders() {
-    return {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY
-    };
-  }
-
-  /* story_id stored as "storyId" for short stories, "storyId_chN" for novella chapters */
-  function commentKey() {
-    return isNovella ? storyId + '_ch' + chIndex : storyId;
-  }
-
-  /* ── LOAD COMMENTS ── */
-  function loadComments() {
-    var list = document.getElementById('comments-list');
-    list.innerHTML = '<div class="comments-loading">Loading transmissions…</div>';
-
-    var key = commentKey();
-    var url = SUPABASE_URL + '/rest/v1/comments?story_id=eq.' + encodeURIComponent(key) +
-              '&order=created_at.asc&select=content,created_at';
-
-    fetch(url, { headers: sbHeaders() })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        list.innerHTML = '';
-        if (!data || data.length === 0) {
-          list.innerHTML = '<div class="comments-empty">No transmissions yet. Be the first.</div>';
-          return;
-        }
-        data.forEach(function(c) {
-          var card = document.createElement('div');
-          card.className = 'comment-card';
-          var date = new Date(c.created_at);
-          var formatted = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-          card.innerHTML =
-            '<div class="comment-meta">' +
-              '<span class="comment-anon">Anonymous</span>' +
-              '<span class="comment-date">' + formatted + '</span>' +
-            '</div>' +
-            '<div class="comment-text">' + escapeHtml(c.content) + '</div>';
-          list.appendChild(card);
-        });
-      })
-      .catch(function() {
-        list.innerHTML = '<div class="comments-empty">Could not load transmissions.</div>';
-      });
-  }
-
-  /* ── SUBMIT COMMENT ── */
-  function submitComment() {
-    var content = document.getElementById('comment-text').value.trim();
-    var pass    = document.getElementById('comment-pass').value.trim();
-    var msg     = document.getElementById('comment-msg');
-    var btn     = document.getElementById('comment-btn');
-
-    if (!content) { showMsg('Write something first.', 'err'); return; }
-    if (!pass)    { showMsg('Enter the passphrase.', 'err'); return; }
-    if (pass !== SECRET_PASSPHRASE) { showMsg('Wrong passphrase.', 'err'); return; }
-
-    btn.disabled = true;
-    showMsg('Sending…', '');
-
-    var payload = {
-      story_id: commentKey(),
-      content:  content,
-      passphrase: pass
-    };
-
-    fetch(SUPABASE_URL + '/rest/v1/comments', {
-      method: 'POST',
-      headers: Object.assign({}, sbHeaders(), { 'Prefer': 'return=minimal' }),
-      body: JSON.stringify(payload)
-    })
-    .then(function(r) {
-      if (r.ok) {
-        document.getElementById('comment-text').value = '';
-        document.getElementById('comment-pass').value = '';
-        showMsg('Transmission received.', 'ok');
-        loadComments();
-      } else {
-        return r.json().then(function(e) {
-          showMsg('Error: ' + (e.message || 'Could not send.'), 'err');
-        });
-      }
-    })
-    .catch(function() { showMsg('Network error. Try again.', 'err'); })
-    .finally(function() { btn.disabled = false; });
-  }
-
-  function showMsg(text, type) {
-    var el = document.getElementById('comment-msg');
-    el.textContent = text;
-    el.className = 'comment-msg' + (type ? ' ' + type : '');
-  }
-
-  function escapeHtml(str) {
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/\n/g, '<br>');
-  }
-
-  /* ── INIT ── */
-  function init() {
-    var params = new URLSearchParams(window.location.search);
-    storyId = params.get('id');
-    if (!storyId || typeof stories === 'undefined') {
-      document.getElementById('story-content').textContent = 'Archive error.';
-      document.getElementById('story-container').classList.add('loaded');
-      return;
-    }
-    story = stories.find(function(s) { return s.id == storyId; });
-    if (!story) {
-      document.getElementById('story-content').textContent = 'Record not found.';
-      document.getElementById('story-container').classList.add('loaded');
-      return;
-    }
-
-    isNovella = story.type === 'novella' && Array.isArray(story.chapters);
-
-    try {
-      var raw = localStorage.getItem('progress_' + storyId);
-      if (raw) savedData = JSON.parse(raw);
-    } catch(e) {}
-
-    var currentPct = savedData ? savedData.pct : '0';
-    var currentCh  = savedData ? savedData.ch  : 0;
-    localStorage.setItem('progress_' + storyId, JSON.stringify({
-      pct: currentPct, ch: currentCh, opened: true
-    }));
-
-    // Show comment section
-    document.getElementById('comment-section').style.display = 'block';
-
-    if (isNovella) {
-      document.getElementById('ch-bar').classList.add('show');
-      chIndex = 0;
-      renderChapter(); // also calls loadComments
-      document.getElementById('story-container').classList.add('loaded');
-      if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) setTimeout(showPopup, 700);
-    } else {
-      document.title = 'THE VAULT | ' + story.title;
-      document.getElementById('story-title').textContent = story.title;
-      document.getElementById('story-synopsis').textContent = story.synopsis || '';
-      document.getElementById('story-content').innerHTML = story.text || story.content || '';
-      document.getElementById('story-content').style.fontSize = fontSize + 'px';
-      document.getElementById('story-container').classList.add('loaded');
-      loadComments();
-      if (savedData && parseFloat(savedData.pct) > 2) setTimeout(showPopup, 700);
-    }
-  }
-
-  window.onload = init;
-</script>
-</body>
-</html>
+      ? 'You were on Chapter ' + (savedData.ch + 1) + '. Pi
