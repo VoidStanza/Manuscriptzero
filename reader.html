@@ -424,7 +424,6 @@ body.light .comments-empty { color: #ccc; }
 }
 @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:0.8} }
 </style>
-
 </head>
 <body>
 
@@ -689,210 +688,202 @@ body.light .comments-empty { color: #ccc; }
       '</div>' +
       '<div class="reply-form">' +
         '<textarea class="reply-textarea" placeholder="Your reply…" maxlength="1000"></textarea>' +
+        '<div class="reply-actions">' +
+          '<button class="reply-submit" onclick="submitReply(this,' + c.id + ')">Send</button>' +
+          '<button class="reply-cancel" onclick="closeReplyForm(this)">Cancel</button>' +
+        '</div>' +
+        '<div class="comment-msg"></div>' +
+      '</div>' +
+      '<div class="replies-list"></div>';
 
-```
-    '<div class="reply-actions">' +
-      '<button class="reply-submit" onclick="submitReply(this,' + c.id + ')">Send</button>' +
-      '<button class="reply-cancel" onclick="closeReplyForm(this)">Cancel</button>' +
-    '</div>' +
-    '<div class="comment-msg"></div>' +
-  '</div>' +
-  '<div class="replies-list"></div>';
+    return div;
+  }
 
-return div;
-```
+  /* ── TOGGLE / CLOSE REPLY FORM ── */
+  function toggleReplyForm(btn) {
+    var actions = btn.closest('.comment-actions');
+    var form = actions.nextElementSibling;
+    var isOpen = form.classList.toggle('open');
+    btn.textContent = isOpen ? '✕ Close' : '↩ Reply';
+    if (isOpen) form.querySelector('textarea').focus();
+    else { form.querySelector('textarea').value = ''; form.querySelector('.comment-msg').textContent = ''; }
+  }
 
-}
+  function closeReplyForm(el) {
+    var form = el.closest('.reply-form');
+    form.classList.remove('open');
+    form.querySelector('textarea').value = '';
+    form.querySelector('.comment-msg').textContent = '';
+    var replyBtn = form.previousElementSibling.querySelector('.reply-btn');
+    if (replyBtn) replyBtn.textContent = '↩ Reply';
+  }
 
-/* ── TOGGLE / CLOSE REPLY FORM ── */
-function toggleReplyForm(btn) {
-var actions = btn.closest(’.comment-actions’);
-var form = actions.nextElementSibling;
-var isOpen = form.classList.toggle(‘open’);
-btn.textContent = isOpen ? ‘✕ Close’ : ‘↩ Reply’;
-if (isOpen) form.querySelector(‘textarea’).focus();
-else { form.querySelector(‘textarea’).value = ‘’; form.querySelector(’.comment-msg’).textContent = ‘’; }
-}
+  /* ── LOAD REPLIES ── */
+  function loadReplies(parentId, container) {
+    fetch(
+      SUPABASE_URL + '/rest/v1/comments'
+      + '?parent_id=eq.' + parentId
+      + '&order=created_at.asc'
+      + '&select=id,content,created_at,token',
+      { headers: sbHeaders() }
+    )
+    .then(function(r) { return r.json(); })
+    .then(function(replies) {
+      container.innerHTML = '';
+      if (!replies || replies.length === 0) return;
+      replies.forEach(function(r) {
+        var myToken = getToken(r.id);
+        var canDelete = myToken && myToken === r.token;
+        var rc = document.createElement('div');
+        rc.className = 'reply-card';
+        rc.dataset.id = r.id;
+        rc.innerHTML =
+          '<div class="reply-meta">' +
+            '<span class="reply-anon">Anonymous</span>' +
+            '<span class="reply-date">' + formatDate(r.created_at) + '</span>' +
+          '</div>' +
+          '<div class="reply-text">' + escapeHtml(r.content) + '</div>' +
+          (canDelete ? '<button class="reply-delete-btn" onclick="deleteComment(' + r.id + ', this)">✕ Delete</button>' : '');
+        container.appendChild(rc);
+      });
+    });
+  }
 
-function closeReplyForm(el) {
-var form = el.closest(’.reply-form’);
-form.classList.remove(‘open’);
-form.querySelector(‘textarea’).value = ‘’;
-form.querySelector(’.comment-msg’).textContent = ‘’;
-var replyBtn = form.previousElementSibling.querySelector(’.reply-btn’);
-if (replyBtn) replyBtn.textContent = ‘↩ Reply’;
-}
+  /* ── SUBMIT TOP-LEVEL COMMENT ── */
+  function submitComment() {
+    var content = document.getElementById('comment-text').value.trim();
+    var btn     = document.getElementById('comment-btn');
+    if (!content) { showRootMsg('Write something first.', 'err'); return; }
+    btn.disabled = true;
+    showRootMsg('Sending…', '');
+    var token = genToken();
+    fetch(SUPABASE_URL + '/rest/v1/comments', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'return=representation' }),
+      body: JSON.stringify({ story_id: commentKey(), content: content, author: 'Anonymous', token: token })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var newId = Array.isArray(data) && data[0] ? data[0].id : null;
+      if (newId) saveToken(newId, token);
+      document.getElementById('comment-text').value = '';
+      showRootMsg('Transmission received.', 'ok');
+      loadComments();
+    })
+    .catch(function() { showRootMsg('Network error. Try again.', 'err'); })
+    .finally(function() { btn.disabled = false; });
+  }
 
-/* ── LOAD REPLIES ── */
-function loadReplies(parentId, container) {
-fetch(
-SUPABASE_URL + ‘/rest/v1/comments’
-+ ‘?parent_id=eq.’ + parentId
-+ ‘&order=created_at.asc’
-+ ‘&select=id,content,created_at,token’,
-{ headers: sbHeaders() }
-)
-.then(function(r) { return r.json(); })
-.then(function(replies) {
-container.innerHTML = ‘’;
-if (!replies || replies.length === 0) return;
-replies.forEach(function(r) {
-var myToken = getToken(r.id);
-var canDelete = myToken && myToken === r.token;
-var rc = document.createElement(‘div’);
-rc.className = ‘reply-card’;
-rc.dataset.id = r.id;
-rc.innerHTML =
-‘<div class="reply-meta">’ +
-‘<span class="reply-anon">Anonymous</span>’ +
-‘<span class="reply-date">’ + formatDate(r.created_at) + ‘</span>’ +
-‘</div>’ +
-‘<div class="reply-text">’ + escapeHtml(r.content) + ‘</div>’ +
-(canDelete ? ‘<button class="reply-delete-btn" onclick="deleteComment(' + r.id + ', this)">✕ Delete</button>’ : ‘’);
-container.appendChild(rc);
-});
-});
-}
+  /* ── SUBMIT REPLY ── */
+  function submitReply(btn, parentId) {
+    var form     = btn.closest('.reply-form');
+    var textarea = form.querySelector('textarea');
+    var msgEl    = form.querySelector('.comment-msg');
+    var content  = textarea.value.trim();
+    if (!content) { msgEl.textContent = 'Write something first.'; msgEl.className = 'comment-msg err'; return; }
+    btn.disabled = true;
+    msgEl.textContent = 'Sending…'; msgEl.className = 'comment-msg';
+    var token = genToken();
+    fetch(SUPABASE_URL + '/rest/v1/comments', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'return=representation' }),
+      body: JSON.stringify({ story_id: commentKey(), parent_id: parentId, content: content, author: 'Anonymous', token: token })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var newId = Array.isArray(data) && data[0] ? data[0].id : null;
+      if (newId) saveToken(newId, token);
+      textarea.value = '';
+      msgEl.textContent = 'Reply sent.'; msgEl.className = 'comment-msg ok';
+      var repliesContainer = btn.closest('.comment-card').querySelector('.replies-list');
+      loadReplies(parentId, repliesContainer);
+      setTimeout(function() { closeReplyForm(btn); }, 1200);
+    })
+    .catch(function() { msgEl.textContent = 'Network error.'; msgEl.className = 'comment-msg err'; })
+    .finally(function() { btn.disabled = false; });
+  }
 
-/* ── SUBMIT TOP-LEVEL COMMENT ── */
-function submitComment() {
-var content = document.getElementById(‘comment-text’).value.trim();
-var btn     = document.getElementById(‘comment-btn’);
-if (!content) { showRootMsg(‘Write something first.’, ‘err’); return; }
-btn.disabled = true;
-showRootMsg(‘Sending…’, ‘’);
-var token = genToken();
-fetch(SUPABASE_URL + ‘/rest/v1/comments’, {
-method: ‘POST’,
-headers: sbHeaders({ ‘Prefer’: ‘return=representation’ }),
-body: JSON.stringify({ story_id: commentKey(), content: content, author: ‘Anonymous’, token: token })
-})
-.then(function(r) { return r.json(); })
-.then(function(data) {
-var newId = Array.isArray(data) && data[0] ? data[0].id : null;
-if (newId) saveToken(newId, token);
-document.getElementById(‘comment-text’).value = ‘’;
-showRootMsg(‘Transmission received.’, ‘ok’);
-loadComments();
-})
-.catch(function() { showRootMsg(‘Network error. Try again.’, ‘err’); })
-.finally(function() { btn.disabled = false; });
-}
+  /* ── DELETE COMMENT (+ cascade via DB foreign key) ── */
+  function deleteComment(id, btn) {
+    if (!confirm('Delete this transmission?')) return;
+    btn.disabled = true;
+    btn.textContent = '…';
+    fetch(SUPABASE_URL + '/rest/v1/comments?id=eq.' + id, {
+      method: 'DELETE',
+      headers: sbHeaders()
+    })
+    .then(function(r) {
+      if (r.ok) {
+        var card = btn.closest('.comment-card') || btn.closest('.reply-card');
+        if (card) {
+          card.style.opacity = '0';
+          setTimeout(function() { card.remove(); }, 300);
+        }
+      } else {
+        btn.disabled = false;
+        btn.textContent = '✕ Delete';
+      }
+    })
+    .catch(function() {
+      btn.disabled = false;
+      btn.textContent = '✕ Delete';
+    });
+  }
 
-/* ── SUBMIT REPLY ── */
-function submitReply(btn, parentId) {
-var form     = btn.closest(’.reply-form’);
-var textarea = form.querySelector(‘textarea’);
-var msgEl    = form.querySelector(’.comment-msg’);
-var content  = textarea.value.trim();
-if (!content) { msgEl.textContent = ‘Write something first.’; msgEl.className = ‘comment-msg err’; return; }
-btn.disabled = true;
-msgEl.textContent = ‘Sending…’; msgEl.className = ‘comment-msg’;
-var token = genToken();
-fetch(SUPABASE_URL + ‘/rest/v1/comments’, {
-method: ‘POST’,
-headers: sbHeaders({ ‘Prefer’: ‘return=representation’ }),
-body: JSON.stringify({ story_id: commentKey(), parent_id: parentId, content: content, author: ‘Anonymous’, token: token })
-})
-.then(function(r) { return r.json(); })
-.then(function(data) {
-var newId = Array.isArray(data) && data[0] ? data[0].id : null;
-if (newId) saveToken(newId, token);
-textarea.value = ‘’;
-msgEl.textContent = ‘Reply sent.’; msgEl.className = ‘comment-msg ok’;
-var repliesContainer = btn.closest(’.comment-card’).querySelector(’.replies-list’);
-loadReplies(parentId, repliesContainer);
-setTimeout(function() { closeReplyForm(btn); }, 1200);
-})
-.catch(function() { msgEl.textContent = ‘Network error.’; msgEl.className = ‘comment-msg err’; })
-.finally(function() { btn.disabled = false; });
-}
+  function showRootMsg(text, type) {
+    var el = document.getElementById('comment-msg');
+    el.textContent = text;
+    el.className = 'comment-msg' + (type ? ' ' + type : '');
+  }
 
-/* ── DELETE COMMENT (+ cascade via DB foreign key) ── */
-function deleteComment(id, btn) {
-if (!confirm(‘Delete this transmission?’)) return;
-btn.disabled = true;
-btn.textContent = ‘…’;
-fetch(SUPABASE_URL + ‘/rest/v1/comments?id=eq.’ + id, {
-method: ‘DELETE’,
-headers: sbHeaders()
-})
-.then(function(r) {
-if (r.ok) {
-var card = btn.closest(’.comment-card’) || btn.closest(’.reply-card’);
-if (card) {
-card.style.opacity = ‘0’;
-setTimeout(function() { card.remove(); }, 300);
-}
-} else {
-btn.disabled = false;
-btn.textContent = ‘✕ Delete’;
-}
-})
-.catch(function() {
-btn.disabled = false;
-btn.textContent = ‘✕ Delete’;
-});
-}
+  /* ── INIT ── */
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    storyId = params.get('id');
+    if (!storyId || typeof stories === 'undefined') {
+      document.getElementById('story-content').textContent = 'Archive error.';
+      document.getElementById('story-container').classList.add('loaded');
+      return;
+    }
+    story = stories.find(function(s) { return s.id == storyId; });
+    if (!story) {
+      document.getElementById('story-content').textContent = 'Record not found.';
+      document.getElementById('story-container').classList.add('loaded');
+      return;
+    }
 
-function showRootMsg(text, type) {
-var el = document.getElementById(‘comment-msg’);
-el.textContent = text;
-el.className = ‘comment-msg’ + (type ? ’ ’ + type : ‘’);
-}
+    isNovella = story.type === 'novella' && Array.isArray(story.chapters);
 
-/* ── INIT ── */
-function init() {
-var params = new URLSearchParams(window.location.search);
-storyId = params.get(‘id’);
-if (!storyId || typeof stories === ‘undefined’) {
-document.getElementById(‘story-content’).textContent = ‘Archive error.’;
-document.getElementById(‘story-container’).classList.add(‘loaded’);
-return;
-}
-story = stories.find(function(s) { return s.id == storyId; });
-if (!story) {
-document.getElementById(‘story-content’).textContent = ‘Record not found.’;
-document.getElementById(‘story-container’).classList.add(‘loaded’);
-return;
-}
+    try {
+      var raw = localStorage.getItem('progress_' + storyId);
+      if (raw) savedData = JSON.parse(raw);
+    } catch(e) {}
 
-```
-isNovella = story.type === 'novella' && Array.isArray(story.chapters);
+    var currentPct = savedData ? savedData.pct : '0';
+    var currentCh  = savedData ? savedData.ch  : 0;
+    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: currentPct, ch: currentCh, opened: true }));
 
-try {
-  var raw = localStorage.getItem('progress_' + storyId);
-  if (raw) savedData = JSON.parse(raw);
-} catch(e) {}
+    document.getElementById('comment-section').style.display = 'block';
 
-var currentPct = savedData ? savedData.pct : '0';
-var currentCh  = savedData ? savedData.ch  : 0;
-localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: currentPct, ch: currentCh, opened: true }));
+    if (isNovella) {
+      document.getElementById('ch-bar').classList.add('show');
+      chIndex = 0;
+      renderChapter();
+      document.getElementById('story-container').classList.add('loaded');
+      if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) setTimeout(showPopup, 700);
+    } else {
+      document.title = 'THE VAULT | ' + story.title;
+      document.getElementById('story-title').textContent = story.title;
+      document.getElementById('story-synopsis').textContent = story.synopsis || '';
+      document.getElementById('story-content').innerHTML = story.text || story.content || '';
+      document.getElementById('story-content').style.fontSize = fontSize + 'px';
+      document.getElementById('story-container').classList.add('loaded');
+      loadComments();
+      if (savedData && parseFloat(savedData.pct) > 2) setTimeout(showPopup, 700);
+    }
+  }
 
-document.getElementById('comment-section').style.display = 'block';
-
-if (isNovella) {
-  document.getElementById('ch-bar').classList.add('show');
-  chIndex = 0;
-  renderChapter();
-  document.getElementById('story-container').classList.add('loaded');
-  if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) setTimeout(showPopup, 700);
-} else {
-  document.title = 'THE VAULT | ' + story.title;
-  document.getElementById('story-title').textContent = story.title;
-  document.getElementById('story-synopsis').textContent = story.synopsis || '';
-  document.getElementById('story-content').innerHTML = story.text || story.content || '';
-  document.getElementById('story-content').style.fontSize = fontSize + 'px';
-  document.getElementById('story-container').classList.add('loaded');
-  loadComments();
-  if (savedData && parseFloat(savedData.pct) > 2) setTimeout(showPopup, 700);
-}
-```
-
-}
-
-window.onload = init;
+  window.onload = init;
 </script>
-
 </body>
 </html>
