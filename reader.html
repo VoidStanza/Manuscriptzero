@@ -1,26 +1,27 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="apple-touch-icon" href="favicon-180.png">
+  <link rel="apple-touch-icon" href="favicon-180.png">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THE VAULT | RECORD</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE VAULT | RECORD</title>
 
-<meta name="description" content="Accessing the sanctum of Void Stanza.">
-<meta property="og:title" content="THE VAULT | ManuscriptZero">
-<meta property="og:description" content="Accessing the sanctum of Void Stanza.">
-<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
-<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
-<meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
-<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+  <meta name="description" content="Accessing the sanctum of Void Stanza.">
+  <meta property="og:title" content="THE VAULT | ManuscriptZero">
+  <meta property="og:description" content="Accessing the sanctum of Void Stanza.">
+  <meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+  <meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+  <meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
+  <meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-<script src="stories.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <script src="stories.js" defer></script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400&family=Montserrat:wght@300;400;600&display=swap');
@@ -28,8 +29,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: #0a0a0b;
-  color: #c9c9c9;
+  background: #0a0a0b; color: #c9c9c9;
   font-family: 'Montserrat', sans-serif;
   transition: background 0.4s, color 0.4s;
 }
@@ -275,7 +275,7 @@ body.light .comment-textarea::placeholder { color: #999; }
   padding: 1.2rem 1.4rem;
   border: 1px solid rgba(255,255,255,0.05); border-bottom: none;
   background: rgba(255,255,255,0.015);
-  transition: background 0.4s, border-color 0.4s;
+  transition: background 0.4s, border-color 0.4s, opacity 0.3s;
   animation: fadeInUp 0.35s ease forwards;
 }
 .comment-card:last-child { border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -306,17 +306,31 @@ body.light .comment-date { color: #aaa; }
 }
 body.light .comment-text { color: #444; }
 
-/* Reply toggle button */
+/* Actions row */
+.comment-actions {
+  display: flex; align-items: center; gap: 1.2rem;
+  margin-top: 0.75rem;
+}
+
 .reply-btn {
   background: none; border: none; cursor: pointer;
   font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
   color: #3a3a3a; font-family: 'Montserrat', sans-serif;
-  margin-top: 0.75rem; padding: 0; transition: color 0.2s;
+  padding: 0; transition: color 0.2s;
   -webkit-tap-highlight-color: transparent;
 }
 .reply-btn:hover { color: #d4af37; }
 body.light .reply-btn { color: #bbb; }
 body.light .reply-btn:hover { color: #d4af37; }
+
+.delete-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #3a1818; font-family: 'Montserrat', sans-serif;
+  padding: 0; transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.delete-btn:hover { color: #c0504d; }
 
 /* Inline reply form */
 .reply-form {
@@ -357,7 +371,7 @@ body.light .reply-textarea::placeholder { color: #999; }
 }
 .reply-cancel:hover { color: #888; }
 
-/* Threaded replies list */
+/* Threaded replies */
 .replies-list {
   margin-top: 0.85rem;
   border-left: 1px solid rgba(212,175,55,0.14);
@@ -366,7 +380,10 @@ body.light .reply-textarea::placeholder { color: #999; }
 }
 body.light .replies-list { border-left-color: rgba(212,175,55,0.28); }
 
-.reply-card { animation: fadeInUp 0.3s ease forwards; }
+.reply-card {
+  animation: fadeInUp 0.3s ease forwards;
+  transition: opacity 0.3s;
+}
 
 .reply-meta {
   display: flex; justify-content: space-between; align-items: center;
@@ -384,7 +401,15 @@ body.light .reply-date { color: #bbb; }
 }
 body.light .reply-text { color: #555; }
 
-/* Empty / loading states */
+.reply-delete-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 7px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #3a1818; font-family: 'Montserrat', sans-serif;
+  margin-top: 0.4rem; padding: 0; transition: color 0.2s;
+}
+.reply-delete-btn:hover { color: #c0504d; }
+
+/* Empty / loading */
 .comments-empty {
   font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
   color: #2e2e2e; font-family: 'Montserrat', sans-serif;
@@ -400,6 +425,7 @@ body.light .comments-empty { color: #ccc; }
 }
 @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:0.8} }
 </style>
+
 </head>
 <body>
 
@@ -448,16 +474,13 @@ body.light .comments-empty { color: #ccc; }
   </div>
 </main>
 
-<!-- Comment Section -->
 <section id="comment-section" style="display:none;">
   <div class="comment-section-title">✦ Transmissions</div>
-
   <div class="comment-form">
     <textarea class="comment-textarea" id="comment-text" placeholder="Leave a transmission…" maxlength="2000"></textarea>
     <button class="comment-submit" id="comment-btn" onclick="submitComment()">Transmit</button>
     <div class="comment-msg" id="comment-msg"></div>
   </div>
-
   <div class="comments-list" id="comments-list">
     <div class="comments-loading">Loading transmissions…</div>
   </div>
@@ -476,6 +499,22 @@ body.light .comments-empty { color: #ccc; }
   var chIndex   = 0;
   var scrollTimer = null;
   var savedData = null;
+
+  /* ── TOKEN STORE ── persists in localStorage so delete works after refresh ── */
+  function myTokens() {
+    try { return JSON.parse(localStorage.getItem('vault_tokens') || '{}'); } catch(e) { return {}; }
+  }
+  function saveToken(commentId, token) {
+    var t = myTokens();
+    t[String(commentId)] = token;
+    localStorage.setItem('vault_tokens', JSON.stringify(t));
+  }
+  function getToken(commentId) {
+    return myTokens()[String(commentId)] || null;
+  }
+  function genToken() {
+    return Math.random().toString(36).slice(2) + Date.now().toString(36) + Math.random().toString(36).slice(2);
+  }
 
   /* ── THEME ── */
   (function() {
@@ -523,7 +562,7 @@ body.light .comments-empty { color: #ccc; }
     if (dy < -80 && atTop)   goChapter(chIndex - 1);
   });
 
-   /* ── RESUME POPUP ── */
+  /* ── RESUME POPUP ── */
   function showPopup() {
     var pct = Math.round(parseFloat(savedData.pct));
     var msg = isNovella && savedData.ch > 0
@@ -604,13 +643,12 @@ body.light .comments-empty { color: #ccc; }
   function loadComments() {
     var list = document.getElementById('comments-list');
     list.innerHTML = '<div class="comments-loading">Loading transmissions…</div>';
-
     fetch(
       SUPABASE_URL + '/rest/v1/comments'
       + '?story_id=eq.' + encodeURIComponent(commentKey())
       + '&parent_id=is.null'
       + '&order=created_at.asc'
-      + '&select=id,content,created_at',
+      + '&select=id,content,created_at,token',
       { headers: sbHeaders() }
     )
     .then(function(r) { return r.json(); })
@@ -636,180 +674,226 @@ body.light .comments-empty { color: #ccc; }
     var div = document.createElement('div');
     div.className = 'comment-card';
     div.dataset.id = c.id;
+
+    var myToken = getToken(c.id);
+    var canDelete = myToken && myToken === c.token;
+
     div.innerHTML =
       '<div class="comment-meta">' +
         '<span class="comment-anon">Anonymous</span>' +
         '<span class="comment-date">' + formatDate(c.created_at) + '</span>' +
       '</div>' +
       '<div class="comment-text">' + escapeHtml(c.content) + '</div>' +
-      '<button class="reply-btn" onclick="toggleReplyForm(this)">↩ Reply</button>' +
+      '<div class="comment-actions">' +
+        '<button class="reply-btn" onclick="toggleReplyForm(this)">↩ Reply</button>' +
+        (canDelete ? '<button class="delete-btn" onclick="deleteComment(' + c.id + ', this)">✕ Delete</button>' : '') +
+      '</div>' +
       '<div class="reply-form">' +
         '<textarea class="reply-textarea" placeholder="Your reply…" maxlength="1000"></textarea>' +
-        '<div class="reply-actions">' +
-          '<button class="reply-submit" onclick="submitReply(this,' + c.id + ')">Send</button>' +
-          '<button class="reply-cancel" onclick="closeReplyForm(this)">Cancel</button>' +
-        '</div>' +
-        '<div class="comment-msg"></div>' +
-      '</div>' +
-      '<div class="replies-list"></div>';
-    return div;
-  }
 
-  /* ── TOGGLE / CLOSE REPLY FORM ── */
-  function toggleReplyForm(btn) {
-    var form = btn.nextElementSibling;
-    var isOpen = form.classList.toggle('open');
-    btn.textContent = isOpen ? '✕ Close' : '↩ Reply';
-    if (isOpen) form.querySelector('textarea').focus();
-    else { form.querySelector('textarea').value = ''; form.querySelector('.comment-msg').textContent = ''; }
-  }
+```
+    '<div class="reply-actions">' +
+      '<button class="reply-submit" onclick="submitReply(this,' + c.id + ')">Send</button>' +
+      '<button class="reply-cancel" onclick="closeReplyForm(this)">Cancel</button>' +
+    '</div>' +
+    '<div class="comment-msg"></div>' +
+  '</div>' +
+  '<div class="replies-list"></div>';
 
-  function closeReplyForm(cancelBtn) {
-    var form = cancelBtn.closest('.reply-form');
-    form.classList.remove('open');
-    form.querySelector('textarea').value = '';
-    form.querySelector('.comment-msg').textContent = '';
-    var replyBtn = form.previousElementSibling;
-    replyBtn.textContent = '↩ Reply';
-  }
+return div;
+```
 
-  /* ── LOAD REPLIES ── */
-  function loadReplies(parentId, container) {
-    fetch(
-      SUPABASE_URL + '/rest/v1/comments'
-      + '?parent_id=eq.' + parentId
-      + '&order=created_at.asc'
-      + '&select=id,content,created_at',
-      { headers: sbHeaders() }
-    )
-    .then(function(r) { return r.json(); })
-    .then(function(replies) {
-      container.innerHTML = '';
-      if (!replies || replies.length === 0) return;
-      replies.forEach(function(r) {
-        var rc = document.createElement('div');
-        rc.className = 'reply-card';
-        rc.innerHTML =
-          '<div class="reply-meta">' +
-            '<span class="reply-anon">Anonymous</span>' +
-            '<span class="reply-date">' + formatDate(r.created_at) + '</span>' +
-          '</div>' +
-          '<div class="reply-text">' + escapeHtml(r.content) + '</div>';
-        container.appendChild(rc);
-      });
-    });
-  }
+}
 
-  /* ── SUBMIT TOP-LEVEL COMMENT ── */
-  function submitComment() {
-    var content = document.getElementById('comment-text').value.trim();
-    var btn     = document.getElementById('comment-btn');
-    if (!content) { showRootMsg('Write something first.', 'err'); return; }
-    btn.disabled = true;
-    showRootMsg('Sending…', '');
-    fetch(SUPABASE_URL + '/rest/v1/comments', {
-      method: 'POST',
-      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
-      body: JSON.stringify({ story_id: commentKey(), content: content, author: 'Anonymous' })
-    })
-    .then(function(r) {
-      if (r.ok) {
-        document.getElementById('comment-text').value = '';
-        showRootMsg('Transmission received.', 'ok');
-        loadComments();
-      } else {
-        return r.json().then(function(e) { showRootMsg('Error: ' + (e.message || 'Could not send.'), 'err'); });
-      }
-    })
-    .catch(function() { showRootMsg('Network error. Try again.', 'err'); })
-    .finally(function() { btn.disabled = false; });
-  }
+/* ── TOGGLE / CLOSE REPLY FORM ── */
+function toggleReplyForm(btn) {
+var actions = btn.closest(’.comment-actions’);
+var form = actions.nextElementSibling;
+var isOpen = form.classList.toggle(‘open’);
+btn.textContent = isOpen ? ‘✕ Close’ : ‘↩ Reply’;
+if (isOpen) form.querySelector(‘textarea’).focus();
+else { form.querySelector(‘textarea’).value = ‘’; form.querySelector(’.comment-msg’).textContent = ‘’; }
+}
 
-  /* ── SUBMIT REPLY ── */
-  function submitReply(btn, parentId) {
-    var form    = btn.closest('.reply-form');
-    var textarea = form.querySelector('textarea');
-    var msgEl   = form.querySelector('.comment-msg');
-    var content = textarea.value.trim();
-    if (!content) { msgEl.textContent = 'Write something first.'; msgEl.className = 'comment-msg err'; return; }
-    btn.disabled = true;
-    msgEl.textContent = 'Sending…'; msgEl.className = 'comment-msg';
-    fetch(SUPABASE_URL + '/rest/v1/comments', {
-      method: 'POST',
-      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
-      body: JSON.stringify({ story_id: commentKey(), parent_id: parentId, content: content, author: 'Anonymous' })
-    })
-    .then(function(r) {
-      if (r.ok) {
-        textarea.value = '';
-        msgEl.textContent = 'Reply sent.'; msgEl.className = 'comment-msg ok';
-        var repliesContainer = btn.closest('.comment-card').querySelector('.replies-list');
-        loadReplies(parentId, repliesContainer);
-        setTimeout(function() { closeReplyForm(btn); }, 1200);
-      } else {
-        return r.json().then(function(e) {
-          msgEl.textContent = 'Error: ' + (e.message || 'Could not send.'); msgEl.className = 'comment-msg err';
-        });
-      }
-    })
-    .catch(function() { msgEl.textContent = 'Network error.'; msgEl.className = 'comment-msg err'; })
-    .finally(function() { btn.disabled = false; });
-  }
+function closeReplyForm(el) {
+var form = el.closest(’.reply-form’);
+form.classList.remove(‘open’);
+form.querySelector(‘textarea’).value = ‘’;
+form.querySelector(’.comment-msg’).textContent = ‘’;
+var replyBtn = form.previousElementSibling.querySelector(’.reply-btn’);
+if (replyBtn) replyBtn.textContent = ‘↩ Reply’;
+}
 
-  function showRootMsg(text, type) {
-    var el = document.getElementById('comment-msg');
-    el.textContent = text;
-    el.className = 'comment-msg' + (type ? ' ' + type : '');
-  }
+/* ── LOAD REPLIES ── */
+function loadReplies(parentId, container) {
+fetch(
+SUPABASE_URL + ‘/rest/v1/comments’
++ ‘?parent_id=eq.’ + parentId
++ ‘&order=created_at.asc’
++ ‘&select=id,content,created_at,token’,
+{ headers: sbHeaders() }
+)
+.then(function(r) { return r.json(); })
+.then(function(replies) {
+container.innerHTML = ‘’;
+if (!replies || replies.length === 0) return;
+replies.forEach(function(r) {
+var myToken = getToken(r.id);
+var canDelete = myToken && myToken === r.token;
+var rc = document.createElement(‘div’);
+rc.className = ‘reply-card’;
+rc.dataset.id = r.id;
+rc.innerHTML =
+‘<div class="reply-meta">’ +
+‘<span class="reply-anon">Anonymous</span>’ +
+‘<span class="reply-date">’ + formatDate(r.created_at) + ‘</span>’ +
+‘</div>’ +
+‘<div class="reply-text">’ + escapeHtml(r.content) + ‘</div>’ +
+(canDelete ? ‘<button class="reply-delete-btn" onclick="deleteComment(' + r.id + ', this)">✕ Delete</button>’ : ‘’);
+container.appendChild(rc);
+});
+});
+}
 
-  /* ── INIT ── */
-  function init() {
-    var params = new URLSearchParams(window.location.search);
-    storyId = params.get('id');
-    if (!storyId || typeof stories === 'undefined') {
-      document.getElementById('story-content').textContent = 'Archive error.';
-      document.getElementById('story-container').classList.add('loaded');
-      return;
-    }
-    story = stories.find(function(s) { return s.id == storyId; });
-    if (!story) {
-      document.getElementById('story-content').textContent = 'Record not found.';
-      document.getElementById('story-container').classList.add('loaded');
-      return;
-    }
+/* ── SUBMIT TOP-LEVEL COMMENT ── */
+function submitComment() {
+var content = document.getElementById(‘comment-text’).value.trim();
+var btn     = document.getElementById(‘comment-btn’);
+if (!content) { showRootMsg(‘Write something first.’, ‘err’); return; }
+btn.disabled = true;
+showRootMsg(‘Sending…’, ‘’);
+var token = genToken();
+fetch(SUPABASE_URL + ‘/rest/v1/comments’, {
+method: ‘POST’,
+headers: sbHeaders({ ‘Prefer’: ‘return=representation’ }),
+body: JSON.stringify({ story_id: commentKey(), content: content, author: ‘Anonymous’, token: token })
+})
+.then(function(r) { return r.json(); })
+.then(function(data) {
+var newId = Array.isArray(data) && data[0] ? data[0].id : null;
+if (newId) saveToken(newId, token);
+document.getElementById(‘comment-text’).value = ‘’;
+showRootMsg(‘Transmission received.’, ‘ok’);
+loadComments();
+})
+.catch(function() { showRootMsg(‘Network error. Try again.’, ‘err’); })
+.finally(function() { btn.disabled = false; });
+}
 
-    isNovella = story.type === 'novella' && Array.isArray(story.chapters);
+/* ── SUBMIT REPLY ── */
+function submitReply(btn, parentId) {
+var form     = btn.closest(’.reply-form’);
+var textarea = form.querySelector(‘textarea’);
+var msgEl    = form.querySelector(’.comment-msg’);
+var content  = textarea.value.trim();
+if (!content) { msgEl.textContent = ‘Write something first.’; msgEl.className = ‘comment-msg err’; return; }
+btn.disabled = true;
+msgEl.textContent = ‘Sending…’; msgEl.className = ‘comment-msg’;
+var token = genToken();
+fetch(SUPABASE_URL + ‘/rest/v1/comments’, {
+method: ‘POST’,
+headers: sbHeaders({ ‘Prefer’: ‘return=representation’ }),
+body: JSON.stringify({ story_id: commentKey(), parent_id: parentId, content: content, author: ‘Anonymous’, token: token })
+})
+.then(function(r) { return r.json(); })
+.then(function(data) {
+var newId = Array.isArray(data) && data[0] ? data[0].id : null;
+if (newId) saveToken(newId, token);
+textarea.value = ‘’;
+msgEl.textContent = ‘Reply sent.’; msgEl.className = ‘comment-msg ok’;
+var repliesContainer = btn.closest(’.comment-card’).querySelector(’.replies-list’);
+loadReplies(parentId, repliesContainer);
+setTimeout(function() { closeReplyForm(btn); }, 1200);
+})
+.catch(function() { msgEl.textContent = ‘Network error.’; msgEl.className = ‘comment-msg err’; })
+.finally(function() { btn.disabled = false; });
+}
 
-    try {
-      var raw = localStorage.getItem('progress_' + storyId);
-      if (raw) savedData = JSON.parse(raw);
-    } catch(e) {}
+/* ── DELETE COMMENT (+ cascade via DB foreign key) ── */
+function deleteComment(id, btn) {
+if (!confirm(‘Delete this transmission?’)) return;
+btn.disabled = true;
+btn.textContent = ‘…’;
+fetch(SUPABASE_URL + ‘/rest/v1/comments?id=eq.’ + id, {
+method: ‘DELETE’,
+headers: sbHeaders()
+})
+.then(function(r) {
+if (r.ok) {
+var card = btn.closest(’.comment-card’) || btn.closest(’.reply-card’);
+if (card) {
+card.style.opacity = ‘0’;
+setTimeout(function() { card.remove(); }, 300);
+}
+} else {
+btn.disabled = false;
+btn.textContent = ‘✕ Delete’;
+}
+})
+.catch(function() {
+btn.disabled = false;
+btn.textContent = ‘✕ Delete’;
+});
+}
 
-    var currentPct = savedData ? savedData.pct : '0';
-    var currentCh  = savedData ? savedData.ch  : 0;
-    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: currentPct, ch: currentCh, opened: true }));
+function showRootMsg(text, type) {
+var el = document.getElementById(‘comment-msg’);
+el.textContent = text;
+el.className = ‘comment-msg’ + (type ? ’ ’ + type : ‘’);
+}
 
-    document.getElementById('comment-section').style.display = 'block';
+/* ── INIT ── */
+function init() {
+var params = new URLSearchParams(window.location.search);
+storyId = params.get(‘id’);
+if (!storyId || typeof stories === ‘undefined’) {
+document.getElementById(‘story-content’).textContent = ‘Archive error.’;
+document.getElementById(‘story-container’).classList.add(‘loaded’);
+return;
+}
+story = stories.find(function(s) { return s.id == storyId; });
+if (!story) {
+document.getElementById(‘story-content’).textContent = ‘Record not found.’;
+document.getElementById(‘story-container’).classList.add(‘loaded’);
+return;
+}
 
-    if (isNovella) {
-      document.getElementById('ch-bar').classList.add('show');
-      chIndex = 0;
-      renderChapter();
-      document.getElementById('story-container').classList.add('loaded');
-      if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) setTimeout(showPopup, 700);
-    } else {
-      document.title = 'THE VAULT | ' + story.title;
-      document.getElementById('story-title').textContent = story.title;
-      document.getElementById('story-synopsis').textContent = story.synopsis || '';
-      document.getElementById('story-content').innerHTML = story.text || story.content || '';
-      document.getElementById('story-content').style.fontSize = fontSize + 'px';
-      document.getElementById('story-container').classList.add('loaded');
-      loadComments();
-      if (savedData && parseFloat(savedData.pct) > 2) setTimeout(showPopup, 700);
-    }
-  }
+```
+isNovella = story.type === 'novella' && Array.isArray(story.chapters);
 
-  window.onload = init;
+try {
+  var raw = localStorage.getItem('progress_' + storyId);
+  if (raw) savedData = JSON.parse(raw);
+} catch(e) {}
+
+var currentPct = savedData ? savedData.pct : '0';
+var currentCh  = savedData ? savedData.ch  : 0;
+localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: currentPct, ch: currentCh, opened: true }));
+
+document.getElementById('comment-section').style.display = 'block';
+
+if (isNovella) {
+  document.getElementById('ch-bar').classList.add('show');
+  chIndex = 0;
+  renderChapter();
+  document.getElementById('story-container').classList.add('loaded');
+  if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) setTimeout(showPopup, 700);
+} else {
+  document.title = 'THE VAULT | ' + story.title;
+  document.getElementById('story-title').textContent = story.title;
+  document.getElementById('story-synopsis').textContent = story.synopsis || '';
+  document.getElementById('story-content').innerHTML = story.text || story.content || '';
+  document.getElementById('story-content').style.fontSize = fontSize + 'px';
+  document.getElementById('story-container').classList.add('loaded');
+  loadComments();
+  if (savedData && parseFloat(savedData.pct) > 2) setTimeout(showPopup, 700);
+}
+```
+
+}
+
+window.onload = init;
 </script>
+
 </body>
 </html>
