@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE VAULT | RECORD NOT FOUND</title>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="favicon-180.png">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0a0a0b;
+  color: #c9c9c9;
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.owl-wrap {
+  width: 280px;
+  max-width: 80vw;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeIn 1.2s ease forwards;
+  animation-delay: 0.2s;
+}
+
+.owl-wrap img {
+  width: 100%;
+  filter: brightness(0.7) sepia(0.3);
+}
+
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  color: #d4af37;
+  opacity: 0.5;
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+  animation-delay: 0.8s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  color: #d4af37;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+  animation-delay: 1s;
+}
+
+.sub {
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: #444;
+  line-height: 1.8;
+  max-width: 340px;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+  animation-delay: 1.2s;
+}
+
+.return-btn {
+  background: none;
+  border: 1px solid rgba(212,175,55,0.35);
+  color: #d4af37;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  padding: 13px 32px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-decoration: none;
+  display: inline-block;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+  animation-delay: 1.4s;
+}
+
+.return-btn:hover {
+  background: #d4af37;
+  color: #000;
+}
+
+/* Subtle radial glow behind owl */
+body::before {
+  content: '';
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -60%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fix double opacity on eyebrow */
+.eyebrow { opacity: 0; }
+.eyebrow.anim { animation: fadeIn 0.8s ease forwards; animation-delay: 0.8s; }
+</style>
+
+</head>
+<body>
+
+<div class="owl-wrap">
+  <img src="preview.png" alt="The Vault Owl">
+</div>
+
+<div class="eyebrow">Record Not Found</div>
+
+<h1>This page<br>does not exist.</h1>
+
+<p class="sub">
+  The archive has no record of this path.<br>
+  It may have been sealed, moved, or never written.
+</p>
+
+<a class="return-btn" href="gallery.html">Return to the Archive</a>
+
+<script>
+  // If they came from within the site, offer to go back
+  if (document.referrer && document.referrer.indexOf(location.hostname) !== -1) {
+    var btn = document.querySelector('.return-btn');
+    btn.insertAdjacentHTML('afterend',
+      '<br><br><button onclick="history.back()" style="background:none;border:none;cursor:pointer;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#444;font-family:Montserrat,sans-serif;margin-top:0.5rem;transition:color 0.2s;" onmouseover="this.style.color=\'#d4af37\'" onmouseout="this.style.color=\'#444\'">← Go Back</button>'
+    );
+  }
+</script>
+
+</body>
+</html>
