@@ -212,7 +212,7 @@ const stories = [
     chapters: [
     {
       number: 1,
-      title: "Chapter 1 — Five, Then Six",
+      title: "Five, Then Six",
       synopsis: "",
       text: `<div class="reading-font text-gray-300">
     <p class="mb-6">The thing about their group was that it had never been chosen.<br>It had assembled itself the way most real things do — by accident, by proximity, by the specific chaos of a high school cafeteria on the first day of freshman year when assigned seating hadn't been assigned yet and five people had sat down at the same table without asking and then kept sitting there, every day, for three years, until the table became theirs by a kind of squatter's law nobody bothered to challenge.</p>
