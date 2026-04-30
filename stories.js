@@ -208,7 +208,7 @@ const stories = [
     type: "novella",
     title: "A Light Left Running",
     synopsis: "A girl fell. A name was given. A will was read. Now the reckoning.",
-    cover: "blob:https://web.whatsapp.com/df380e48-b346-44d3-8caf-01bce776d9f1",
+    cover: "file:///Users/eishwaryaelangovan/Downloads/WhatsApp%20Image%202026-04-30%20at%208.45.27%20AM.jpeg",
     chapters: [
     {
       number: 1,
