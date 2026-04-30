@@ -268,6 +268,7 @@ const stories = [
     <div class="text-center text-[#d4af37]/40 my-8 tracking-widest">✦ ✦ ✦</div>
     <p class="mb-6">Reed was twenty-four and had done this for four consecutive summers and retained, despite this, a quality of genuine enthusiasm that he deployed strategically and that the six of them found immediately readable.<br>"He likes the job but not the admin," Jodelle said, after Reed had ticked them off his list and directed them to Cabin Seven with detailed instructions that Marcus was already not following because Marcus preferred to orient himself. "He's been looking at his watch every ten minutes but not because he's bored — he's got a sequence he's running. He needs us all checked in by eight."<br>"You got all that from thirty seconds," Simone said.<br>"He's not complicated," Jodelle said, without unkindness. "He's a person who cares about things going well. Those are the easiest to read."<br>"And the hardest?" Marcus said, because Marcus couldn't help it.<br>Jodelle considered. "People who don't know what they want but think they do." A pause. "And people who know exactly what they want and have decided not to want it."<br>A small silence in which Priya and Marcus did not look at each other.<br>"Cabin Seven," Theo said.<br>They found Cabin Seven. It was wooden, warm-smelling, six bunks in two rows. Clean. Simple. The window on the west wall looked directly at the old-growth tree line, which Jodelle noted and said nothing about.<br>She took the bunk by the window.</p>
 </div>`
-   }
-                ]
-];
+    }         // ← closes last chapter object
+  ]          // ← closes chapters array
+}            // ← closes story id:7 object  ← THIS IS MISSING
+];     
