@@ -208,7 +208,7 @@ const stories = [
     type: "novella",
     title: "A Light Left Running",
     synopsis: "A girl fell. A name was given. A will was read. Now the reckoning.",
-    cover: "https://photos.app.goo.gl/p8k8LRFM2Yq1FUnp8",
+    cover: "https://photos.google.com/u/1/photo/AF1QipO6XOAeIiT3ZOzIE7f58HwHb-UPLkakGXW0CkRn",
     chapters: [
     {
       number: 1,
