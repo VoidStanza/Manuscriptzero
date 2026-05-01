@@ -392,7 +392,7 @@ Hargreave & Associates</blockquote>
     <p class="mb-6">Marcus read it twice, standing in his kitchen in Chicago, still in his coat. Then he sat down on the kitchen floor, which was something he had not done since he was about seven years old, and stayed there for a while.<br>Priya read it at her desk between appointments, in the sixty-second gap between a patient leaving and the next one arriving. She read it once, very carefully, and then placed it face-down on her desk and called her next patient in and was entirely professional for the next four hours and then went to the bathroom and stood very still for three minutes.<br>Danny read it on his phone — Hargreave's office had sent an email version to the address they'd found through records — while Claire was putting Emma to bed. He sat at the kitchen table and read it and then sat for a long time, and when Claire came back downstairs he said I have to go to Millhaven and she said okay and that was the whole conversation.<br>Simone was on set when her assistant brought the physical letter. She excused herself for five minutes, read it in a production trailer, sat with it, and then went back to work. That evening, on a FaceTime with Reina, she said: Jodelle's parents died. Both of them this year. They've left something — something in a will — and I have to go back to Millhaven. Reina said: Do you want me to come? Simone said: No. But thank you. And then, after a pause: Yes. But you shouldn't have to.<br>Theo received the letter on a Thursday, at his office. He read it once, placed it in the center of his desk, and looked at it for the rest of the afternoon. Mia found it on the kitchen table that evening — he'd brought it home without deciding to.<br>Jodelle's parents, he said.<br>She looked at the letter. She'd never known Jodelle's parents' names, but she knew the shape of this moment — had been waiting, in some peripheral way, for years.<br>Are you going? she said.<br>I have to, he said.<br>I know, she said. I mean — do you want to?<br>He thought about it.<br>I think they want to tell us something, he said.</p>
     
 </div>`
-                } // ← closes last chapter object
-  ]          // ← closes chapters array
-}            // ← closes story id:7 object  ← THIS IS MISSING
-];     
+                }
+            ]
+}
+];
