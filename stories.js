@@ -657,7 +657,7 @@ Carmela and Eduardo Vasquez</blockquote>
     <p class="mb-6">Still The Problem.</p>
     <p class="mb-6">Still six, in the way that mattered.</p>
 </div>`
-     } 
-    ]     
-}    
-];        
+   }         // ← closes last chapter object
+  ]          // ← closes chapters array
+}            // ← closes story id:7 object  ← THIS IS MISSING
+];  
