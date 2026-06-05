@@ -553,7 +553,113 @@ Carmela and Eduardo Vasquez</blockquote>
     <div class="text-center text-[#d4af37]/40 my-8 tracking-widest">✦ ✦ ✦</div>
     <p class="mb-6">“She sounds like me,” she said, when he’d finished.<br>He looked at her. “A little,” he said.<br>“Not exactly,” Clara said. “But a little.” She was quiet for a moment, looking at the northeast corner. “I don’t see people who aren’t there,” she said. “But I feel what places remember. And this place—” she looked at the two pines, the gap between them, the dark and ordinary stillness of it — “this place remembered him for a very long time.”<br>“Kellerman,” Theo said.<br>“And her,” Clara said. “Both of them. This is where she finished something.” She paused. “I think it felt like that to her. Finishing something.”<br>Theo looked at the northeast corner.<br>“Yes,” he said quietly. “I think it did.”<br>A silence.<br>“She would have liked you,” he said.<br>Clara thought about this seriously. “I think I would have liked her,” she said. “She noticed things. I notice things.” A pause. “It’s lonely sometimes. Noticing things.”<br>Theo looked at his daughter.<br>“I know,” he said. “She knew that too.”<br>“Did she tell you?”<br>“Not in those words,” he said. “But yes.”<br>Clara nodded, satisfied. She leaned slightly against his arm, the way she did when something had been resolved to her satisfaction and she was ready to be still.<br>They sat together on the foundation wall while the clearing held its quiet around them.<br>Theo held her hand.<br>“Good,” he said. And then, quietly: “She would have liked you.”<br>Clara thought about this. “I think I would have liked her,” she said.<br>“Yes,” he said. “I think you would have.”</p>
 </div>`
-                }
+                },
+                {
+                         number: 24,
+      title: "Epilogue: What Stays in the Woods and What Comes Home",
+      synopsis: "",
+      text: `<div class="reading-font text-gray-300">
+    
+    <p class="mb-6">The cars left Camp Aldermoor as the sun went down.</p>
+    <p class="mb-6">Not separately this time. In convoy — five cars, spaced out on the forestry road, then the state route, then the highway. Not planned. Just — they left at the same time, and the cars followed each other, and nobody objected.</p>
+    <p class="mb-6">Meera watched the trees through the rear window of her mother's car. The managed forest giving way to old growth. Old growth thinning as they moved south. The road widening by degrees until the world was roads and lights and ordinary things again.</p>
+    <p class="mb-6">She opened her notebook.</p>
+    <p class="mb-6">She drew the clearing — the foundation, the walls, the northeast corner. She drew the canopy overhead, the light coming through it. She drew, in the corner, small enough to almost miss, a figure. Still. Patient. Good posture. Blue jacket.</p>
+    <p class="mb-6">She drew it and then she closed the notebook.</p>
+    <p class="mb-6">She didn't know the clinical words yet — for what Jodelle had carried, for what her parents had buried, for what the clearing had held for seventy years. She would learn them eventually. But she already knew the shape of all three. She had been mapping shapes her whole life.</p>
+    <p class="mb-6">Sophie read the letter one more time in the back seat of her father's car, while he drove and did not speak and the highway unreeled in the headlights.</p>
+    <p class="mb-6">When she was done she folded it and put it in her jacket pocket.</p>
+    <p class="mb-6">"Dad," she said.</p>
+    <p class="mb-6">"Mm."</p>
+    <p class="mb-6">"She loved you."</p>
+    <p class="mb-6">He was quiet for a long time. Long enough that she thought he might not answer.</p>
+    <p class="mb-6">"I know," he said eventually. "I knew that. I just — forgot how to hold it." He paused. "After."</p>
+    <p class="mb-6">"She wouldn't have wanted you to forget."</p>
+    <p class="mb-6">"No," he said. "She wouldn't." He was quiet again. "She would have had something very specific to say about it. About the exact mechanism by which I'd gotten it wrong."</p>
+    <p class="mb-6">"And then?"</p>
+    <p class="mb-6">"And then she would have gone back to drawing and expected me to figure out the rest myself."</p>
+    <p class="mb-6">Sophie almost smiled. "That tracks," she said, though she had never known Jodelle Vasquez and was speaking from a portrait assembled in a clearing from five different angles, which was all she had, and which was somehow enough.</p>
+    <p class="mb-6">Jodi leaned against the window in the back seat of her mothers' car and watched the sky.</p>
+    <p class="mb-6">She thought about the clearing. About the five adults standing in the ruins telling pieces of someone into a whole.</p>
+    <p class="mb-6">She thought about what her mother had said, afterward, walking back through the old growth: "I've been trying to film her for eleven years without knowing it."</p>
+    <p class="mb-6">All the watchfulness, her mother said. All the being present, all the not looking away — that's what I should have been doing then. And it took me eleven years to learn how to do it. And I made six films that critics call unsparing, and every one of them is an apology to her.</p>
+    <p class="mb-6">Jodi had thought about this.</p>
+    <p class="mb-6">"Then make one that isn't an apology", she'd said. "Make one that's just — for her."</p>
+    <p class="mb-6">Her mother had looked at her for a long moment. Then she had said: okay. Just that. Okay.</p>
+    <p class="mb-6">Emma fell asleep in the car.</p>
+    <p class="mb-6">She dreamed — vaguely, impressionistically, the way eight-year-olds dream — of a lake and a ridge and a girl who looked just past whoever she was talking to, and who was funny in a low, even, easy-to-miss way, and who had rings on all her fingers, none matching.</p>
+    <p class="mb-6">In the dream the girl was sitting on a rock by the water, drawing.</p>
+    <p class="mb-6">She looked up at Emma.</p>
+    <p class="mb-6">"Found it", she said.</p>
+    <p class="mb-6">"Found what?" Emma said.</p>
+    <p class="mb-6">The girl looked at the drawing. "The pattern", she said. "I always knew it was there."</p>
+    <p class="mb-6">Emma tried to see the drawing. She couldn't quite.</p>
+    <p class="mb-6">"What does it look like?" she said.</p>
+    <p class="mb-6">But the girl was already drawing again, absorbed, and the dream shifted, and the lake was gone, and Emma slept.</p>
+    <p class="mb-6">Clara sat in the back seat of her father's car with her hands in her lap and watched the dark go past the window.</p>
+    <p class="mb-6">After a while she said: "Dad."</p>
+    <p class="mb-6">"Mm."</p>
+    <p class="mb-6">"The letter said she saw him. The man in the blue jacket. Elias Kellerman." A pause. "She really saw him?"</p>
+    <p class="mb-6">A long pause.</p>
+    <p class="mb-6">"I think so," her father said. "I could never see him. But she described him the same way every time. Very specific. Very calm." He paused. "She was never frightened."</p>
+    <p class="mb-6">"Because he wasn't frightening," Clara said. "He just wanted someone to find what he left."</p>
+    <p class="mb-6">"Yes," her father said. "That's what she would have said."</p>
+    <p class="mb-6">Clara looked out the window at the dark going past. "The northeast corner," she said. "She found it. And then we found it again." A pause. "Do you think that's enough? For him to be — finished?"</p>
+    <p class="mb-6">Her father was quiet for a moment.</p>
+    <p class="mb-6">"I think," he said carefully, "that some things need to be found more than once. By more than one person. Before they're really finished."</p>
+    <p class="mb-6">Clara considered this. "Like forgiveness," she said.</p>
+    <p class="mb-6">The car was very quiet.</p>
+    <p class="mb-6">"Yes," her father said. His voice had something in it she didn't have the word for yet. She'd find the word later — years later, when she was old enough for it. The word was *gratitude.*</p>
+    <p class="mb-6">"Was it true?" she said. "What I said in the clearing. About it being okay."</p>
+    <p class="mb-6">"Yes," he said.</p>
+    <p class="mb-6">"Then it was fine to say."</p>
+    <p class="mb-6">He reached back with one hand, briefly, and she took it.</p>
+    <p class="mb-6">The highway continued. The convoy of five cars moved through the dark, south toward the ordinary world, carrying what they carried — which was less than before. Not nothing. Never nothing. But less.</p>
+    <div class="text-center text-[#d4af37]/40 my-8 tracking-widest">✦ ✦ ✦</div>
+    <p class="mb-6">The woods behind them held their quiet.</p>
+    <p class="mb-6">The clearing settled. The foundation stones continued their patient work. The moss resumed. The northeast corner, its capstone replaced, its waterproof sleeve refilled with the camp medallion and the photograph and a new letter — written by Hargreave, on behalf of the Vasquez estate, explaining what had happened here across three generations — waited for whoever came next.</p>
+    <p class="mb-6">The two birch trees on the far shore of the lake stood in their own reflection.</p>
+    <p class="mb-6">The arch between them was empty.</p>
+    <p class="mb-6">Had been empty all morning. All day. The five girls had walked through the clearing, found the capstone, read the letter, and left. The pines stood at the north edge as they always had. The gap between them held nothing but air and light and the ordinary dark of a forest interior.</p>
+    <p class="mb-6">Just trees.</p>
+    <p class="mb-6">The woods kept what was theirs and released what was ready.</p>
+    <p class="mb-6">This is what woods do.</p>
+    <p class="mb-6">This is what they have always done.</p>
+    <div class="text-center text-[#d4af37]/40 my-8 tracking-widest">✦ ✦ ✦</div>
+    <p class="mb-6">Somewhere in Minneapolis, five weeks after camp, Jodelle Clara Park — who goes by Clara, who is five, who maps rooms when she enters them and watches water coolers and holds her father's hand when he needs it — sat in the backyard in the late summer evening.</p>
+    <p class="mb-6">She was looking at the treeline.</p>
+    <p class="mb-6">Her father came and sat beside her.</p>
+    <p class="mb-6">"What do you see?" he said.</p>
+    <p class="mb-6">She thought about it.</p>
+    <p class="mb-6">"Just trees," she said.</p>
+    <p class="mb-6">He looked at the treeline. Dense and ordinary and present in the way that ordinary things are present, fully themselves, requiring nothing.</p>
+    <p class="mb-6">"Yes," he said.</p>
+    <p class="mb-6">"Is that okay?" she said.</p>
+    <p class="mb-6">He put his arm around her.</p>
+    <p class="mb-6">"That's perfect," he said.</p>
+    <p class="mb-6">Above them, the first stars arrived in the darkening blue, one by one, the way they always arrive — without fanfare, without announcement, just appearing when the conditions are right.</p>
+    <p class="mb-6">The evening turned.</p>
+    <p class="mb-6">Five daughters named Jodelle went to sleep in five separate cities.</p>
+    <p class="mb-6">Tomorrow would be ordinary. Tomorrow would be school and breakfast and the particular small chaos of regular life.</p>
+    <p class="mb-6">But tonight the stars were arriving, and the woods were quiet, and the guilt that had calcified into architecture across eleven years had shifted — just slightly, just at the load-bearing points — into something that was still heavy but was also, for the first time, something that could be shared.</p>
+    <p class="mb-6">The group chat called The Problem — last message, eleven years ago — received a new message at 11:47pm.</p>
+    <p class="mb-6">It was from Theo.</p>
+    <p class="mb-6">It said: Hey.</p>
+    <p class="mb-6">Four typing indicators appeared, nearly simultaneously.</p>
+    <p class="mb-6">Then:</p>
+    <p class="mb-6">[QUOTE]<br>Hey. — Marcus</p>
+    <p class="mb-6">Hi. — Priya</p>
+    <p class="mb-6">Hey man. — Danny</p>
+    <p class="mb-6">— — Simone,[/QUOTE]</p>
+    <p class="mb-6">who sent just a dash, because Simone, and because some things don't need more than a mark of presence.</p>
+    <p class="mb-6">The chat was active again.</p>
+    <p class="mb-6">The five of them, in five separate cities, looking at their phones in the dark.</p>
+    <p class="mb-6">Still The Problem.</p>
+    <p class="mb-6">Still six, in the way that mattered.</p>
+</div>`
+    }
+    ]
+}
                             
             ]
 }
