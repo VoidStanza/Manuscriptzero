@@ -219,6 +219,31 @@ body.light .popup-inner { background: #ede8de; border-color: rgba(212,175,55,0.3
 body.light .popup-no { border-color: rgba(0,0,0,0.12); }
 .popup-no:hover { color: #d4af37; border-color: rgba(212,175,55,0.4); }
 
+/* ── LIKES ── */
+#like-bar {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 2rem 0 1.5rem;
+  border-top: 1px solid rgba(212,175,55,0.12);
+  margin-bottom: 0;
+}
+body.light #like-bar { border-top-color: rgba(212,175,55,0.2); }
+
+#like-btn {
+  background: none; border: 1px solid rgba(255,255,255,0.08); border-radius: 999px;
+  padding: 8px 18px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #555; transition: all 0.2s; min-height: 40px;
+  -webkit-tap-highlight-color: transparent;
+}
+#like-btn:hover { border-color: rgba(212,175,55,0.4); color: #d4af37; }
+#like-btn.liked { border-color: rgba(212,175,55,0.5); color: #d4af37; background: rgba(212,175,55,0.07); }
+body.light #like-btn { border-color: rgba(0,0,0,0.1); color: #888; }
+body.light #like-btn.liked { border-color: rgba(212,175,55,0.5); color: #d4af37; }
+
+#like-count { font-size: 11px; color: #444; font-family: 'Montserrat', sans-serif; letter-spacing: 0.1em; }
+body.light #like-count { color: #999; }
+
 /* ── COMMENT SECTION ── */
 #comment-section {
   max-width: 660px; margin: 0 auto;
@@ -227,11 +252,11 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
 
 .comment-section-title {
   font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase;
-  color: #d4af37; opacity: 0.6; margin-bottom: 2rem; padding-top: 3rem;
+  color: #d4af37; opacity: 0.6; margin-bottom: 2rem; padding-top: 2rem;
   font-family: 'Montserrat', sans-serif;
-  border-top: 1px solid rgba(212,175,55,0.12);
+  border-top: 1px solid rgba(255,255,255,0.04);
 }
-body.light .comment-section-title { border-top-color: rgba(212,175,55,0.2); }
+body.light .comment-section-title { border-top-color: rgba(0,0,0,0.06); }
 
 .comment-form { margin-bottom: 3rem; }
 
@@ -250,12 +275,27 @@ body.light .comment-textarea:focus { border-color: rgba(212,175,55,0.4); }
 .comment-textarea::placeholder { color: #444; font-style: italic; }
 body.light .comment-textarea::placeholder { color: #999; }
 
+.form-row {
+  display: flex; gap: 0.65rem; margin-top: 0.65rem; flex-wrap: wrap;
+}
+.form-input {
+  flex: 1; min-width: 120px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);
+  color: #c9c9c9; font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem; letter-spacing: 0.08em;
+  padding: 0 1rem; height: 44px; outline: none;
+  transition: border-color 0.2s, background 0.4s;
+}
+.form-input:focus { border-color: rgba(212,175,55,0.35); }
+body.light .form-input { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); color: #1a1a1a; }
+.form-input::placeholder { color: #444; font-style: italic; letter-spacing: 0.04em; }
+body.light .form-input::placeholder { color: #999; }
+
 .comment-submit {
-  margin-top: 0.75rem;
   background: none; border: 1px solid rgba(212,175,55,0.35); color: #d4af37;
   font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 0.4em;
   text-transform: uppercase; padding: 0 1.4rem; height: 44px;
-  cursor: pointer; transition: all 0.2s;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
 }
 .comment-submit:hover { background: #d4af37; color: #000; }
 .comment-submit:disabled { opacity: 0.4; cursor: default; }
@@ -274,7 +314,7 @@ body.light .comment-textarea::placeholder { color: #999; }
   padding: 1.2rem 1.4rem;
   border: 1px solid rgba(255,255,255,0.05); border-bottom: none;
   background: rgba(255,255,255,0.015);
-  transition: background 0.4s, border-color 0.4s, opacity 0.3s;
+  transition: background 0.4s, border-color 0.4s;
   animation: fadeInUp 0.35s ease forwards;
 }
 .comment-card:last-child { border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -305,12 +345,9 @@ body.light .comment-date { color: #aaa; }
 }
 body.light .comment-text { color: #444; }
 
-/* Actions row */
 .comment-actions {
-  display: flex; align-items: center; gap: 1.2rem;
-  margin-top: 0.75rem;
+  display: flex; align-items: center; gap: 1.2rem; margin-top: 0.75rem;
 }
-
 .reply-btn {
   background: none; border: none; cursor: pointer;
   font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
@@ -340,10 +377,8 @@ body.light .reply-btn:hover { color: #d4af37; }
 
 .reply-textarea {
   width: 100%;
-  background: rgba(255,255,255,0.015);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: #c9c9c9;
-  font-family: 'Lora', serif; font-size: 0.82rem; line-height: 1.65;
+  background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06);
+  color: #c9c9c9; font-family: 'Lora', serif; font-size: 0.82rem; line-height: 1.65;
   padding: 0.7rem 1rem; resize: vertical; min-height: 70px;
   outline: none; transition: border-color 0.2s;
 }
@@ -353,7 +388,6 @@ body.light .reply-textarea { background: rgba(0,0,0,0.03); border-color: rgba(0,
 body.light .reply-textarea::placeholder { color: #999; }
 
 .reply-actions { display: flex; gap: 0.5rem; align-items: center; }
-
 .reply-submit {
   background: none; border: 1px solid rgba(212,175,55,0.3); color: #d4af37;
   font-family: 'Montserrat', sans-serif; font-size: 8px; letter-spacing: 0.35em;
@@ -372,18 +406,12 @@ body.light .reply-textarea::placeholder { color: #999; }
 
 /* Threaded replies */
 .replies-list {
-  margin-top: 0.85rem;
-  border-left: 1px solid rgba(212,175,55,0.14);
-  padding-left: 1rem;
-  display: flex; flex-direction: column; gap: 0.75rem;
+  margin-top: 0.85rem; border-left: 1px solid rgba(212,175,55,0.14);
+  padding-left: 1rem; display: flex; flex-direction: column; gap: 0.75rem;
 }
 body.light .replies-list { border-left-color: rgba(212,175,55,0.28); }
 
-.reply-card {
-  animation: fadeInUp 0.3s ease forwards;
-  transition: opacity 0.3s;
-}
-
+.reply-card { animation: fadeInUp 0.3s ease forwards; }
 .reply-meta {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 0.3rem;
@@ -394,12 +422,8 @@ body.light .replies-list { border-left-color: rgba(212,175,55,0.28); }
 }
 .reply-date { font-size: 7px; letter-spacing: 0.15em; color: #3a3a3a; font-family: 'Montserrat', sans-serif; }
 body.light .reply-date { color: #bbb; }
-
-.reply-text {
-  font-family: 'Lora', serif; font-size: 0.82rem; line-height: 1.7; color: #666;
-}
+.reply-text { font-family: 'Lora', serif; font-size: 0.82rem; line-height: 1.7; color: #666; }
 body.light .reply-text { color: #555; }
-
 .reply-delete-btn {
   background: none; border: none; cursor: pointer;
   font-size: 7px; letter-spacing: 0.3em; text-transform: uppercase;
@@ -408,7 +432,6 @@ body.light .reply-text { color: #555; }
 }
 .reply-delete-btn:hover { color: #c0504d; }
 
-/* Empty / loading */
 .comments-empty {
   font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
   color: #2e2e2e; font-family: 'Montserrat', sans-serif;
@@ -472,47 +495,65 @@ body.light .comments-empty { color: #ccc; }
   </div>
 </main>
 
-<section id="comment-section" style="display:none;">
-  <div class="comment-section-title">✦ Transmissions</div>
-  <div class="comment-form">
-    <textarea class="comment-textarea" id="comment-text" placeholder="Leave a transmission…" maxlength="2000"></textarea>
-    <button class="comment-submit" id="comment-btn" onclick="submitComment()">Transmit</button>
-    <div class="comment-msg" id="comment-msg"></div>
+<!-- LIKES + COMMENTS -->
+<section id="engagement-section" style="display:none;">
+  <div style="max-width:660px;margin:0 auto;padding:0 1.75rem;">
+    <div id="like-bar">
+      <button id="like-btn" onclick="toggleLike()">
+        <span id="like-icon">✦</span>
+        <span>Leave a mark</span>
+      </button>
+      <span id="like-count"></span>
+    </div>
   </div>
-  <div class="comments-list" id="comments-list">
-    <div class="comments-loading">Loading transmissions…</div>
-  </div>
+
+  <section id="comment-section">
+    <div class="comment-section-title">✦ Marginalia</div>
+    <div class="comment-form">
+      <textarea class="comment-textarea" id="comment-text"
+        placeholder="Leave a trace in the marginalia…" maxlength="2000"></textarea>
+      <div class="form-row">
+        <input type="text"     class="form-input" id="comment-author"
+          placeholder="Name (optional)" autocomplete="off">
+        <input type="password" class="form-input" id="comment-pass"
+          placeholder="Passphrase" autocomplete="off">
+        <button class="comment-submit" id="comment-btn" onclick="submitComment()">Send</button>
+      </div>
+      <div class="comment-msg" id="comment-msg"></div>
+    </div>
+    <div class="comments-list" id="comments-list">
+      <div class="comments-loading">Loading transmissions…</div>
+    </div>
+  </section>
 </section>
 
 <script>
   /* ── CONFIG ── */
-  var SUPABASE_URL = 'https://iakkxwghbczalryylqzg.supabase.co';
-  var SUPABASE_KEY = 'sb_publishable_WL-bPgOrYIK-PGgHk3-6YQ_Re7SIb1-';
+  var SUPABASE_URL      = 'https://iakkxwghbczalryylqzg.supabase.co';
+  var SUPABASE_KEY      = 'sb_publishable_WL-bPgOrYIK-PGgHk3-6YQ_Re7SIb1-';
+  var CORRECT_PASSPHRASE = 'VaultReader';
 
   /* ── STATE ── */
-  var fontSize  = parseInt(localStorage.getItem('readerFontSize')) || 18;
-  var storyId   = null;
-  var story     = null;
-  var isNovella = false;
-  var chIndex   = 0;
+  var fontSize    = parseInt(localStorage.getItem('readerFontSize')) || 18;
+  var storyId     = null;
+  var story       = null;
+  var isNovella   = false;
+  var chIndex     = 0;
   var scrollTimer = null;
-  var savedData = null;
+  var savedData   = null;
+  var commentKey  = null; /* ← this is what gets sent to Supabase */
+  var likeKey     = '';
+  var hasLiked    = false;
 
-  /* ── TOKEN STORE ── persists in localStorage so delete works after refresh ── */
+  /* ── TOKEN STORE ── */
   function myTokens() {
     try { return JSON.parse(localStorage.getItem('vault_tokens') || '{}'); } catch(e) { return {}; }
   }
-  function saveToken(commentId, token) {
-    var t = myTokens();
-    t[String(commentId)] = token;
+  function saveToken(id, token) {
+    var t = myTokens(); t[String(id)] = token;
     localStorage.setItem('vault_tokens', JSON.stringify(t));
   }
-  function getToken(commentId) {
-    return myTokens()[String(commentId)] || null;
-  }
-  function genToken() {
-    return Math.random().toString(36).slice(2) + Date.now().toString(36) + Math.random().toString(36).slice(2);
-  }
+  function getToken(id) { return myTokens()[String(id)] || null; }
 
   /* ── THEME ── */
   (function() {
@@ -560,7 +601,7 @@ body.light .comments-empty { color: #ccc; }
     if (dy < -80 && atTop)   goChapter(chIndex - 1);
   });
 
-  /* ── RESUME POPUP ── */
+  /* ── RESUME ── */
   function showPopup() {
     var pct = Math.round(parseFloat(savedData.pct));
     var msg = isNovella && savedData.ch > 0
@@ -585,266 +626,290 @@ body.light .comments-empty { color: #ccc; }
     window.scrollTo({ top: 0 });
   }
 
+  /* ── COMMENT KEY ── the value sent to Supabase as story_id ── */
+  function buildCommentKey() {
+    /* Novellas: "7_ch20" format — matches what Supabase already has */
+    if (isNovella) return storyId + '_ch' + (chIndex + 1);
+    return storyId;
+  }
+
   /* ── CHAPTER RENDER ── */
   function renderChapter() {
-    var ch = story.chapters[chIndex];
+    var ch    = story.chapters[chIndex];
     var total = story.chapters.length;
-    document.getElementById('chapter-eyebrow').textContent = story.title + '  ·  Chapter ' + (chIndex + 1) + ' of ' + total;
-    document.getElementById('story-title').textContent = ch.title || ('Chapter ' + (chIndex + 1));
+
+    document.getElementById('chapter-eyebrow').textContent =
+      story.title + '  ·  Chapter ' + (chIndex + 1) + ' of ' + total;
+    document.getElementById('story-title').textContent    = ch.title || ('Chapter ' + (chIndex + 1));
     document.getElementById('story-synopsis').textContent = ch.synopsis || '';
-    document.getElementById('story-content').innerHTML = ch.text || '';
+    document.getElementById('story-content').innerHTML    = ch.text || '';
     document.getElementById('story-content').style.fontSize = fontSize + 'px';
     document.title = 'THE VAULT | ' + story.title + ' · Ch.' + (chIndex + 1);
-    document.getElementById('ch-label').textContent = (chIndex + 1) + ' / ' + total;
-    document.getElementById('prev-ch-top').disabled = chIndex === 0;
-    document.getElementById('next-ch-top').disabled = chIndex === total - 1;
+
+    document.getElementById('ch-label').textContent      = (chIndex + 1) + ' / ' + total;
+    document.getElementById('prev-ch-top').disabled      = chIndex === 0;
+    document.getElementById('next-ch-top').disabled      = chIndex === total - 1;
     document.getElementById('ch-footer-num').textContent = chIndex + 1;
     document.getElementById('next-ch-btn').style.display = chIndex < total - 1 ? 'block' : 'none';
     document.getElementById('prev-ch-link').style.display = chIndex > 0 ? 'block' : 'none';
     document.getElementById('ch-footer').classList.add('show');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    /* Rebuild commentKey and reload engagement for new chapter */
+    commentKey = buildCommentKey();
+    likeKey    = 'liked_' + commentKey;
+    hasLiked   = !!localStorage.getItem(likeKey);
+    updateLikeBtn();
+    loadLikes();
     loadComments();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function goChapter(i) {
     if (!story || !story.chapters) return;
     if (i < 0 || i >= story.chapters.length) return;
     chIndex = i;
-    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: '0', ch: chIndex, opened: true }));
+    localStorage.setItem('progress_' + storyId, JSON.stringify({
+      pct: '0', ch: chIndex, opened: true
+    }));
     renderChapter();
   }
 
-  /* ── SUPABASE HELPERS ── */
-  function sbHeaders(extra) {
-    return Object.assign({
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY
-    }, extra || {});
-  }
-
-  function commentKey() {
-    return isNovella ? String(storyId) + '_ch' + chIndex : String(storyId);
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
-  }
-
-  function formatDate(iso) {
-    return new Date(iso).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
-  }
-
-  /* ── LOAD COMMENTS ── */
-  function loadComments() {
-    var list = document.getElementById('comments-list');
-    list.innerHTML = '<div class="comments-loading">Loading transmissions…</div>';
-    fetch(
-      SUPABASE_URL + '/rest/v1/comments'
-      + '?story_id=eq.' + encodeURIComponent(commentKey())
-      + '&parent_id=is.null'
-      + '&order=created_at.asc'
-      + '&select=id,content,created_at,token',
-      { headers: sbHeaders() }
-    )
-    .then(function(r) { return r.json(); })
-    .then(function(comments) {
-      list.innerHTML = '';
-      if (!comments || comments.length === 0) {
-        list.innerHTML = '<div class="comments-empty">No transmissions yet. Be the first.</div>';
-        return;
+  /* ── SUPABASE HELPER ── */
+  function sbFetch(path, method, body) {
+    var opts = {
+      method: method || 'GET',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': method === 'POST' ? 'return=representation' : ''
       }
-      comments.forEach(function(c) {
-        var card = buildCommentCard(c);
-        list.appendChild(card);
-        loadReplies(c.id, card.querySelector('.replies-list'));
+    };
+    if (body) opts.body = JSON.stringify(body);
+    return fetch(SUPABASE_URL + '/rest/v1/' + path, opts).then(function(r) { return r.json(); });
+  }
+
+  /* ── LIKES ── */
+  function updateLikeBtn() {
+    var btn = document.getElementById('like-btn');
+    if (hasLiked) {
+      btn.classList.add('liked');
+      document.getElementById('like-icon').textContent = '✦';
+    } else {
+      btn.classList.remove('liked');
+      document.getElementById('like-icon').textContent = '✦';
+    }
+  }
+
+  function loadLikes() {
+    sbFetch('likes?story_id=eq.' + encodeURIComponent(commentKey) + '&select=id')
+      .then(function(data) {
+        var count = Array.isArray(data) ? data.length : 0;
+        document.getElementById('like-count').textContent =
+          count > 0 ? count + (count === 1 ? ' mark' : ' marks') : '';
       });
-    })
-    .catch(function() {
-      list.innerHTML = '<div class="comments-empty">Could not load transmissions.</div>';
-    });
   }
 
-  /* ── BUILD COMMENT CARD ── */
-  function buildCommentCard(c) {
-    var div = document.createElement('div');
-    div.className = 'comment-card';
-    div.dataset.id = c.id;
-
-    var myToken = getToken(c.id);
-    var canDelete = myToken && myToken === c.token;
-
-    div.innerHTML =
-      '<div class="comment-meta">' +
-        '<span class="comment-anon">Anonymous</span>' +
-        '<span class="comment-date">' + formatDate(c.created_at) + '</span>' +
-      '</div>' +
-      '<div class="comment-text">' + escapeHtml(c.content) + '</div>' +
-      '<div class="comment-actions">' +
-        '<button class="reply-btn" onclick="toggleReplyForm(this)">↩ Reply</button>' +
-        (canDelete ? '<button class="delete-btn" onclick="deleteComment(' + c.id + ', this)">✕ Delete</button>' : '') +
-      '</div>' +
-      '<div class="reply-form">' +
-        '<textarea class="reply-textarea" placeholder="Your reply…" maxlength="1000"></textarea>' +
-        '<div class="reply-actions">' +
-          '<button class="reply-submit" onclick="submitReply(this,' + c.id + ')">Send</button>' +
-          '<button class="reply-cancel" onclick="closeReplyForm(this)">Cancel</button>' +
-        '</div>' +
-        '<div class="comment-msg"></div>' +
-      '</div>' +
-      '<div class="replies-list"></div>';
-
-    return div;
-  }
-
-  /* ── TOGGLE / CLOSE REPLY FORM ── */
-  function toggleReplyForm(btn) {
-    var actions = btn.closest('.comment-actions');
-    var form = actions.nextElementSibling;
-    var isOpen = form.classList.toggle('open');
-    btn.textContent = isOpen ? '✕ Close' : '↩ Reply';
-    if (isOpen) form.querySelector('textarea').focus();
-    else { form.querySelector('textarea').value = ''; form.querySelector('.comment-msg').textContent = ''; }
-  }
-
-  function closeReplyForm(el) {
-    var form = el.closest('.reply-form');
-    form.classList.remove('open');
-    form.querySelector('textarea').value = '';
-    form.querySelector('.comment-msg').textContent = '';
-    var replyBtn = form.previousElementSibling.querySelector('.reply-btn');
-    if (replyBtn) replyBtn.textContent = '↩ Reply';
-  }
-
-  /* ── LOAD REPLIES ── */
-  function loadReplies(parentId, container) {
-    fetch(
-      SUPABASE_URL + '/rest/v1/comments'
-      + '?parent_id=eq.' + parentId
-      + '&order=created_at.asc'
-      + '&select=id,content,created_at,token',
-      { headers: sbHeaders() }
-    )
-    .then(function(r) { return r.json(); })
-    .then(function(replies) {
-      container.innerHTML = '';
-      if (!replies || replies.length === 0) return;
-      replies.forEach(function(r) {
-        var myToken = getToken(r.id);
-        var canDelete = myToken && myToken === r.token;
-        var rc = document.createElement('div');
-        rc.className = 'reply-card';
-        rc.dataset.id = r.id;
-        rc.innerHTML =
-          '<div class="reply-meta">' +
-            '<span class="reply-anon">Anonymous</span>' +
-            '<span class="reply-date">' + formatDate(r.created_at) + '</span>' +
-          '</div>' +
-          '<div class="reply-text">' + escapeHtml(r.content) + '</div>' +
-          (canDelete ? '<button class="reply-delete-btn" onclick="deleteComment(' + r.id + ', this)">✕ Delete</button>' : '');
-        container.appendChild(rc);
-      });
-    });
-  }
-
-  /* ── SUBMIT TOP-LEVEL COMMENT ── */
-  function submitComment() {
-    var content = document.getElementById('comment-text').value.trim();
-    var btn     = document.getElementById('comment-btn');
-    if (!content) { showRootMsg('Write something first.', 'err'); return; }
-    btn.disabled = true;
-    showRootMsg('Sending…', '');
-    var token = genToken();
-    fetch(SUPABASE_URL + '/rest/v1/comments', {
-      method: 'POST',
-      headers: sbHeaders({ 'Prefer': 'return=representation' }),
-      body: JSON.stringify({ story_id: commentKey(), content: content, author: 'Anonymous', token: token })
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      var newId = Array.isArray(data) && data[0] ? data[0].id : null;
-      if (newId) saveToken(newId, token);
-      document.getElementById('comment-text').value = '';
-      showRootMsg('Transmission received.', 'ok');
-      loadComments();
-    })
-    .catch(function() { showRootMsg('Network error. Try again.', 'err'); })
-    .finally(function() { btn.disabled = false; });
-  }
-
-  /* ── SUBMIT REPLY ── */
-  function submitReply(btn, parentId) {
-    var form     = btn.closest('.reply-form');
-    var textarea = form.querySelector('textarea');
-    var msgEl    = form.querySelector('.comment-msg');
-    var content  = textarea.value.trim();
-    if (!content) { msgEl.textContent = 'Write something first.'; msgEl.className = 'comment-msg err'; return; }
-    btn.disabled = true;
-    msgEl.textContent = 'Sending…'; msgEl.className = 'comment-msg';
-    var token = genToken();
-    fetch(SUPABASE_URL + '/rest/v1/comments', {
-      method: 'POST',
-      headers: sbHeaders({ 'Prefer': 'return=representation' }),
-      body: JSON.stringify({ story_id: commentKey(), parent_id: parentId, content: content, author: 'Anonymous', token: token })
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      var newId = Array.isArray(data) && data[0] ? data[0].id : null;
-      if (newId) saveToken(newId, token);
-      textarea.value = '';
-      msgEl.textContent = 'Reply sent.'; msgEl.className = 'comment-msg ok';
-      var repliesContainer = btn.closest('.comment-card').querySelector('.replies-list');
-      loadReplies(parentId, repliesContainer);
-      setTimeout(function() { closeReplyForm(btn); }, 1200);
-    })
-    .catch(function() { msgEl.textContent = 'Network error.'; msgEl.className = 'comment-msg err'; })
-    .finally(function() { btn.disabled = false; });
-  }
-
-  /* ── DELETE COMMENT (+ cascade via DB foreign key) ── */
-  function deleteComment(id, btn) {
-    if (!confirm('Delete this transmission?')) return;
-    btn.disabled = true;
-    btn.textContent = '…';
-    fetch(SUPABASE_URL + '/rest/v1/comments?id=eq.' + id, {
-      method: 'DELETE',
-      headers: sbHeaders()
-    })
-    .then(function(r) {
-      if (r.ok) {
-        var card = btn.closest('.comment-card') || btn.closest('.reply-card');
-        if (card) {
-          card.style.opacity = '0';
-          setTimeout(function() { card.remove(); }, 300);
+  function toggleLike() {
+    if (hasLiked) {
+      var likeId = localStorage.getItem(likeKey + '_id');
+      if (likeId) {
+        sbFetch('likes?id=eq.' + likeId, 'DELETE').then(function() {
+          hasLiked = false;
+          localStorage.removeItem(likeKey);
+          localStorage.removeItem(likeKey + '_id');
+          updateLikeBtn();
+          loadLikes();
+        });
+      }
+    } else {
+      sbFetch('likes', 'POST', { story_id: commentKey }).then(function(data) {
+        if (Array.isArray(data) && data[0] && data[0].id) {
+          hasLiked = true;
+          localStorage.setItem(likeKey, '1');
+          localStorage.setItem(likeKey + '_id', data[0].id);
+          updateLikeBtn();
+          loadLikes();
         }
+      });
+    }
+  }
+
+  /* ── COMMENTS ── */
+  function loadComments() {
+    document.getElementById('comments-list').innerHTML =
+      '<div class="comments-loading">Loading transmissions…</div>';
+
+    sbFetch('comments?story_id=eq.' + encodeURIComponent(commentKey) +
+            '&order=created_at.asc&select=*')
+      .then(function(data) {
+        var list = document.getElementById('comments-list');
+        if (!Array.isArray(data) || data.length === 0) {
+          list.innerHTML = '<div class="comments-empty">No traces yet. Be the first.</div>';
+          return;
+        }
+        var tops    = data.filter(function(c) { return !c.parent_id; });
+        var replies = data.filter(function(c) { return !!c.parent_id; });
+
+        list.innerHTML = tops.map(function(c) {
+          var myReplies = replies.filter(function(r) { return r.parent_id === c.id; });
+          return renderCommentCard(c) +
+            (myReplies.length
+              ? '<div class="replies-list">' +
+                  myReplies.map(function(r) { return renderReplyCard(r); }).join('') +
+                '</div>'
+              : '');
+        }).join('');
+      });
+  }
+
+  function renderCommentCard(c) {
+    var date   = new Date(c.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    var name   = c.author && c.author.trim() ? c.author : 'Anonymous';
+    var canDel = !!getToken(c.id);
+
+    return '<div class="comment-card" id="cc-' + c.id + '">' +
+      '<div class="comment-meta">' +
+        '<span class="comment-anon">' + escHtml(name) + '</span>' +
+        '<span class="comment-date">' + date + '</span>' +
+      '</div>' +
+      '<div class="comment-text">' + escHtml(c.content) + '</div>' +
+      '<div class="comment-actions">' +
+        '<button class="reply-btn" onclick="toggleReplyForm(\'' + c.id + '\')">Reply</button>' +
+        (canDel ? '<button class="delete-btn" onclick="deleteComment(\'' + c.id + '\')">Delete</button>' : '') +
+      '</div>' +
+      '<div class="reply-form" id="rf-' + c.id + '">' +
+        '<textarea class="reply-textarea" id="rt-' + c.id + '" placeholder="Your reply…" maxlength="1000"></textarea>' +
+        '<div class="reply-actions">' +
+          '<input type="text"     class="form-input" style="height:36px;font-size:0.75rem;" id="ra-' + c.id + '" placeholder="Name (optional)">' +
+          '<input type="password" class="form-input" style="height:36px;font-size:0.75rem;" id="rp-' + c.id + '" placeholder="Passphrase">' +
+          '<button class="reply-submit" onclick="submitReply(\'' + c.id + '\')">Send</button>' +
+          '<button class="reply-cancel" onclick="toggleReplyForm(\'' + c.id + '\')">Cancel</button>' +
+        '</div>' +
+        '<div class="comment-msg" id="rm-' + c.id + '"></div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderReplyCard(r) {
+    var date   = new Date(r.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    var name   = r.author && r.author.trim() ? r.author : 'Anonymous';
+    var canDel = !!getToken(r.id);
+
+    return '<div class="reply-card" id="cc-' + r.id + '">' +
+      '<div class="reply-meta">' +
+        '<span class="reply-anon">' + escHtml(name) + '</span>' +
+        '<span class="reply-date">' + date + '</span>' +
+      '</div>' +
+      '<div class="reply-text">' + escHtml(r.content) + '</div>' +
+      (canDel ? '<button class="reply-delete-btn" onclick="deleteComment(\'' + r.id + '\')">Delete</button>' : '') +
+    '</div>';
+  }
+
+  function toggleReplyForm(id) {
+    var rf = document.getElementById('rf-' + id);
+    if (rf) rf.classList.toggle('open');
+  }
+
+  function submitComment() {
+    var text   = (document.getElementById('comment-text').value   || '').trim();
+    var pass   = (document.getElementById('comment-pass').value   || '').trim();
+    var author = (document.getElementById('comment-author').value || '').trim();
+    var msg    = document.getElementById('comment-msg');
+    var btn    = document.getElementById('comment-btn');
+
+    if (!text) { setMsg(msg, 'Write something first.', true); return; }
+    if (pass !== CORRECT_PASSPHRASE) { setMsg(msg, 'Wrong passphrase. Try again.', true); return; }
+
+    btn.disabled = true;
+    setMsg(msg, 'Sending…', false);
+
+    sbFetch('comments', 'POST', {
+      story_id:   commentKey,   /* ← string key e.g. "7_ch20" */
+      content:    text,
+      author:     author || null,
+      passphrase: pass
+    }).then(function(data) {
+      if (Array.isArray(data) && data[0]) {
+        saveToken(data[0].id, '1');
+        document.getElementById('comment-text').value   = '';
+        document.getElementById('comment-pass').value   = '';
+        document.getElementById('comment-author').value = '';
+        setMsg(msg, 'Trace left. ✦', false);
+        loadComments();
       } else {
-        btn.disabled = false;
-        btn.textContent = '✕ Delete';
+        setMsg(msg, 'Something went wrong. Try again.', true);
       }
-    })
-    .catch(function() {
       btn.disabled = false;
-      btn.textContent = '✕ Delete';
+    }).catch(function() {
+      setMsg(msg, 'Connection error.', true);
+      btn.disabled = false;
     });
   }
 
-  function showRootMsg(text, type) {
-    var el = document.getElementById('comment-msg');
+  function submitReply(parentId) {
+    var text   = (document.getElementById('rt-' + parentId).value || '').trim();
+    var pass   = (document.getElementById('rp-' + parentId).value || '').trim();
+    var author = (document.getElementById('ra-' + parentId).value || '').trim();
+    var msg    = document.getElementById('rm-' + parentId);
+
+    if (!text) { setMsg(msg, 'Write something first.', true); return; }
+    if (pass !== CORRECT_PASSPHRASE) { setMsg(msg, 'Wrong passphrase.', true); return; }
+
+    setMsg(msg, 'Sending…', false);
+
+    sbFetch('comments', 'POST', {
+      story_id:   commentKey,
+      parent_id:  parentId,
+      content:    text,
+      author:     author || null,
+      passphrase: pass
+    }).then(function(data) {
+      if (Array.isArray(data) && data[0]) {
+        saveToken(data[0].id, '1');
+        document.getElementById('rt-' + parentId).value = '';
+        document.getElementById('rp-' + parentId).value = '';
+        document.getElementById('ra-' + parentId).value = '';
+        document.getElementById('rf-' + parentId).classList.remove('open');
+        setMsg(msg, '', false);
+        loadComments();
+      } else {
+        setMsg(msg, 'Something went wrong.', true);
+      }
+    });
+  }
+
+  function deleteComment(id) {
+    if (!confirm('Remove this trace from the marginalia?')) return;
+    sbFetch('comments?id=eq.' + id, 'DELETE').then(function() {
+      localStorage.removeItem('vault_tokens_' + id);
+      loadComments();
+    });
+  }
+
+  function setMsg(el, text, isErr) {
     el.textContent = text;
-    el.className = 'comment-msg' + (type ? ' ' + type : '');
+    el.className = 'comment-msg' + (isErr ? ' err' : ' ok');
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   /* ── INIT ── */
   function init() {
     var params = new URLSearchParams(window.location.search);
-    storyId = params.get('id');
+    storyId    = params.get('id');
+
     if (!storyId || typeof stories === 'undefined') {
       document.getElementById('story-content').textContent = 'Archive error.';
       document.getElementById('story-container').classList.add('loaded');
       return;
     }
+
     story = stories.find(function(s) { return s.id == storyId; });
     if (!story) {
       document.getElementById('story-content').textContent = 'Record not found.';
@@ -859,28 +924,39 @@ body.light .comments-empty { color: #ccc; }
       if (raw) savedData = JSON.parse(raw);
     } catch(e) {}
 
-    var currentPct = savedData ? savedData.pct : '0';
-    var currentCh  = savedData ? savedData.ch  : 0;
-    localStorage.setItem('progress_' + storyId, JSON.stringify({ pct: currentPct, ch: currentCh, opened: true }));
-
-    document.getElementById('comment-section').style.display = 'block';
+    /* Mark opened */
+    var curPct = savedData ? savedData.pct : '0';
+    var curCh  = savedData ? savedData.ch  : 0;
+    localStorage.setItem('progress_' + storyId, JSON.stringify({
+      pct: curPct, ch: curCh, opened: true
+    }));
 
     if (isNovella) {
       document.getElementById('ch-bar').classList.add('show');
-      chIndex = 0;
+      chIndex    = 0;
+      commentKey = buildCommentKey(); /* set before renderChapter so likes/comments load correctly */
       renderChapter();
       document.getElementById('story-container').classList.add('loaded');
-      if (savedData && (savedData.ch > 0 || parseFloat(savedData.pct) > 2)) setTimeout(showPopup, 700);
+      if (savedData && savedData.opened) setTimeout(showPopup, 700);
     } else {
       document.title = 'THE VAULT | ' + story.title;
-      document.getElementById('story-title').textContent = story.title;
+      document.getElementById('story-title').textContent    = story.title;
       document.getElementById('story-synopsis').textContent = story.synopsis || '';
-      document.getElementById('story-content').innerHTML = story.text || story.content || '';
+      document.getElementById('story-content').innerHTML    = story.text || story.content || '';
       document.getElementById('story-content').style.fontSize = fontSize + 'px';
       document.getElementById('story-container').classList.add('loaded');
+
+      commentKey = storyId; /* plain stories just use the numeric id */
+      likeKey    = 'liked_' + commentKey;
+      hasLiked   = !!localStorage.getItem(likeKey);
+      updateLikeBtn();
+      loadLikes();
       loadComments();
-      if (savedData && parseFloat(savedData.pct) > 2) setTimeout(showPopup, 700);
+
+      if (savedData && savedData.opened) setTimeout(showPopup, 700);
     }
+
+    document.getElementById('engagement-section').style.display = 'block';
   }
 
   window.onload = init;
