@@ -224,7 +224,6 @@ body.light .popup-no { border-color: rgba(0,0,0,0.12); }
   display: flex; align-items: center; gap: 1rem;
   padding: 2rem 0 1.5rem;
   border-top: 1px solid rgba(212,175,55,0.12);
-  margin-bottom: 0;
 }
 body.light #like-bar { border-top-color: rgba(212,175,55,0.2); }
 
@@ -279,7 +278,7 @@ body.light .comment-textarea::placeholder { color: #999; }
   display: flex; gap: 0.65rem; margin-top: 0.65rem; flex-wrap: wrap;
 }
 .form-input {
-  flex: 1; min-width: 120px;
+  flex: 1; min-width: 140px;
   background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);
   color: #c9c9c9; font-family: 'Montserrat', sans-serif;
   font-size: 0.78rem; letter-spacing: 0.08em;
@@ -307,7 +306,6 @@ body.light .form-input::placeholder { color: #999; }
 .comment-msg.ok  { color: rgba(212,175,55,0.75); }
 .comment-msg.err { color: #c0504d; }
 
-/* Comment list */
 .comments-list { display: flex; flex-direction: column; gap: 0; }
 
 .comment-card {
@@ -368,7 +366,6 @@ body.light .reply-btn:hover { color: #d4af37; }
 }
 .delete-btn:hover { color: #c0504d; }
 
-/* Inline reply form */
 .reply-form {
   margin-top: 0.85rem; display: none;
   flex-direction: column; gap: 0.5rem;
@@ -387,7 +384,7 @@ body.light .reply-textarea { background: rgba(0,0,0,0.03); border-color: rgba(0,
 .reply-textarea::placeholder { color: #444; font-style: italic; }
 body.light .reply-textarea::placeholder { color: #999; }
 
-.reply-actions { display: flex; gap: 0.5rem; align-items: center; }
+.reply-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
 .reply-submit {
   background: none; border: 1px solid rgba(212,175,55,0.3); color: #d4af37;
   font-family: 'Montserrat', sans-serif; font-size: 8px; letter-spacing: 0.35em;
@@ -404,7 +401,6 @@ body.light .reply-textarea::placeholder { color: #999; }
 }
 .reply-cancel:hover { color: #888; }
 
-/* Threaded replies */
 .replies-list {
   margin-top: 0.85rem; border-left: 1px solid rgba(212,175,55,0.14);
   padding-left: 1rem; display: flex; flex-direction: column; gap: 0.75rem;
@@ -513,10 +509,9 @@ body.light .comments-empty { color: #ccc; }
       <textarea class="comment-textarea" id="comment-text"
         placeholder="Leave a trace in the marginalia…" maxlength="2000"></textarea>
       <div class="form-row">
-        <input type="text"     class="form-input" id="comment-author"
-          placeholder="Name (optional)" autocomplete="off">
-        <input type="password" class="form-input" id="comment-pass"
-          placeholder="Passphrase" autocomplete="off">
+        <!-- Name only — no passphrase -->
+        <input type="text" class="form-input" id="comment-author"
+          placeholder="Name (optional — leave blank to be Anonymous)" autocomplete="off">
         <button class="comment-submit" id="comment-btn" onclick="submitComment()">Send</button>
       </div>
       <div class="comment-msg" id="comment-msg"></div>
@@ -529,9 +524,8 @@ body.light .comments-empty { color: #ccc; }
 
 <script>
   /* ── CONFIG ── */
-  var SUPABASE_URL      = 'https://iakkxwghbczalryylqzg.supabase.co';
-  var SUPABASE_KEY      = 'sb_publishable_WL-bPgOrYIK-PGgHk3-6YQ_Re7SIb1-';
-  var CORRECT_PASSPHRASE = 'VaultReader';
+  var SUPABASE_URL = 'https://iakkxwghbczalryylqzg.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_WL-bPgOrYIK-PGgHk3-6YQ_Re7SIb1-';
 
   /* ── STATE ── */
   var fontSize    = parseInt(localStorage.getItem('readerFontSize')) || 18;
@@ -541,16 +535,16 @@ body.light .comments-empty { color: #ccc; }
   var chIndex     = 0;
   var scrollTimer = null;
   var savedData   = null;
-  var commentKey  = null; /* ← this is what gets sent to Supabase */
+  var commentKey  = null;
   var likeKey     = '';
   var hasLiked    = false;
 
-  /* ── TOKEN STORE ── */
+  /* ── TOKEN STORE ── so delete works after refresh ── */
   function myTokens() {
     try { return JSON.parse(localStorage.getItem('vault_tokens') || '{}'); } catch(e) { return {}; }
   }
-  function saveToken(id, token) {
-    var t = myTokens(); t[String(id)] = token;
+  function saveToken(id) {
+    var t = myTokens(); t[String(id)] = '1';
     localStorage.setItem('vault_tokens', JSON.stringify(t));
   }
   function getToken(id) { return myTokens()[String(id)] || null; }
@@ -626,9 +620,8 @@ body.light .comments-empty { color: #ccc; }
     window.scrollTo({ top: 0 });
   }
 
-  /* ── COMMENT KEY ── the value sent to Supabase as story_id ── */
+  /* ── COMMENT KEY ── */
   function buildCommentKey() {
-    /* Novellas: "7_ch20" format — matches what Supabase already has */
     if (isNovella) return storyId + '_ch' + (chIndex + 1);
     return storyId;
   }
@@ -646,15 +639,14 @@ body.light .comments-empty { color: #ccc; }
     document.getElementById('story-content').style.fontSize = fontSize + 'px';
     document.title = 'THE VAULT | ' + story.title + ' · Ch.' + (chIndex + 1);
 
-    document.getElementById('ch-label').textContent      = (chIndex + 1) + ' / ' + total;
-    document.getElementById('prev-ch-top').disabled      = chIndex === 0;
-    document.getElementById('next-ch-top').disabled      = chIndex === total - 1;
-    document.getElementById('ch-footer-num').textContent = chIndex + 1;
-    document.getElementById('next-ch-btn').style.display = chIndex < total - 1 ? 'block' : 'none';
+    document.getElementById('ch-label').textContent       = (chIndex + 1) + ' / ' + total;
+    document.getElementById('prev-ch-top').disabled       = chIndex === 0;
+    document.getElementById('next-ch-top').disabled       = chIndex === total - 1;
+    document.getElementById('ch-footer-num').textContent  = chIndex + 1;
+    document.getElementById('next-ch-btn').style.display  = chIndex < total - 1 ? 'block' : 'none';
     document.getElementById('prev-ch-link').style.display = chIndex > 0 ? 'block' : 'none';
     document.getElementById('ch-footer').classList.add('show');
 
-    /* Rebuild commentKey and reload engagement for new chapter */
     commentKey = buildCommentKey();
     likeKey    = 'liked_' + commentKey;
     hasLiked   = !!localStorage.getItem(likeKey);
@@ -675,7 +667,7 @@ body.light .comments-empty { color: #ccc; }
     renderChapter();
   }
 
-  /* ── SUPABASE HELPER ── */
+  /* ── SUPABASE ── */
   function sbFetch(path, method, body) {
     var opts = {
       method: method || 'GET',
@@ -693,13 +685,8 @@ body.light .comments-empty { color: #ccc; }
   /* ── LIKES ── */
   function updateLikeBtn() {
     var btn = document.getElementById('like-btn');
-    if (hasLiked) {
-      btn.classList.add('liked');
-      document.getElementById('like-icon').textContent = '✦';
-    } else {
-      btn.classList.remove('liked');
-      document.getElementById('like-icon').textContent = '✦';
-    }
+    if (hasLiked) btn.classList.add('liked');
+    else btn.classList.remove('liked');
   }
 
   function loadLikes() {
@@ -782,9 +769,8 @@ body.light .comments-empty { color: #ccc; }
       '<div class="reply-form" id="rf-' + c.id + '">' +
         '<textarea class="reply-textarea" id="rt-' + c.id + '" placeholder="Your reply…" maxlength="1000"></textarea>' +
         '<div class="reply-actions">' +
-          '<input type="text"     class="form-input" style="height:36px;font-size:0.75rem;" id="ra-' + c.id + '" placeholder="Name (optional)">' +
-          '<input type="password" class="form-input" style="height:36px;font-size:0.75rem;" id="rp-' + c.id + '" placeholder="Passphrase">' +
-          '<button class="reply-submit" onclick="submitReply(\'' + c.id + '\')">Send</button>' +
+          '<input type="text" class="form-input" style="height:36px;font-size:0.75rem;flex:1;min-width:100px;" id="ra-' + c.id + '" placeholder="Name (optional)">' +
+          '<button class="reply-submit" onclick="submitReply(\'' + c.id + '\')">Reply</button>' +
           '<button class="reply-cancel" onclick="toggleReplyForm(\'' + c.id + '\')">Cancel</button>' +
         '</div>' +
         '<div class="comment-msg" id="rm-' + c.id + '"></div>' +
@@ -814,27 +800,23 @@ body.light .comments-empty { color: #ccc; }
 
   function submitComment() {
     var text   = (document.getElementById('comment-text').value   || '').trim();
-    var pass   = (document.getElementById('comment-pass').value   || '').trim();
     var author = (document.getElementById('comment-author').value || '').trim();
     var msg    = document.getElementById('comment-msg');
     var btn    = document.getElementById('comment-btn');
 
     if (!text) { setMsg(msg, 'Write something first.', true); return; }
-    if (pass !== CORRECT_PASSPHRASE) { setMsg(msg, 'Wrong passphrase. Try again.', true); return; }
 
     btn.disabled = true;
     setMsg(msg, 'Sending…', false);
 
     sbFetch('comments', 'POST', {
-      story_id:   commentKey,   /* ← string key e.g. "7_ch20" */
-      content:    text,
-      author:     author || null,
-      passphrase: pass
+      story_id: commentKey,
+      content:  text,
+      author:   author || null
     }).then(function(data) {
       if (Array.isArray(data) && data[0]) {
-        saveToken(data[0].id, '1');
+        saveToken(data[0].id);
         document.getElementById('comment-text').value   = '';
-        document.getElementById('comment-pass').value   = '';
         document.getElementById('comment-author').value = '';
         setMsg(msg, 'Trace left. ✦', false);
         loadComments();
@@ -850,26 +832,22 @@ body.light .comments-empty { color: #ccc; }
 
   function submitReply(parentId) {
     var text   = (document.getElementById('rt-' + parentId).value || '').trim();
-    var pass   = (document.getElementById('rp-' + parentId).value || '').trim();
     var author = (document.getElementById('ra-' + parentId).value || '').trim();
     var msg    = document.getElementById('rm-' + parentId);
 
     if (!text) { setMsg(msg, 'Write something first.', true); return; }
-    if (pass !== CORRECT_PASSPHRASE) { setMsg(msg, 'Wrong passphrase.', true); return; }
 
     setMsg(msg, 'Sending…', false);
 
     sbFetch('comments', 'POST', {
-      story_id:   commentKey,
-      parent_id:  parentId,
-      content:    text,
-      author:     author || null,
-      passphrase: pass
+      story_id:  commentKey,
+      parent_id: parentId,
+      content:   text,
+      author:    author || null
     }).then(function(data) {
       if (Array.isArray(data) && data[0]) {
-        saveToken(data[0].id, '1');
+        saveToken(data[0].id);
         document.getElementById('rt-' + parentId).value = '';
-        document.getElementById('rp-' + parentId).value = '';
         document.getElementById('ra-' + parentId).value = '';
         document.getElementById('rf-' + parentId).classList.remove('open');
         setMsg(msg, '', false);
@@ -883,7 +861,6 @@ body.light .comments-empty { color: #ccc; }
   function deleteComment(id) {
     if (!confirm('Remove this trace from the marginalia?')) return;
     sbFetch('comments?id=eq.' + id, 'DELETE').then(function() {
-      localStorage.removeItem('vault_tokens_' + id);
       loadComments();
     });
   }
@@ -924,7 +901,6 @@ body.light .comments-empty { color: #ccc; }
       if (raw) savedData = JSON.parse(raw);
     } catch(e) {}
 
-    /* Mark opened */
     var curPct = savedData ? savedData.pct : '0';
     var curCh  = savedData ? savedData.ch  : 0;
     localStorage.setItem('progress_' + storyId, JSON.stringify({
@@ -934,7 +910,7 @@ body.light .comments-empty { color: #ccc; }
     if (isNovella) {
       document.getElementById('ch-bar').classList.add('show');
       chIndex    = 0;
-      commentKey = buildCommentKey(); /* set before renderChapter so likes/comments load correctly */
+      commentKey = buildCommentKey();
       renderChapter();
       document.getElementById('story-container').classList.add('loaded');
       if (savedData && savedData.opened) setTimeout(showPopup, 700);
@@ -946,7 +922,7 @@ body.light .comments-empty { color: #ccc; }
       document.getElementById('story-content').style.fontSize = fontSize + 'px';
       document.getElementById('story-container').classList.add('loaded');
 
-      commentKey = storyId; /* plain stories just use the numeric id */
+      commentKey = storyId;
       likeKey    = 'liked_' + commentKey;
       hasLiked   = !!localStorage.getItem(likeKey);
       updateLikeBtn();
