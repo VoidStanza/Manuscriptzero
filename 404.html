@@ -2,6 +2,15 @@
 
 <html lang="en">
 <head>
+  <script>
+  (function(){
+    if (sessionStorage.getItem('mz_unlocked') !== '1') {
+      // Preserve the URL they tried to reach so we could
+      // redirect back after unlock (optional — see gate.html)
+      window.location.replace('gate.html');
+    }
+  })();
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script defer src="https://cloud.umami.is/script.js" data-website-id="76ac9d15-8540-48f0-886c-5861388113e4"></script>
