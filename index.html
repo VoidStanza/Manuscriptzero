@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+  (function(){
+    if (sessionStorage.getItem('mz_unlocked') !== '1') {
+      // Preserve the URL they tried to reach so we could
+      // redirect back after unlock (optional — see gate.html)
+      window.location.replace('gate.html');
+    }
+  })();
+  </script>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="favicon-180.png">
 
