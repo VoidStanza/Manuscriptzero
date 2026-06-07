@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManuscriptZero</title>
+  <link rel="icon" href="favicon.ico" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0a0a;
+      --gold:     #b8964a;
+      --gold-dim: #7a6030;
+      --white:    #e8e4dc;
+      --dim:      #555;
+      --error:    #8b3a3a;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      overflow: hidden;
+    }
+
+    /* Subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .scene {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 2rem;
+    }
+
+    /* Top rule */
+    .rule-top {
+      position: absolute;
+      top: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(480px, 90vw);
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+    }
+
+    /* Sigil / monogram */
+    .sigil {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 8vw, 4.5rem);
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+      line-height: 1;
+      margin-bottom: 2.8rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.1s ease forwards;
+    }
+
+    .site-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.25s ease forwards;
+    }
+
+    /* Gate container */
+    .gate {
+      width: min(360px, 90vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s ease forwards;
+    }
+
+    .gate-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--dim);
+      align-self: flex-start;
+    }
+
+    .input-row {
+      width: 100%;
+      display: flex;
+      border: 1px solid var(--dim);
+      transition: border-color 0.3s;
+    }
+
+    .input-row:focus-within {
+      border-color: var(--gold-dim);
+    }
+
+    .input-row.error {
+      border-color: var(--error);
+      animation: shake 0.35s ease;
+    }
+
+    input[type="password"] {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 0.85rem 1rem;
+      color: var(--white);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      caret-color: var(--gold);
+    }
+
+    input[type="password"]::placeholder {
+      color: var(--dim);
+      font-style: italic;
+      letter-spacing: 0.1em;
+      font-size: 0.95rem;
+    }
+
+    button.enter {
+      background: transparent;
+      border: none;
+      border-left: 1px solid var(--dim);
+      padding: 0.85rem 1.1rem;
+      color: var(--dim);
+      cursor: pointer;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-family: 'Montserrat', sans-serif;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .input-row:focus-within button.enter {
+      color: var(--gold);
+      border-left-color: var(--gold-dim);
+    }
+
+    .error-msg {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--error);
+      height: 1em;
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+
+    .error-msg.visible { opacity: 1; }
+
+    /* Bottom rule */
+    .rule-bottom {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(480px, 90vw);
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+    }
+
+    .bottom-note {
+      position: absolute;
+      bottom: 1.6rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.5rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--dim);
+      white-space: nowrap;
+      opacity: 0.5;
+    }
+
+    /* Unlock flash */
+    .unlock-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 99;
+      transition: opacity 0.5s ease;
+    }
+    .unlock-overlay.flash { opacity: 1; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-6px); }
+      40%      { transform: translateX(6px); }
+      60%      { transform: translateX(-4px); }
+      80%      { transform: translateX(4px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="unlock-overlay" id="unlockOverlay"></div>
+
+  <div class="scene">
+    <div class="rule-top"></div>
+
+    <div class="sigil">V.</div>
+    <div class="site-label">ManuscriptZero — Restricted Access</div>
+
+    <div class="gate" id="gate">
+      <div class="gate-label">Enter passphrase to continue</div>
+      <div class="input-row" id="inputRow">
+        <input
+          type="password"
+          id="phraseInput"
+          placeholder="passphrase"
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+          autofocus
+        />
+        <button class="enter" onclick="attempt()">Enter</button>
+      </div>
+      <div class="error-msg" id="errorMsg">incorrect passphrase</div>
+    </div>
+
+    <div class="rule-bottom"></div>
+    <div class="bottom-note">This archive is private</div>
+  </div>
+
+  <script>
+    // If already unlocked this session, go straight to index
+    if (sessionStorage.getItem('mz_unlocked') === '1') {
+      window.location.replace('index.html');
+    }
+
+    const input     = document.getElementById('phraseInput');
+    const inputRow  = document.getElementById('inputRow');
+    const errorMsg  = document.getElementById('errorMsg');
+    const overlay   = document.getElementById('unlockOverlay');
+
+    // Passphrase — change here if needed
+    const PASSPHRASE = 'tacere';
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') attempt();
+    });
+
+    function attempt() {
+      const val = input.value.trim().toLowerCase();
+      if (val === PASSPHRASE) {
+        sessionStorage.setItem('mz_unlocked', '1');
+        overlay.classList.add('flash');
+        setTimeout(() => window.location.replace('index.html'), 500);
+      } else {
+        inputRow.classList.add('error');
+        errorMsg.classList.add('visible');
+        input.value = '';
+        setTimeout(() => {
+          inputRow.classList.remove('error');
+          errorMsg.classList.remove('visible');
+        }, 1800);
+      }
+    }
+  </script>
+</body>
+</html>
+
