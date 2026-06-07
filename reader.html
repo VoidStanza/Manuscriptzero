@@ -946,5 +946,284 @@ body.light .comments-empty { color: #ccc; }
 
   window.onload = init;
 </script>
+  <!--
+  ============================================================
+  ManuscriptZero — Terms & Conditions Popup
+  
+  Paste the <style> block into your existing <style> tag,
+  and the HTML + <script> anywhere before </body>.
+  
+  Shows once per browser (localStorage flag: mz_terms_accepted)
+  ============================================================
+-->
+
+<!-- ── STYLES ─────────────────────────────────────────────── -->
+<style>
+  /* Overlay */
+  #tc-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+  #tc-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Modal */
+  #tc-modal {
+    width: min(560px, 95vw);
+    background: #0f0f0f;
+    border: 1px solid #2a2a2a;
+    padding: 2.8rem 2.5rem 2rem;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.5s ease;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+  }
+  #tc-overlay.visible #tc-modal {
+    transform: translateY(0);
+  }
+
+  /* Decorative top rule */
+  #tc-modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 2.5rem; right: 2.5rem;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #b8964a, transparent);
+  }
+
+  .tc-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.55rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 0.6rem;
+  }
+
+  .tc-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    font-weight: 300;
+    color: #b8964a;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.6rem;
+    line-height: 1.2;
+  }
+
+  .tc-body {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.7rem;
+    line-height: 1.9;
+    color: #999;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 0.5rem;
+    margin-bottom: 1.8rem;
+
+    /* Subtle scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #2a2a2a transparent;
+  }
+  .tc-body::-webkit-scrollbar { width: 3px; }
+  .tc-body::-webkit-scrollbar-track { background: transparent; }
+  .tc-body::-webkit-scrollbar-thumb { background: #2a2a2a; }
+
+  .tc-rule {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-bottom: 0.9rem;
+    color: #bbb;
+  }
+
+  .tc-rule-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    color: #b8964a;
+    min-width: 1.2rem;
+    padding-top: 0.05rem;
+    font-style: italic;
+  }
+
+  .tc-rule-text {
+    font-size: 0.68rem;
+    line-height: 1.75;
+  }
+
+  .tc-rule-text strong {
+    color: #e8e4dc;
+    font-weight: 400;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+  }
+
+  .tc-divider {
+    border: none;
+    border-top: 1px solid #1e1e1e;
+    margin: 1.2rem 0;
+  }
+
+  .tc-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .tc-note {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #444;
+    flex: 1;
+  }
+
+  .tc-accept {
+    background: transparent;
+    border: 1px solid #b8964a;
+    color: #b8964a;
+    padding: 0.7rem 1.8rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+    white-space: nowrap;
+  }
+  .tc-accept:hover {
+    background: #b8964a;
+    color: #0a0a0a;
+  }
+</style>
+
+<!-- ── HTML ────────────────────────────────────────────────── -->
+<div id="tc-overlay" role="dialog" aria-modal="true" aria-labelledby="tc-title-el">
+  <div id="tc-modal">
+    <div class="tc-eyebrow">ManuscriptZero — Community Guidelines</div>
+    <div class="tc-title" id="tc-title-el">Before you read &amp; write</div>
+
+    <div class="tc-body">
+
+      <div class="tc-rule">
+        <span class="tc-rule-num">I.</span>
+        <span class="tc-rule-text">
+          <strong>This is a literary space.</strong>
+          ManuscriptZero exists for fiction, craft, and honest response to the written word.
+          Keep all engagement anchored to the work.
+        </span>
+      </div>
+
+      <div class="tc-rule">
+        <span class="tc-rule-num">II.</span>
+        <span class="tc-rule-text">
+          <strong>Speak with care.</strong>
+          Criticism is welcome; cruelty is not. Challenge ideas, not people.
+          Comments that exist only to diminish will not be approved.
+        </span>
+      </div>
+
+      <div class="tc-rule">
+        <span class="tc-rule-num">III.</span>
+        <span class="tc-rule-text">
+          <strong>No hate, harassment, or harm.</strong>
+          Content targeting anyone on the basis of identity — race, gender, religion, sexuality,
+          or otherwise — has no place here and will be permanently removed.
+        </span>
+      </div>
+
+      <div class="tc-rule">
+        <span class="tc-rule-num">IV.</span>
+        <span class="tc-rule-text">
+          <strong>Spoilers carry weight.</strong>
+          If your comment reveals plot, mark it clearly. Not everyone reads at the same pace.
+        </span>
+      </div>
+
+      <div class="tc-rule">
+        <span class="tc-rule-num">V.</span>
+        <span class="tc-rule-text">
+          <strong>Spam and self-promotion are not commentary.</strong>
+          Links, advertisements, and off-topic solicitations will be rejected without notice.
+        </span>
+      </div>
+
+      <div class="tc-rule">
+        <span class="tc-rule-num">VI.</span>
+        <span class="tc-rule-text">
+          <strong>Moderation is final.</strong>
+          All comments are reviewed before they appear. The author reserves the right to
+          approve, reject, or remove any submission at their sole discretion.
+        </span>
+      </div>
+
+      <div class="tc-rule">
+        <span class="tc-rule-num">VII.</span>
+        <span class="tc-rule-text">
+          <strong>Your words are yours — and visible.</strong>
+          Once approved, comments are public. Do not post anything you would not wish
+          to be read by anyone.
+        </span>
+      </div>
+
+      <hr class="tc-divider"/>
+
+      <div style="font-size:0.62rem; line-height:1.8; color:#555; font-style:italic; font-family:'Cormorant Garamond',serif;">
+        These guidelines exist not to restrict, but to protect the integrity of this archive
+        and everyone who enters it. ManuscriptZero is a private literary space — treat it accordingly.
+      </div>
+
+    </div><!-- /.tc-body -->
+
+    <div class="tc-footer">
+      <div class="tc-note">Continuing confirms you have read and agree to these terms</div>
+      <button class="tc-accept" onclick="acceptTerms()">I Understand — Enter</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── SCRIPT ──────────────────────────────────────────────── -->
+<script>
+  (function() {
+    // Show only if not already accepted
+    if (localStorage.getItem('mz_terms_accepted') !== '1') {
+      // Small delay so page renders first
+      setTimeout(function() {
+        document.getElementById('tc-overlay').classList.add('visible');
+      }, 400);
+    }
+  })();
+
+  function acceptTerms() {
+    localStorage.setItem('mz_terms_accepted', '1');
+    var overlay = document.getElementById('tc-overlay');
+    overlay.style.opacity = '0';
+    overlay.style.pointerEvents = 'none';
+    setTimeout(function() { overlay.style.display = 'none'; }, 500);
+  }
+</script>
+  
 </body>
 </html>
