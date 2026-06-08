@@ -105,45 +105,63 @@ body {
 </div>
 
 <script>
-  // If not unlocked at all, send to Gate
   if (sessionStorage.getItem('mz_unlocked') !== '1') {
     window.location.replace('Gate.html');
-  }
-
-  // If unlocked but didn't just come from Gate, skip gear and go to gallery
-  if (!sessionStorage.getItem('mz_just_passed_gate')) {
+  } else if (!sessionStorage.getItem('mz_just_passed_gate')) {
     window.location.replace('gallery.html');
+  } else {
+    sessionStorage.removeItem('mz_just_passed_gate');
+
+    window.addEventListener('load', function() {
+      var gear = document.getElementById('vault-gear');
+      var statusText = document.getElementById('status-text');
+      var progressHint = document.getElementById('unlock-progress');
+
+      // Show T&C first if not accepted
+      if (localStorage.getItem('mz_terms_accepted') !== '1') {
+        setTimeout(function() {
+          document.getElementById('tc-overlay').classList.add('visible');
+        }, 400);
+        // Wait for T&C acceptance before playing gear
+        document.querySelector('.tc-accept').addEventListener('click', function() {
+          localStorage.setItem('mz_terms_accepted', '1');
+          var overlay = document.getElementById('tc-overlay');
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+          setTimeout(function() {
+            overlay.style.display = 'none';
+            playGear(gear, statusText, progressHint);
+          }, 500);
+        });
+      } else {
+        // T&C already accepted, play gear directly
+        setTimeout(function() {
+          playGear(gear, statusText, progressHint);
+        }, 600);
+      }
+    });
   }
 
-  // Consume the flag so gear doesn't replay on refresh
-  sessionStorage.removeItem('mz_just_passed_gate');
-
-  window.addEventListener('load', function() {
-    const gear = document.getElementById('vault-gear');
-    const statusText = document.getElementById('status-text');
-    const progressHint = document.getElementById('unlock-progress');
+  function playGear(gear, statusText, progressHint) {
+    progressHint.innerText = "Passphrase Accepted";
+    gear.style.transition = 'transform 2s cubic-bezier(0.4, 0, 0.2, 1)';
+    gear.style.transform = 'rotate(360deg)';
 
     setTimeout(function() {
-      progressHint.innerText = "Passphrase Accepted";
-      gear.style.transition = 'transform 2s cubic-bezier(0.4, 0, 0.2, 1)';
-      gear.style.transform = 'rotate(360deg)';
+      gear.style.transform = 'rotate(720deg)';
+      statusText.innerText = "ACCESS GRANTED TO MANUSCRIPT ZERO";
+      statusText.classList.remove('text-gray-700');
+      statusText.classList.add('text-unlock-glow');
+      gear.classList.add('unlock-glow');
 
       setTimeout(function() {
-        gear.style.transform = 'rotate(720deg)';
-        statusText.innerText = "ACCESS GRANTED TO MANUSCRIPT ZERO";
-        statusText.classList.remove('text-gray-700');
-        statusText.classList.add('text-unlock-glow');
-        gear.classList.add('unlock-glow');
-
+        document.body.classList.add('fade-out');
         setTimeout(function() {
-          document.body.classList.add('fade-out');
-          setTimeout(function() {
-            window.location.href = 'gallery.html';
-          }, 800);
-        }, 2500);
-      }, 2200);
-    }, 800);
-  });
+          window.location.href = 'gallery.html';
+        }, 800);
+      }, 2500);
+    }, 2200);
+  }
 </script>
 
 <!--
