@@ -105,9 +105,19 @@ body {
 </div>
 
 <script>
-  if (sessionStorage.getItem('mz_unlocked') === '1') {
-  window.location.replace('index.html');
-}
+  // If not unlocked, send to Gate first
+  if (sessionStorage.getItem('mz_unlocked') !== '1') {
+    window.location.replace('Gate.html');
+  }
+
+  // If unlocked but didn't just come from Gate, skip gear and go to gallery
+  if (!sessionStorage.getItem('mz_just_passed_gate')) {
+    window.location.replace('gallery.html');
+  }
+
+  // Consume the flag so gear doesn't replay on refresh
+  sessionStorage.removeItem('mz_just_passed_gate');
+
   window.addEventListener('load', function() {
     const gear = document.getElementById('vault-gear');
     const statusText = document.getElementById('status-text');
@@ -115,7 +125,6 @@ body {
 
     setTimeout(function() {
       progressHint.innerText = "Passphrase Accepted";
-
       gear.style.transform = 'rotate(360deg)';
 
       setTimeout(function() {
@@ -134,7 +143,7 @@ body {
       }, 700);
     }, 600);
   });
-</script> 
+</script>
 
 <!--
   ============================================================
