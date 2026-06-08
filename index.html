@@ -105,7 +105,7 @@ body {
 </div>
 
 <script>
-  // If not unlocked, send to Gate first
+  // If not unlocked at all, send to Gate
   if (sessionStorage.getItem('mz_unlocked') !== '1') {
     window.location.replace('Gate.html');
   }
@@ -123,25 +123,26 @@ body {
     const statusText = document.getElementById('status-text');
     const progressHint = document.getElementById('unlock-progress');
 
-  setTimeout(function() {
-  progressHint.innerText = "Passphrase Accepted";
-  gear.style.transform = 'rotate(360deg)';
-
-  setTimeout(function() {
-    gear.style.transform = 'rotate(720deg)';
-    statusText.innerText = "ACCESS GRANTED TO MANUSCRIPT ZERO";
-    statusText.classList.remove('text-gray-700');
-    statusText.classList.add('text-unlock-glow');
-    gear.classList.add('unlock-glow');
-
     setTimeout(function() {
-      document.body.classList.add('fade-out');
+      progressHint.innerText = "Passphrase Accepted";
+      gear.style.transition = 'transform 2s cubic-bezier(0.4, 0, 0.2, 1)';
+      gear.style.transform = 'rotate(360deg)';
+
       setTimeout(function() {
-        window.location.href = 'gallery.html';
-      }, 800);
-    }, 2500);
-  }, 2200);
-}, 800);
+        gear.style.transform = 'rotate(720deg)';
+        statusText.innerText = "ACCESS GRANTED TO MANUSCRIPT ZERO";
+        statusText.classList.remove('text-gray-700');
+        statusText.classList.add('text-unlock-glow');
+        gear.classList.add('unlock-glow');
+
+        setTimeout(function() {
+          document.body.classList.add('fade-out');
+          setTimeout(function() {
+            window.location.href = 'gallery.html';
+          }, 800);
+        }, 2500);
+      }, 2200);
+    }, 800);
   });
 </script>
 
