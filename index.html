@@ -105,6 +105,9 @@ body {
 </div>
 
 <script>
+  if (sessionStorage.getItem('mz_unlocked') === '1') {
+  window.location.replace('index.html');
+}
   window.addEventListener('load', function() {
     const gear = document.getElementById('vault-gear');
     const statusText = document.getElementById('status-text');
