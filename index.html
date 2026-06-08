@@ -86,15 +86,11 @@ body {
   <div class="mb-12 text-center">
     <h2 class="serif tracking-[0.6em] text-[10px] uppercase mb-2">Vault</h2>
     <p id="unlock-progress" class="text-[8px] text-gray-600 font-mono uppercase tracking-[0.3em] animate-pulse">
-      Two-Phase Verification Required
+      Decrypting Access...
     </p>
   </div>
 
-  <div id="gear-container" class="relative group"
-       role="button"
-       aria-label="Turn the vault gear to unlock"
-       tabindex="0"
-       onclick="rotateGear()">
+<div id="gear-container" class="relative">
     <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-60 h-60">
       <circle cx="50" cy="50" r="40" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2 2"/>
       <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
@@ -109,49 +105,33 @@ body {
 </div>
 
 <script>
-  if (sessionStorage.getItem('mz_unlocked') === '1'){
-    window.location.href = 'gallery.html';
-  }
-
-  let currentRotation = 0;
-  const unlockThreshold = 360;
-
-  document.getElementById('gear-container').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') rotateGear();
-  });
-
-  function rotateGear() {
-    currentRotation += 180;
+  window.addEventListener('load', function() {
     const gear = document.getElementById('vault-gear');
     const statusText = document.getElementById('status-text');
     const progressHint = document.getElementById('unlock-progress');
 
-    gear.style.transform = `rotate(${currentRotation}deg)`;
+    setTimeout(function() {
+      progressHint.innerText = "Passphrase Accepted";
 
-    if (currentRotation === 180) {
-      statusText.innerText = "STATUS: HALF-LOCKED";
-      progressHint.innerText = "One Final Step";
-    }
+      gear.style.transform = 'rotate(360deg)';
 
-    if (currentRotation >= unlockThreshold) {
-      document.getElementById('gear-container').onclick = null;
+      setTimeout(function() {
+        gear.style.transform = 'rotate(720deg)';
+        statusText.innerText = "ACCESS GRANTED TO MANUSCRIPT ZERO";
+        statusText.classList.remove('text-gray-700');
+        statusText.classList.add('text-unlock-glow');
+        gear.classList.add('unlock-glow');
 
-      statusText.innerText = "ACCESS GRANTED TO MANUSCRIPT ZERO";
-      statusText.classList.remove('text-gray-700');
-      statusText.classList.add('text-unlock-glow');
-      gear.classList.add('unlock-glow');
-
-      sessionStorage.setItem('mz_unlocked', '1');
-
-      setTimeout(() => {
-        document.body.classList.add('fade-out');
-        setTimeout(() => {
-          window.location.href = 'gallery.html';
-        }, 800);
-      }, 1000);
-    }
-  }
-</script>
+        setTimeout(function() {
+          document.body.classList.add('fade-out');
+          setTimeout(function() {
+            window.location.href = 'gallery.html';
+          }, 800);
+        }, 1200);
+      }, 700);
+    }, 600);
+  });
+</script> 
 
 <!--
   ============================================================
