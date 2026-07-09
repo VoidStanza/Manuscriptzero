@@ -4,6 +4,12 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ManuscriptZero</title>
+<!--
+  IMPORTANT: this page intentionally has NO passphrase-gate script.
+  It's a private confirmation view reached only via a secret,
+  single-use link in an email — not story content — so it must
+  never redirect to gate.html.
+-->
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Montserrat:wght@300&display=swap');
   body {
@@ -11,11 +17,15 @@
     display:flex; align-items:center; justify-content:center; height:100vh; margin:0;
     padding: 0 1.5rem; box-sizing: border-box;
   }
-  .box { text-align:center; }
+  .box { text-align:center; max-width: 420px; }
   .sigil { font-family:'Cormorant Garamond',serif; font-size:3rem; color:#b8964a; }
   .msg {
-    font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase;
+    font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase;
     margin-top:1.5rem; line-height: 1.8;
+  }
+  .story {
+    font-family:'Cormorant Garamond',serif; font-style: italic;
+    font-size:1.1rem; color:#888; margin-top:1rem; letter-spacing: 0.02em;
   }
 </style>
 </head>
@@ -23,12 +33,14 @@
   <div class="box">
     <div class="sigil">V.</div>
     <div class="msg" id="msg">Loading…</div>
+    <div class="story" id="story"></div>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const type = params.get('type') || 'info';
     const msg = params.get('msg') || 'Done.';
+    const story = params.get('story');
 
     const colors = {
       success: '#b8964a',
@@ -40,6 +52,11 @@
     const msgEl = document.getElementById('msg');
     msgEl.textContent = msg;
     msgEl.style.color = colors[type] || colors.info;
+
+    const storyEl = document.getElementById('story');
+    if (story) {
+      storyEl.textContent = story;
+    }
   </script>
 </body>
 </html>
