@@ -16,7 +16,6 @@
       --gold-dim: #7a6030;
       --white:    #e8e4dc;
       --dim:      #555;
-      --error:    #8b3a3a;
     }
 
     html, body {
@@ -28,7 +27,6 @@
       overflow: hidden;
     }
 
-    /* Subtle grain overlay */
     body::before {
       content: '';
       position: fixed;
@@ -47,11 +45,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0;
       padding: 2rem;
     }
 
-    /* Top rule */
     .rule-top {
       position: absolute;
       top: 3rem;
@@ -62,117 +58,131 @@
       background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
     }
 
-    /* Sigil / monogram */
     .sigil {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.8rem, 8vw, 4.5rem);
+      font-size: clamp(2rem, 6vw, 3rem);
       font-weight: 300;
       color: var(--gold);
       letter-spacing: 0.12em;
       line-height: 1;
-      margin-bottom: 2.8rem;
+      margin-bottom: 0.6rem;
       opacity: 0;
       animation: fadeUp 0.9s 0.1s ease forwards;
     }
 
     .site-label {
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: var(--dim);
-      margin-bottom: 3.5rem;
+      margin-bottom: 2.4rem;
       opacity: 0;
       animation: fadeUp 0.9s 0.25s ease forwards;
     }
 
-    /* Gate container */
-    .gate {
-      width: min(360px, 90vw);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
+    #gear-container {
+      width: 190px;
+      height: 190px;
+      position: relative;
       opacity: 0;
       animation: fadeUp 0.9s 0.4s ease forwards;
     }
 
-    .gate-label {
-      font-size: 0.55rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--dim);
-      align-self: flex-start;
+    #vault-gear {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: drop-shadow(0 0 10px rgba(184, 150, 74, 0.2));
     }
 
-    .input-row {
-      width: 100%;
+    #vault-gear.unlocking {
+      transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #vault-gear.unlock-glow {
+      animation: gearGlow 1.5s ease-out forwards;
+    }
+
+    @keyframes gearGlow {
+      0% { filter: brightness(1) drop-shadow(0 0 15px var(--gold)); }
+      100% { filter: brightness(1.8) drop-shadow(0 0 55px var(--gold)); transform: scale(1.08); }
+    }
+
+    .gate {
+      margin-top: 2.2rem;
       display: flex;
-      border: 1px solid var(--dim);
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.55s ease forwards;
+    }
+
+    .boxes {
+      position: relative;
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .box {
+      width: 1.4rem;
+      height: 1.9rem;
+      border-bottom: 1px solid var(--dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--gold);
+      text-transform: lowercase;
       transition: border-color 0.3s;
     }
 
-    .input-row:focus-within {
-      border-color: var(--gold-dim);
-    }
+    .box.filled { border-color: var(--gold-dim); }
 
-    .input-row.error {
-      border-color: var(--error);
-      animation: shake 0.35s ease;
+    .box .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
+    .box .dot.visible { opacity: 1; }
 
-    input[type="password"] {
-      flex: 1;
-      background: transparent;
+    .box .letter {
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .box .letter.visible { opacity: 1; }
+
+    #phraseInput {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
       border: none;
       outline: none;
-      padding: 0.85rem 1rem;
-      color: var(--white);
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
-      font-weight: 300;
-      letter-spacing: 0.2em;
-      caret-color: var(--gold);
-    }
-
-    input[type="password"]::placeholder {
-      color: var(--dim);
-      font-style: italic;
-      letter-spacing: 0.1em;
-      font-size: 0.95rem;
-    }
-
-    button.enter {
       background: transparent;
-      border: none;
-      border-left: 1px solid var(--dim);
-      padding: 0.85rem 1.1rem;
-      color: var(--dim);
-      cursor: pointer;
-      font-size: 0.6rem;
+      caret-color: transparent;
+      color: transparent;
+      font-size: 16px;
+    }
+
+    .status-msg {
+      font-size: 0.55rem;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      font-family: 'Montserrat', sans-serif;
-      transition: color 0.3s, border-color 0.3s;
-    }
-
-    .input-row:focus-within button.enter {
-      color: var(--gold);
-      border-left-color: var(--gold-dim);
-    }
-
-    .error-msg {
-      font-size: 0.55rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--error);
+      color: var(--dim);
       height: 1em;
-      transition: opacity 0.3s;
       opacity: 0;
+      transition: opacity 0.4s ease;
     }
+    .status-msg.visible { opacity: 1; }
+    .status-msg.gold { color: var(--gold); }
 
-    .error-msg.visible { opacity: 1; }
-
-    /* Bottom rule */
     .rule-bottom {
       position: absolute;
       bottom: 3rem;
@@ -196,57 +206,49 @@
       opacity: 0.5;
     }
 
-    /* Unlock flash */
-    .unlock-overlay {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
+    .fade-out {
       opacity: 0;
+      transition: opacity 0.8s ease;
       pointer-events: none;
-      z-index: 99;
-      transition: opacity 0.5s ease;
     }
-    .unlock-overlay.flash { opacity: 1; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      20%      { transform: translateX(-6px); }
-      40%      { transform: translateX(6px); }
-      60%      { transform: translateX(-4px); }
-      80%      { transform: translateX(4px); }
-    }
   </style>
 </head>
 <body>
 
-  <div class="unlock-overlay" id="unlockOverlay"></div>
-
-  <div class="scene">
+  <div class="scene" id="scene">
     <div class="rule-top"></div>
 
     <div class="sigil">V.</div>
     <div class="site-label">ManuscriptZero — Restricted Access</div>
 
-    <div class="gate" id="gate">
-      <div class="gate-label">Enter passphrase to continue</div>
-      <div class="input-row" id="inputRow">
+    <div id="gear-container">
+      <svg id="vault-gear" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" stroke="#b8964a" stroke-width="0.5" stroke-dasharray="2 2"/>
+        <path d="M50 5V15M50 95V85M5 50H15M95 50H85M18.2 18.2L25.2 25.2M81.8 81.8L74.8 74.8M18.2 81.8L25.2 74.8M81.8 18.2L74.8 25.2" stroke="#b8964a" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="20" stroke="#b8964a" stroke-width="2"/>
+        <path d="M45 50L50 45L55 50L50 55Z" fill="#b8964a"/>
+      </svg>
+    </div>
+
+    <div class="gate">
+      <div class="boxes" id="boxes">
         <input
-          type="password"
+          type="text"
           id="phraseInput"
-          placeholder="passphrase"
           autocomplete="off"
           autocorrect="off"
           spellcheck="false"
+          inputmode="text"
+          maxlength="6"
           autofocus
         />
-        <button class="enter" onclick="attempt()">Enter</button>
       </div>
-      <div class="error-msg" id="errorMsg">incorrect passphrase</div>
+      <div class="status-msg" id="statusMsg"></div>
     </div>
 
     <div class="rule-bottom"></div>
@@ -254,40 +256,118 @@
   </div>
 
   <script>
-    // If already unlocked this session, go straight to index
     if (sessionStorage.getItem('mz_unlocked') === '1') {
       window.location.replace('index.html');
     }
 
-    const input     = document.getElementById('phraseInput');
-    const inputRow  = document.getElementById('inputRow');
-    const errorMsg  = document.getElementById('errorMsg');
-    const overlay   = document.getElementById('unlockOverlay');
-
-    // Passphrase — change here if needed
     const PASSPHRASE = 'tacere';
+    const REVEAL_MS = 700;
 
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') attempt();
+    const boxesEl  = document.getElementById('boxes');
+    const input    = document.getElementById('phraseInput');
+    const gear     = document.getElementById('vault-gear');
+    const statusEl = document.getElementById('statusMsg');
+    const scene    = document.getElementById('scene');
+
+    let boxes = [];
+    for (let i = 0; i < PASSPHRASE.length; i++) {
+      const box = document.createElement('div');
+      box.className = 'box';
+      box.innerHTML = '<span class="letter"></span><span class="dot"></span>';
+      boxesEl.insertBefore(box, input);
+      boxes.push(box);
+    }
+
+    let revealTimer = null;
+    let unlocked = false;
+
+    document.addEventListener('click', () => input.focus());
+    window.addEventListener('load', () => input.focus());
+
+    input.addEventListener('input', () => {
+      if (unlocked) return;
+
+      const raw = input.value.toLowerCase().replace(/[^a-z]/g, '');
+      input.value = raw;
+
+      if (PASSPHRASE.indexOf(raw) !== 0) {
+        input.value = raw.slice(0, -1);
+        showStatus('not yet', false);
+        return;
+      }
+
+      hideStatus();
+      renderBoxes(raw);
+
+      const progress = raw.length / PASSPHRASE.length;
+      gear.style.transform = 'rotate(' + (progress * 300) + 'deg)';
+
+      if (raw.length === PASSPHRASE.length) {
+        unlocked = true;
+        input.blur();
+        input.setAttribute('readonly', true);
+        unlockSequence();
+      }
     });
 
-    function attempt() {
-      const val = input.value.trim().toLowerCase();
-      if (val === PASSPHRASE) {
-        sessionStorage.setItem('mz_unlocked', '1');
-        overlay.classList.add('flash');
-        setTimeout(() => window.location.replace('index.html'), 500);
-      } else {
-        inputRow.classList.add('error');
-        errorMsg.classList.add('visible');
-        input.value = '';
-        setTimeout(() => {
-          inputRow.classList.remove('error');
-          errorMsg.classList.remove('visible');
-        }, 1800);
+    function renderBoxes(value) {
+      for (let i = 0; i < boxes.length; i++) {
+        const letterEl = boxes[i].querySelector('.letter');
+        const dotEl = boxes[i].querySelector('.dot');
+        boxes[i].classList.toggle('filled', i < value.length);
+
+        if (i < value.length) {
+          if (i === value.length - 1) {
+            letterEl.textContent = value[i];
+            letterEl.classList.add('visible');
+            dotEl.classList.remove('visible');
+            clearTimeout(revealTimer);
+            revealTimer = setTimeout(() => {
+              letterEl.classList.remove('visible');
+              dotEl.classList.add('visible');
+            }, REVEAL_MS);
+          } else {
+            letterEl.classList.remove('visible');
+            dotEl.classList.add('visible');
+          }
+        } else {
+          letterEl.classList.remove('visible');
+          dotEl.classList.remove('visible');
+          letterEl.textContent = '';
+        }
       }
+    }
+
+    function showStatus(text, gold) {
+      statusEl.textContent = text;
+      statusEl.classList.toggle('gold', !!gold);
+      statusEl.classList.add('visible');
+      clearTimeout(showStatus._t);
+      showStatus._t = setTimeout(hideStatus, 1200);
+    }
+
+    function hideStatus() {
+      statusEl.classList.remove('visible');
+    }
+
+    function unlockSequence() {
+      showStatus('vault opens', true);
+      gear.classList.add('unlocking');
+      gear.style.transform = 'rotate(680deg)';
+
+      setTimeout(() => {
+        gear.classList.add('unlock-glow');
+      }, 300);
+
+      setTimeout(() => {
+        sessionStorage.setItem('mz_unlocked', '1');
+        sessionStorage.setItem('mz_just_passed_gate', '1');
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 800);
+      }, 1900);
     }
   </script>
 </body>
 </html>
-
