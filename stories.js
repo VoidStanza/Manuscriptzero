@@ -15,7 +15,6 @@ warnings: ["Emotional Neglect"],
                 title: "The Dance of the 2 Empires",
                 synopsis: "Two crowns, one dance, and a shared history.",
                         tags: ["fantasy", "royalty", "slow-burn"],
-                 warnings:[],
                 cover: "https://i.pinimg.com/736x/b5/34/43/b53443eaeed068570e1084f73bebeaf5.jpg",
             text: `<div class="reading-font text-gray-300">
     <p class="mb-6">The crown didn’t feel any heavier today — but something beneath it did. Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign? Or maybe it was her body — weary and still waiting for the warmth she had once been promised.</p>
@@ -102,7 +101,6 @@ warnings: ["Emotional Neglect"],
                 title: "Empathodexterity",
                 synopsis: "Silver edges, different worlds: the same inherited precision",
                   tags: ["family-drama", "legacy", "emotional"],
-warnings:[],      
                cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" ,
                         text: `<div class="reading-font text-gray-300">
     <p class="mb-6">The old woman’s bangles sang a sharp, glass melody as she worked, a rhythmic percussion that cut through the humid air of the bazaar. To the passing crowds, she was just the "Guava Lady," a fixture of the pavement, but to the young girl sitting at her feet, she was a surgeon of the streets.</p>
