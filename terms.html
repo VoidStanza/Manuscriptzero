@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  if (sessionStorage.getItem('mz_unlocked') !== '1') {
+    window.location.replace('gate.html');
+  }
+})();
+</script>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE VAULT | TERMS</title>
+<meta name="description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:title" content="THE VAULT | ManuscriptZero">
+<meta property="og:description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/terms.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+<meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
+<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="76ac9d15-8540-48f0-886c-5861388113e4"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@300&family=Montserrat:wght@300;400&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0b;color:#c9c9c9;font-family:'Montserrat',sans-serif;transition:background .4s,color .4s}
+body.light{background:#f5f0e8;color:#1a1a1a}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.05);position:sticky;top:0;background:rgba(10,10,11,.96);backdrop-filter:blur(12px);z-index:50;transition:background .4s,border-color .4s}
+body.light nav{background:rgba(245,240,232,.97);border-bottom-color:rgba(0,0,0,.08)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:#d4af37;background:none;border:none}
+.nav-title{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#555}
+
+.wrap{max-width:600px;margin:0 auto;padding:3.5rem 1.75rem 5rem}
+.page-eyebrow{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.65;margin-bottom:.6rem}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,5vw,2.4rem);color:#d4af37;line-height:1.2;margin-bottom:2.5rem}
+
+.tc-rule{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:1.4rem;color:#bbb}
+body.light .tc-rule{color:#333}
+.tc-rule-num{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:#b8964a;min-width:1.3rem;padding-top:.1rem;font-style:italic}
+.tc-rule-text{font-size:.82rem;line-height:1.85}
+.tc-rule-text strong{color:#e8e4dc;font-weight:400;font-family:'Cormorant Garamond',serif;font-size:.95rem;letter-spacing:.03em}
+body.light .tc-rule-text strong{color:#111}
+
+.tc-divider{border:none;border-top:1px solid rgba(255,255,255,.08);margin:2rem 0}
+body.light .tc-divider{border-top-color:rgba(0,0,0,.1)}
+
+.tc-closing{font-size:.7rem;line-height:1.9;color:#555;font-style:italic;font-family:'Cormorant Garamond',serif;text-align:center}
+body.light .tc-closing{color:#888}
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="nav-logo">V.</button>
+  <span class="nav-title">Terms</span>
+</nav>
+
+<div class="wrap">
+  <div class="page-eyebrow">ManuscriptZero &mdash; Community Guidelines</div>
+  <h1 class="page-title">Before you read &amp; write</h1>
+
+  <div class="tc-rule"><span class="tc-rule-num">I.</span><span class="tc-rule-text"><strong>This is a literary space.</strong> ManuscriptZero exists for fiction, craft, and honest response to the written word. Keep all engagement anchored to the work.</span></div>
+  <div class="tc-rule"><span class="tc-rule-num">II.</span><span class="tc-rule-text"><strong>Speak with care.</strong> Criticism is welcome; cruelty is not. Challenge ideas, not people. Comments that exist only to diminish will not be approved.</span></div>
+  <div class="tc-rule"><span class="tc-rule-num">III.</span><span class="tc-rule-text"><strong>No hate, harassment, or harm.</strong> Content targeting anyone on the basis of identity &mdash; race, gender, religion, sexuality, or otherwise &mdash; has no place here and will be permanently removed.</span></div>
+  <div class="tc-rule"><span class="tc-rule-num">IV.</span><span class="tc-rule-text"><strong>Spoilers carry weight.</strong> If your comment reveals plot, mark it clearly. Not everyone reads at the same pace.</span></div>
+  <div class="tc-rule"><span class="tc-rule-num">V.</span><span class="tc-rule-text"><strong>Spam and self-promotion are not commentary.</strong> Links, advertisements, and off-topic solicitations will be rejected without notice.</span></div>
+  <div class="tc-rule"><span class="tc-rule-num">VI.</span><span class="tc-rule-text"><strong>Moderation is final.</strong> All comments are reviewed before they appear. The author reserves the right to approve, reject, or remove any submission at their sole discretion.</span></div>
+  <div class="tc-rule"><span class="tc-rule-num">VII.</span><span class="tc-rule-text"><strong>Your words are yours &mdash; and visible.</strong> Once approved, comments are public. Do not post anything you would not wish to be read by anyone.</span></div>
+
+  <hr class="tc-divider">
+
+  <p class="tc-closing">These guidelines exist not to restrict, but to protect the integrity of this archive and everyone who enters it. ManuscriptZero is a private literary space &mdash; treat it accordingly.</p>
+</div>
+
+<script src="sidebar.js" defer></script>
+<script>
+(function(){var t=localStorage.getItem('vaultTheme')||'dark';if(t==='light')document.body.classList.add('light')})();
+</script>
+</body>
+</html>
+
