@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <script>
@@ -340,7 +340,7 @@ window.addEventListener('scroll',function(){
   if(!storyId)return;
   clearTimeout(scrollTimer);
   scrollTimer=setTimeout(function(){localStorage.setItem('progress_'+storyId,JSON.stringify({pct:pct.toFixed(2),ch:chIndex,opened:true}))},1000);
-  if(!isNovella&&!recommendationShown&&pct>=96){recommendationShown=true;showRecommendation()}
+  if(!isNovella&&!recommendationShown&&pct>=93){recommendationShown=true;showRecommendation()}
 });
 
 var touchY=0;
@@ -403,8 +403,9 @@ function renderCommentCard(c){
       '<div class="comment-msg" id="rm-'+c.id+'"></div>'+
     '</div>'+
   '</div>';
-  }
-  function renderReplyCard(r){
+}
+
+function renderReplyCard(r){
   var date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
   var name=r.author&&r.author.trim()?r.author:'Anonymous';
   var canDel=!!getToken(r.id);
@@ -413,9 +414,8 @@ function renderCommentCard(c){
     '<div class="reply-text">'+escHtml(r.content)+'</div>'+
     (canDel?'<button class="reply-delete-btn" onclick="deleteComment(\''+r.id+'\')">Delete</button>':'')+
   '</div>';
-}
-
-function toggleReplyForm(id){var rf=document.getElementById('rf-'+id);if(rf)rf.classList.toggle('open')}
+  }
+  function toggleReplyForm(id){var rf=document.getElementById('rf-'+id);if(rf)rf.classList.toggle('open')}
 
 function handleCommentSubmit(){
   var text=(document.getElementById('comment-text').value||'').trim();
@@ -494,11 +494,21 @@ function renderWarnings(){
   wrap.classList.add('show');
 }
 
+function getStoryProgressPct(id){
+  try{
+    var raw=localStorage.getItem('progress_'+id);
+    if(!raw)return 0;
+    var data=JSON.parse(raw);
+    return parseFloat(data.pct||0);
+  }catch(e){return 0}
+}
 function pickRecommendation(){
   if(!story||typeof stories==='undefined')return null;
   var myTags=story.tags||[];
   var candidates=stories.filter(function(s){return s.id!=storyId});
-  var scored=candidates.map(function(s){
+  var unread=candidates.filter(function(s){return getStoryProgressPct(s.id)<13});
+  var pool=unread.length?unread:candidates;
+  var scored=pool.map(function(s){
     var overlap=(s.tags||[]).filter(function(t){return myTags.indexOf(t)>-1}).length;
     return {s:s,score:overlap};
   });
@@ -580,4 +590,4 @@ function acceptTerms(){localStorage.setItem('mz_terms_accepted','1');var o=docum
 </script>
 </body>
 </html>
-      
+  
