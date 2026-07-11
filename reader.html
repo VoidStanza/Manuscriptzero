@@ -164,14 +164,12 @@ body.light .reply-text{color:#555}
 .comments-empty{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#2e2e2e;font-family:'Montserrat',sans-serif;text-align:center;padding:2.5rem 0}
 body.light .comments-empty{color:#ccc}
 .comments-loading{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#2e2e2e;font-family:'Montserrat',sans-serif;text-align:center;padding:2rem 0;animation:pulse 1.5s ease-in-out infinite}
-#content-warning{display:none;margin-bottom:2rem}
-#content-warning.show{display:block}
-#cw-toggle{background:none;border:1px solid rgba(212,175,55,.25);color:#b8964a;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.25em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all .2s}
-#cw-toggle:hover{border-color:rgba(212,175,55,.5);color:#d4af37}
-body.light #cw-toggle{border-color:rgba(212,175,55,.35)}
-#cw-body{display:none;margin-top:.75rem;padding:.85rem 1rem;border-left:2px solid rgba(212,175,55,.3);font-family:'Lora',serif;font-size:.8rem;font-style:italic;color:#888;line-height:1.7}
-#cw-body.open{display:block}
-body.light #cw-body{color:#666}
+#cw-overlay{display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,.8);align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#cw-overlay.show{display:flex}
+.cw-inner{max-width:400px}
+.cw-list{text-align:left;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.65rem}
+.cw-list li{font-family:'Lora',serif;font-style:italic;font-size:.85rem;color:#999;line-height:1.6;padding-left:1rem;border-left:2px solid rgba(212,175,55,.3)}
+body.light .cw-list li{color:#555}
 #recommend-next{display:none;max-width:660px;margin:0 auto;padding:0 1.75rem 3rem}
 #recommend-next.show{display:block}
 .rn-label{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.6;margin-bottom:1.2rem;font-family:'Montserrat',sans-serif}
@@ -216,6 +214,15 @@ body.light .rn-synopsis{color:#888}
     </div>
   </div>
 </div>
+<div id="cw-overlay">
+  <div class="popup-inner cw-inner">
+    <div class="popup-heading">Before You Begin</div>
+    <ul class="cw-list" id="cw-list"></ul>
+    <div class="popup-actions" style="margin-top:1.75rem;">
+      <button class="popup-yes" onclick="acknowledgeWarning()">I Understand - Continue</button>
+    </div>
+  </div>
+</div>
 <nav id="top-nav">
   <button class="nav-logo">V.</button>
   <div class="nav-right">
@@ -231,10 +238,6 @@ body.light .rn-synopsis{color:#888}
   <div id="chapter-eyebrow"></div>
   <h1 id="story-title"></h1>
   <p id="story-synopsis"></p>
-  <div id="content-warning">
-    <button id="cw-toggle" onclick="toggleWarnings()">Content Notes ▾</button>
-    <div id="cw-body"></div>
-  </div>
   <div id="ch-bar">
     <button class="ch-btn" id="prev-ch-top" onclick="goChapter(chIndex-1)">Prev</button>
     <span id="ch-label"></span>
@@ -303,7 +306,7 @@ var SUPABASE_URL  = 'https://iakkxwghbczalryylqzg.supabase.co';
 var SUPABASE_KEY  = 'sb_publishable_WL-bPgOrYIK-PGgHk3-6YQ_Re7SIb1-';
 var NOTIFY_FN_URL = SUPABASE_URL + '/functions/v1/comment-notify';
 var fontSize=parseInt(localStorage.getItem('readerFontSize'))||18;
-var storyId=null,story=null,isNovella=false,chIndex=0,scrollTimer=null,savedData=null,commentKey=null,likeKey='',hasLiked=false;
+var storyId=null,story=null,isNovella=false,chIndex=0,scrollTimer=null,savedData=null,commentKey=null,likeKey='',hasLiked=false,pendingWarningCb=null;
 
 function myTokens(){try{return JSON.parse(localStorage.getItem('vault_tokens')||'{}')}catch(e){return{}}}
 function saveToken(id,tok){var t=myTokens();t[String(id)]=tok||'1';localStorage.setItem('vault_tokens',JSON.stringify(t))}
@@ -353,8 +356,7 @@ document.addEventListener('touchend',function(e){
   if(dy>80&&atBottom)goChapter(chIndex+1);
   if(dy<-80&&atTop)goChapter(chIndex-1);
 });
-
-function showPopup(){var pct=Math.round(parseFloat(savedData.pct));var msg=isNovella&&savedData.ch>0?'You were on Chapter '+(savedData.ch+1)+'. Pick up from there?':'You were '+pct+'% through. Resume from there?';document.getElementById('popup-msg').textContent=msg;document.getElementById('resume-popup').classList.add('show')}
+ function showPopup(){var pct=Math.round(parseFloat(savedData.pct));var msg=isNovella&&savedData.ch>0?'You were on Chapter '+(savedData.ch+1)+'. Pick up from there?':'You were '+pct+'% through. Resume from there?';document.getElementById('popup-msg').textContent=msg;document.getElementById('resume-popup').classList.add('show')}
 function doResume(){document.getElementById('resume-popup').classList.remove('show');if(isNovella){chIndex=savedData.ch||0;renderChapter()}setTimeout(function(){var total=document.documentElement.scrollHeight-document.documentElement.clientHeight;window.scrollTo({top:(parseFloat(savedData.pct)/100)*total,behavior:rmOn()?'auto':'smooth'})},300)}
 function doStartOver(){document.getElementById('resume-popup').classList.remove('show');if(isNovella){chIndex=0;renderChapter()}window.scrollTo({top:0})}
 
@@ -481,17 +483,21 @@ function deleteComment(id){if(!confirm('Remove this trace from the marginalia?')
 function setMsg(el,text,isErr){el.textContent=text;el.className='comment-msg'+(isErr?' err':' ok')}
 function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
-function toggleWarnings(){
-  var body=document.getElementById('cw-body'),btn=document.getElementById('cw-toggle');
-  var open=body.classList.toggle('open');
-  btn.textContent='Content Notes '+(open?'▴':'▾');
-}
-function renderWarnings(){
+function warningKey(){return 'mz_cw_seen_'+storyId}
+function needsWarningModal(){
   var warnings=story&&story.warnings;
-  var wrap=document.getElementById('content-warning');
-  if(!warnings||!warnings.length){wrap.classList.remove('show');return}
-  document.getElementById('cw-body').innerHTML=warnings.map(function(w){return escHtml(w)}).join(' &middot; ');
-  wrap.classList.add('show');
+  return !!(warnings&&warnings.length&&localStorage.getItem(warningKey())!=='1');
+}
+function showWarningModal(cb){
+  document.getElementById('cw-list').innerHTML=story.warnings.map(function(w){return '<li>'+escHtml(w)+'</li>'}).join('');
+  pendingWarningCb=cb;
+  document.getElementById('cw-overlay').classList.add('show');
+}
+function acknowledgeWarning(){
+  localStorage.setItem(warningKey(),'1');
+  document.getElementById('cw-overlay').classList.remove('show');
+  var cb=pendingWarningCb;pendingWarningCb=null;
+  if(cb)cb();
 }
 
 function getStoryProgressPct(id){
@@ -563,7 +569,9 @@ function init(){
   story=stories.find(function(s){return s.id==storyId});
   if(!story){document.getElementById('story-content').textContent='Record not found.';document.getElementById('story-container').classList.add('loaded');return}
   isNovella=story.type==='novella'&&Array.isArray(story.chapters);
-  renderWarnings();
+  if(needsWarningModal()){showWarningModal(proceedInit)}else{proceedInit()}
+ }
+ function proceedInit(){
   try{var raw=localStorage.getItem('progress_'+storyId);if(raw)savedData=JSON.parse(raw)}catch(e){}
   var curPct=savedData?savedData.pct:'0',curCh=savedData?savedData.ch:0;
   localStorage.setItem('progress_'+storyId,JSON.stringify({pct:curPct,ch:curCh,opened:true}));
