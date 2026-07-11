@@ -164,6 +164,14 @@ body.light .reply-text{color:#555}
 .comments-empty{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#2e2e2e;font-family:'Montserrat',sans-serif;text-align:center;padding:2.5rem 0}
 body.light .comments-empty{color:#ccc}
 .comments-loading{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#2e2e2e;font-family:'Montserrat',sans-serif;text-align:center;padding:2rem 0;animation:pulse 1.5s ease-in-out infinite}
+#content-warning{display:none;margin-bottom:2rem}
+#content-warning.show{display:block}
+#cw-toggle{background:none;border:1px solid rgba(212,175,55,.25);color:#b8964a;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.25em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all .2s}
+#cw-toggle:hover{border-color:rgba(212,175,55,.5);color:#d4af37}
+body.light #cw-toggle{border-color:rgba(212,175,55,.35)}
+#cw-body{display:none;margin-top:.75rem;padding:.85rem 1rem;border-left:2px solid rgba(212,175,55,.3);font-family:'Lora',serif;font-size:.8rem;font-style:italic;color:#888;line-height:1.7}
+#cw-body.open{display:block}
+body.light #cw-body{color:#666}
 #recommend-next{display:none;max-width:660px;margin:0 auto;padding:0 1.75rem 3rem}
 #recommend-next.show{display:block}
 .rn-label{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.6;margin-bottom:1.2rem;font-family:'Montserrat',sans-serif}
@@ -210,7 +218,8 @@ body.light .rn-synopsis{color:#888}
 </div>
 <nav id="top-nav">
   <button class="nav-logo">V.</button>
-  <div class="nav-right"<div class="font-pill">
+  <div class="nav-right">
+    <div class="font-pill">
       <button onclick="changeFont(-2)" aria-label="Decrease font size">A-</button>
       <div class="font-sep"></div>
       <button onclick="changeFont(2)" aria-label="Increase font size">A+</button>
@@ -222,6 +231,10 @@ body.light .rn-synopsis{color:#888}
   <div id="chapter-eyebrow"></div>
   <h1 id="story-title"></h1>
   <p id="story-synopsis"></p>
+  <div id="content-warning">
+    <button id="cw-toggle" onclick="toggleWarnings()">Content Notes ▾</button>
+    <div id="cw-body"></div>
+  </div>
   <div id="ch-bar">
     <button class="ch-btn" id="prev-ch-top" onclick="goChapter(chIndex-1)">Prev</button>
     <span id="ch-label"></span>
@@ -357,7 +370,8 @@ function toggleLike(){
   if(hasLiked){var likeId=localStorage.getItem(likeKey+'_id');if(likeId)sbFetch('likes?id=eq.'+likeId,'DELETE').then(function(){hasLiked=false;localStorage.removeItem(likeKey);localStorage.removeItem(likeKey+'_id');updateLikeBtn();loadLikes()})}
   else{sbFetch('likes','POST',{story_id:commentKey}).then(function(data){if(Array.isArray(data)&&data[0]&&data[0].id){hasLiked=true;localStorage.setItem(likeKey,'1');localStorage.setItem(likeKey+'_id',data[0].id);updateLikeBtn();loadLikes()}})}
 }
-  function loadComments(){
+
+function loadComments(){
   document.getElementById('comments-list').innerHTML='<div class="comments-loading">Loading transmissions...</div>';
   sbFetch('comments?story_id=eq.'+encodeURIComponent(commentKey)+'&status=eq.approved&order=created_at.'+marginaliaOrder()+'&select=*').then(function(data){
     var list=document.getElementById('comments-list');
@@ -389,9 +403,8 @@ function renderCommentCard(c){
       '<div class="comment-msg" id="rm-'+c.id+'"></div>'+
     '</div>'+
   '</div>';
-}
-
-function renderReplyCard(r){
+  }
+  function renderReplyCard(r){
   var date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
   var name=r.author&&r.author.trim()?r.author:'Anonymous';
   var canDel=!!getToken(r.id);
@@ -468,6 +481,19 @@ function deleteComment(id){if(!confirm('Remove this trace from the marginalia?')
 function setMsg(el,text,isErr){el.textContent=text;el.className='comment-msg'+(isErr?' err':' ok')}
 function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
+function toggleWarnings(){
+  var body=document.getElementById('cw-body'),btn=document.getElementById('cw-toggle');
+  var open=body.classList.toggle('open');
+  btn.textContent='Content Notes '+(open?'▴':'▾');
+}
+function renderWarnings(){
+  var warnings=story&&story.warnings;
+  var wrap=document.getElementById('content-warning');
+  if(!warnings||!warnings.length){wrap.classList.remove('show');return}
+  document.getElementById('cw-body').innerHTML=warnings.map(function(w){return escHtml(w)}).join(' &middot; ');
+  wrap.classList.add('show');
+}
+
 function pickRecommendation(){
   if(!story||typeof stories==='undefined')return null;
   var myTags=story.tags||[];
@@ -527,6 +553,7 @@ function init(){
   story=stories.find(function(s){return s.id==storyId});
   if(!story){document.getElementById('story-content').textContent='Record not found.';document.getElementById('story-container').classList.add('loaded');return}
   isNovella=story.type==='novella'&&Array.isArray(story.chapters);
+  renderWarnings();
   try{var raw=localStorage.getItem('progress_'+storyId);if(raw)savedData=JSON.parse(raw)}catch(e){}
   var curPct=savedData?savedData.pct:'0',curCh=savedData?savedData.ch:0;
   localStorage.setItem('progress_'+storyId,JSON.stringify({pct:curPct,ch:curCh,opened:true}));
