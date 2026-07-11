@@ -3,6 +3,8 @@ const stories = [
                 id: 1,
                 title: "Horizon",
                 synopsis: "The perfect son is a masterpiece of a lie.",
+                        tags: ["family-drama","loneliness","identity"],
+warnings: ["Emotional Neglect"],
                cover: "https://i.pinimg.com/736x/a3/a3/08/a3a3084fa4e3ba568560114e137ba5aa.jpg",
                 text: `<p class="mb-6">He sits at the edge of the living room, shoes polished, uniform pressed, hair combed just so, and waits as the sunlight pours through the window and pools on the carpet where he sits, watching his parents move around him with soft voices and laughter, telling stories he has told a thousand times, clapping for a medal he earned, for a speech he gave, and he knows they are proud, their pride sharp and bright in the air, but he feels it on the wrong side of himself, like a shadow that mirrors the light without holding it.</p>
                <p class="mb-6">They call him our boy, and he smiles because he is always careful to smile, memorizing the way their eyes stretch and lift, the way their lips curve over words that belong to someone else, the imagined boy who fits perfectly into the story they built, the one he can never quite be, and he folds his hands, nods at the right moments, laughs when expected, is present and never scolded, never unloved, never absent, and still the hollow grows quietly inside, a patient little erosion of wanting attention that lands nowhere, unnoticed, unremarked.</p>
@@ -12,6 +14,8 @@ const stories = [
                 id: 2,
                 title: "The Dance of the 2 Empires",
                 synopsis: "Two crowns, one dance, and a shared history.",
+                        tags: ["fantasy", "royalty", "slow-burn"],
+                 warnings:,
                 cover: "https://i.pinimg.com/736x/b5/34/43/b53443eaeed068570e1084f73bebeaf5.jpg",
             text: `<div class="reading-font text-gray-300">
     <p class="mb-6">The crown didn’t feel any heavier today — but something beneath it did. Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign? Or maybe it was her body — weary and still waiting for the warmth she had once been promised.</p>
@@ -42,6 +46,8 @@ const stories = [
                 id: 3,
                 title: "Anamnesis",
                 synopsis: "The archives are hungry.",
+                        tags: ["horror", "mystery", "supernatural"],
+              warnings: ["Psychological Horror", "Mild Body Horror", "Medical Themes"],
                cover: "https://i.pinimg.com/1200x/dc/0d/c1/dc0dc15c13dcfe322b098796162b2a39.jpg" ,   
                 text: `<div class="space-y-6 font-mono text-sm border-l-2 border-[#d4af37]/30 pl-6 py-4 bg-black/20">
     <p class="text-[#d4af37] font-bold tracking-widest uppercase">RECOLLECTION OF A SUPPOSED PREVIOUS EXISTENCE</p>
@@ -95,6 +101,8 @@ const stories = [
                 id: 4,
                 title: "Empathodexterity",
                 synopsis: "Silver edges, different worlds: the same inherited precision",
+                  tags: ["family-drama", "legacy", "emotional"],
+warnings:,      
                cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" ,
                         text: `<div class="reading-font text-gray-300">
     <p class="mb-6">The old woman’s bangles sang a sharp, glass melody as she worked, a rhythmic percussion that cut through the humid air of the bazaar. To the passing crowds, she was just the "Guava Lady," a fixture of the pavement, but to the young girl sitting at her feet, she was a surgeon of the streets.</p>
@@ -122,6 +130,8 @@ const stories = [
                   id: 5,
                 title: "Kintsugi",
                 synopsis: "A story of gold-filled cracks",
+                        tags: ["trauma", "healing", "psychological"],
+warnings: ["Domestic Violence", "Child Abuse", "Trauma", "Blood", "Death", "Self-Defense"],
                         cover: "https://i.pinimg.com/736x/61/90/b9/6190b9bff1fae3657da043473a061f13.jpg",
                 text:`<div class="reading-font text-gray-300">
         <p class="mb-6">The bottle did not shatter loudly. It split with a dull, imperfect crack — like something already fractured simply admitting it.</p>
@@ -165,7 +175,9 @@ const stories = [
     id: 6,
     title: "Calliope of Wyvern Reef",
     synopsis: "A beauty guarded by silence reveals a voice of ancient power when the sea claims its own.",
-    cover: "https://i.pinimg.com/236x/4c/4d/e2/4c4de2586ed6d326b654fdf522b92477.jpg",
+    tags: ["fantasy", "mythology", "coming-of-age"],
+warnings: ["Kidnapping", "Violence", "Pirates"],
+                        cover: "https://i.pinimg.com/236x/4c/4d/e2/4c4de2586ed6d326b654fdf522b92477.jpg",
                         text: `<div class="reading-font text-gray-300">
         <p class="mb-6">In the sea-shore village of Wyvern Reef lived a girl whose beauty people spoke of in lowered voices. They said even young Medusa, before the curse of stone and serpents, would have admired her face. Her name was Calliope.</p>
         
@@ -208,6 +220,8 @@ const stories = [
     type: "novella",
     title: "A Light Left Running",
     synopsis: "A girl fell. A name was given. A will was read. Now the reckoning.",
+            tags: ["supernatural", "mystery", "found-family", "coming-of-age"],
+warnings: ["Supernatural Themes", "Suspense", "Mild Horror", "Death Themes"],
     cover: "https://i.pinimg.com/736x/27/ad/d3/27add30140a04214c68068e159bda8d9.jpg",
     chapters: [
     {
