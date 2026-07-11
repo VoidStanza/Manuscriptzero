@@ -49,6 +49,7 @@
         '<a href="settings.html" data-page="settings.html">Settings</a>' +
         '<a href="about.html" data-page="about.html">About</a>' +
         '<a href="community-guidelines.html" data-page="community-guidelines.html">Community Guidelines </a>' +
+        '<a href="privacy.html" data-page="privacy.html">Privacy</a>' +
         '<a href="copyright.html" data-page="copyright.html">Copyright</a>' +
       '</nav>' +
       '<div class="mz-sidebar-footer">Manuscript Zero</div>' +
@@ -93,4 +94,3 @@
     });
   });
 })();
-
