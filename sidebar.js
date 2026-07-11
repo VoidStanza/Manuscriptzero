@@ -47,8 +47,8 @@
         '<a href="my-reading.html" data-page="my-reading.html">My Reading</a>' +
         '<a href="gallery.html" data-page="gallery.html">The Archive</a>' +
         '<a href="settings.html" data-page="settings.html">Settings</a>' +
-        '<a href="colophon.html" data-page="colophon.html">Colophon</a>' +
-        '<a href="terms.html" data-page="terms.html">Terms &amp; Conditions</a>' +
+        '<a href="about.html" data-page="about.html">About</a>' +
+        '<a href="community-guidelines.html" data-page="community-guidelines.html">Community Guidelines </a>' +
         '<a href="copyright.html" data-page="copyright.html">Copyright</a>' +
       '</nav>' +
       '<div class="mz-sidebar-footer">Manuscript Zero</div>' +
