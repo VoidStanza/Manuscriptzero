@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  if (sessionStorage.getItem('mz_unlocked') !== '1') {
+    window.location.replace('gate.html');
+  }
+})();
+</script>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE VAULT | COPYRIGHT</title>
+<meta name="description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:title" content="THE VAULT | ManuscriptZero">
+<meta property="og:description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/copyright.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+<meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
+<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="76ac9d15-8540-48f0-886c-5861388113e4"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital@0;1&family=Montserrat:wght@300;400&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0b;color:#c9c9c9;font-family:'Montserrat',sans-serif;transition:background .4s,color .4s}
+body.light{background:#f5f0e8;color:#1a1a1a}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.05);position:sticky;top:0;background:rgba(10,10,11,.96);backdrop-filter:blur(12px);z-index:50;transition:background .4s,border-color .4s}
+body.light nav{background:rgba(245,240,232,.97);border-bottom-color:rgba(0,0,0,.08)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:#d4af37;background:none;border:none}
+.nav-title{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#555}
+
+.wrap{max-width:600px;margin:0 auto;padding:3.5rem 1.75rem 5rem}
+.page-eyebrow{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.65;margin-bottom:.6rem}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,5vw,2.4rem);color:#d4af37;line-height:1.2;margin-bottom:2.5rem}
+
+.notice{font-family:'Lora',serif;font-style:italic;font-size:13.5px;line-height:1.95;color:#999;margin-bottom:1rem}
+body.light .notice{color:#555}
+
+.mark-line{display:flex;align-items:baseline;gap:.6rem;padding:1.5rem 0;margin:2rem 0;border-top:1px solid rgba(212,175,55,.15);border-bottom:1px solid rgba(212,175,55,.15)}
+.mark-symbol{font-family:'Playfair Display',serif;font-size:1.3rem;color:#d4af37}
+.mark-text{font-size:10.5px;letter-spacing:.15em;color:#aaa}
+body.light .mark-text{color:#444}
+
+.section-title{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:#555;margin:2.25rem 0 .9rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="nav-logo">V.</button>
+  <span class="nav-title">Copyright</span>
+</nav>
+
+<div class="wrap">
+  <div class="page-eyebrow">Legal</div>
+  <h1 class="page-title">Copyright</h1>
+
+  <div class="mark-line">
+    <span class="mark-symbol">&copy;</span>
+    <span class="mark-text">Void Stanza. All rights reserved.</span>
+  </div>
+
+  <p class="notice">All fiction, prose, character work, and original imagery published within ManuscriptZero are the intellectual property of Void Stanza, protected under copyright law from the moment of creation. No registration is required for this protection to apply.</p>
+
+  <div class="section-title">Reproduction</div>
+  <p class="notice">No portion of any record held in this archive may be copied, redistributed, adapted, or republished elsewhere — in whole or in part — without prior written permission from the author.</p>
+
+  <div class="section-title">Reader Comments</div>
+  <p class="notice">Marginalia submitted by readers remains the property of its author, who grants ManuscriptZero a non-exclusive license to display it alongside the relevant record.</p>
+
+  <div class="section-title">Contact</div>
+  <p class="notice">Requests for permission, press inquiries, or reports of unauthorized reproduction can be directed through the author's listed contact channel on @void.stanza.</p>
+</div>
+
+<script src="sidebar.js" defer></script>
+<script>
+(function(){var t=localStorage.getItem('vaultTheme')||'dark';if(t==='light')document.body.classList.add('light')})();
+</script>
+</body>
+</html>
