@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  if (sessionStorage.getItem('mz_unlocked') !== '1') {
+    window.location.replace('gate.html');
+  }
+})();
+</script>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE VAULT | MY READING</title>
+<meta name="description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:title" content="THE VAULT | ManuscriptZero">
+<meta property="og:description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/my-reading.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+<meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
+<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="76ac9d15-8540-48f0-886c-5861388113e4"></script>
+<script src="stories.js" defer></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital@0;1&family=Montserrat:wght@300;400&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0b;color:#e2e2e2;font-family:'Montserrat',sans-serif;transition:background .4s,color .4s}
+body.light{background:#f5f0e8;color:#1a1a1a}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.05);position:sticky;top:0;background:rgba(10,10,11,.96);backdrop-filter:blur(12px);z-index:50;transition:background .4s,border-color .4s}
+body.light nav{background:rgba(245,240,232,.97);border-bottom-color:rgba(0,0,0,.08)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:#d4af37;background:none;border:none}
+.nav-title{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#555}
+
+.page-header{text-align:center;padding:2.5rem 2rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.04)}
+body.light .page-header{border-bottom-color:rgba(0,0,0,.06)}
+.page-header h2{font-family:'Playfair Display',serif;font-size:11px;letter-spacing:.6em;text-transform:uppercase;color:#d4af37;margin-bottom:.4rem}
+.page-header p{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#333}
+body.light .page-header p{color:#aaa}
+
+.wrap{max-width:800px;margin:0 auto;padding:2.5rem 1.75rem 5rem}
+
+.section-title{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:#555;padding-bottom:.75rem;margin:2rem 0 1.25rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.section-title:first-child{margin-top:0}
+body.light .section-title{border-bottom-color:rgba(0,0,0,.08)}
+
+.rlist{display:flex;flex-direction:column;gap:1px}
+.rcard{display:flex;align-items:center;gap:1.1rem;padding:1.1rem 1.2rem;background:#0f0f10;border:1px solid rgba(255,255,255,.05);cursor:pointer;transition:border-color .2s,background .2s}
+body.light .rcard{background:#fff;border-color:rgba(0,0,0,.07)}
+.rcard:hover{border-color:rgba(212,175,55,.35)}
+.rcard + .rcard{margin-top:.5rem}
+
+.rcard-img{width:52px;height:70px;flex-shrink:0;overflow:hidden;background:#111}
+.rcard-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(60%)}
+.rcard-img.no-cover{display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(45deg,#111 0,#111 1px,#0f0f10 0,#0f0f10 50%) center/6px 6px}
+
+.rcard-body{flex:1;min-width:0}
+.rcard-id{font-size:8px;letter-spacing:.3em;color:#2a2a2a;margin-bottom:2px}
+.rcard-title{font-family:'Playfair Display',serif;font-size:14px;color:#d4d4d4;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.light .rcard-title{color:#222}
+.rcard-progress-bar{height:2px;background:rgba(255,255,255,.08);width:100%;position:relative}
+body.light .rcard-progress-bar{background:rgba(0,0,0,.08)}
+.rcard-progress-fill{height:100%;background:#d4af37}
+.rcard-pct{font-size:8px;letter-spacing:.2em;color:#555;margin-top:5px}
+
+.rcard-cta{flex-shrink:0;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:#d4af37;border:1px solid rgba(212,175,55,.3);padding:8px 14px;white-space:nowrap}
+
+.empty-state{text-align:center;padding:4rem 1rem;color:#333;font-size:10px;letter-spacing:.3em;text-transform:uppercase;line-height:2}
+body.light .empty-state{color:#bbb}
+.empty-state a{color:#d4af37;text-decoration:none;border-bottom:1px solid rgba(212,175,55,.3)}
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="nav-logo">V.</button>
+  <span class="nav-title">My Reading</span>
+</nav>
+
+<div class="page-header">
+  <h2>My Reading</h2>
+  <p id="record-count">Loading records...</p>
+</div>
+
+<div class="wrap" id="wrap"></div>
+
+<script src="sidebar.js" defer></script>
+<script>
+(function(){var t=localStorage.getItem('vaultTheme')||'dark';if(t==='light')document.body.classList.add('light')})();
+
+function getProgress(storyId){
+  try{
+    var raw=localStorage.getItem('progress_'+storyId);
+    if(!raw) return null;
+    var d=JSON.parse(raw);
+    if(!d || !d.opened) return null;
+    return d;
+  }catch(e){return null}
+}
+
+function cardHTML(s,pct,cta){
+  var hasCover = s.cover && s.cover.trim()!=='';
+  var img = hasCover
+    ? '<div class="rcard-img"><img src="'+s.cover+'" alt="" loading="lazy"></div>'
+    : '<div class="rcard-img no-cover"></div>';
+  return '<div class="rcard" onclick="location.href=\'reader.html?id='+s.id+'\'">'
+    + img
+    + '<div class="rcard-body">'
+    +   '<div class="rcard-id">#'+String(s.id).padStart(3,'0')+'</div>'
+    +   '<div class="rcard-title">'+s.title+'</div>'
+    +   '<div class="rcard-progress-bar"><div class="rcard-progress-fill" style="width:'+pct+'%"></div></div>'
+    +   '<div class="rcard-pct">'+Math.round(pct)+'% read</div>'
+    + '</div>'
+    + '<div class="rcard-cta">'+cta+'</div>'
+    + '</div>';
+}
+
+function render(){
+  var wrap=document.getElementById('wrap');
+  var countEl=document.getElementById('record-count');
+
+  if(typeof stories==='undefined' || !stories.length){
+    wrap.innerHTML='<p style="color:#333;font-size:10px;letter-spacing:.3em;text-transform:uppercase;">Archives unavailable.</p>';
+    return;
+  }
+
+  var inProgress=[], sealed=[];
+  stories.forEach(function(s){
+    var p=getProgress(s.id);
+    if(!p) return;
+    var pct=parseFloat(p.pct||0);
+    if(pct>=90) sealed.push({s:s,pct:pct});
+    else inProgress.push({s:s,pct:pct});
+  });
+
+  if(!inProgress.length && !sealed.length){
+    countEl.textContent='No records opened yet';
+    wrap.innerHTML='<div class="empty-state">Nothing here yet.<br>The archive awaits.<br><br><a href="gallery.html">Browse the Archive &rarr;</a></div>';
+    return;
+  }
+
+  countEl.textContent=inProgress.length+' in progress &middot; '+sealed.length+' sealed';
+
+  var html='';
+  if(inProgress.length){
+    html+='<div class="section-title">In Progress</div><div class="rlist">'
+      + inProgress.map(function(x){return cardHTML(x.s,x.pct,'Continue')}).join('')
+      + '</div>';
+  }
+  if(sealed.length){
+    html+='<div class="section-title">Sealed</div><div class="rlist">'
+      + sealed.map(function(x){return cardHTML(x.s,x.pct,'Reread')}).join('')
+      + '</div>';
+  }
+  wrap.innerHTML=html;
+}
+
+window.addEventListener('load',render);
+</script>
+</body>
+</html>
