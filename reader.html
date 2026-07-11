@@ -164,6 +164,16 @@ body.light .reply-text{color:#555}
 .comments-empty{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#2e2e2e;font-family:'Montserrat',sans-serif;text-align:center;padding:2.5rem 0}
 body.light .comments-empty{color:#ccc}
 .comments-loading{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#2e2e2e;font-family:'Montserrat',sans-serif;text-align:center;padding:2rem 0;animation:pulse 1.5s ease-in-out infinite}
+#recommend-next{display:none;max-width:660px;margin:0 auto;padding:0 1.75rem 3rem}
+#recommend-next.show{display:block}
+.rn-label{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.6;margin-bottom:1.2rem;font-family:'Montserrat',sans-serif}
+.rn-card{display:flex;gap:1.1rem;align-items:center;border:1px solid rgba(212,175,55,.2);background:rgba(255,255,255,.02);padding:1rem;cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none}
+.rn-card:hover{border-color:rgba(212,175,55,.5);background:rgba(212,175,55,.05)}
+body.light .rn-card{border-color:rgba(212,175,55,.3);background:rgba(0,0,0,.02)}
+.rn-cover{width:64px;height:86px;object-fit:cover;flex-shrink:0}
+.rn-title{font-family:'Playfair Display',serif;color:#d4af37;font-size:1.05rem;margin-bottom:.35rem;line-height:1.2}
+.rn-synopsis{font-family:'Lora',serif;font-style:italic;font-size:.8rem;color:#666;line-height:1.5}
+body.light .rn-synopsis{color:#888}
 /* T&C */
 #tc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;transition:opacity .5s ease;pointer-events:none}
 #tc-overlay.visible{opacity:1;pointer-events:all}
@@ -200,8 +210,7 @@ body.light .comments-empty{color:#ccc}
 </div>
 <nav id="top-nav">
   <button class="nav-logo">V.</button>
-  <div class="nav-right">
-    <div class="font-pill">
+  <div class="nav-right"<div class="font-pill">
       <button onclick="changeFont(-2)" aria-label="Decrease font size">A-</button>
       <div class="font-sep"></div>
       <button onclick="changeFont(2)" aria-label="Increase font size">A+</button>
@@ -225,6 +234,10 @@ body.light .comments-empty{color:#ccc}
     <button id="prev-ch-link" onclick="goChapter(chIndex-1)">>Previous Chapter</button>
   </div>
 </main>
+<section id="recommend-next">
+  <div class="rn-label">Recommended Next</div>
+  <a class="rn-card" id="rn-card"></a>
+</section>
 <section id="engagement-section" style="display:none;">
    <div style="max-width:660px;margin:0 auto;padding:0 1.75rem;">
     <div id="like-bar">
@@ -307,12 +320,14 @@ document.getElementById('story-content').addEventListener('click',function(e){
 function toggleTheme(){var l=document.body.classList.toggle('light');localStorage.setItem('vaultTheme',l?'light':'dark');document.getElementById('theme-btn').textContent=l?'Light':'Dark'}
 function changeFont(d){fontSize=Math.min(Math.max(fontSize+d,12),32);document.getElementById('story-content').style.fontSize=fontSize+'px';localStorage.setItem('readerFontSize',fontSize)}
 
+var recommendationShown=false;
 window.addEventListener('scroll',function(){
   var s=document.documentElement.scrollTop,total=document.documentElement.scrollHeight-document.documentElement.clientHeight,pct=total>0?(s/total)*100:0;
   document.getElementById('scroll-bar').style.width=pct+'%';
   if(!storyId)return;
   clearTimeout(scrollTimer);
   scrollTimer=setTimeout(function(){localStorage.setItem('progress_'+storyId,JSON.stringify({pct:pct.toFixed(2),ch:chIndex,opened:true}))},1000);
+  if(!isNovella&&!recommendationShown&&pct>=96){recommendationShown=true;showRecommendation()}
 });
 
 var touchY=0;
@@ -342,8 +357,7 @@ function toggleLike(){
   if(hasLiked){var likeId=localStorage.getItem(likeKey+'_id');if(likeId)sbFetch('likes?id=eq.'+likeId,'DELETE').then(function(){hasLiked=false;localStorage.removeItem(likeKey);localStorage.removeItem(likeKey+'_id');updateLikeBtn();loadLikes()})}
   else{sbFetch('likes','POST',{story_id:commentKey}).then(function(data){if(Array.isArray(data)&&data[0]&&data[0].id){hasLiked=true;localStorage.setItem(likeKey,'1');localStorage.setItem(likeKey+'_id',data[0].id);updateLikeBtn();loadLikes()}})}
 }
-
-function loadComments(){
+  function loadComments(){
   document.getElementById('comments-list').innerHTML='<div class="comments-loading">Loading transmissions...</div>';
   sbFetch('comments?story_id=eq.'+encodeURIComponent(commentKey)+'&status=eq.approved&order=created_at.'+marginaliaOrder()+'&select=*').then(function(data){
     var list=document.getElementById('comments-list');
@@ -454,6 +468,27 @@ function deleteComment(id){if(!confirm('Remove this trace from the marginalia?')
 function setMsg(el,text,isErr){el.textContent=text;el.className='comment-msg'+(isErr?' err':' ok')}
 function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
+function pickRecommendation(){
+  if(!story||typeof stories==='undefined')return null;
+  var myTags=story.tags||[];
+  var candidates=stories.filter(function(s){return s.id!=storyId});
+  var scored=candidates.map(function(s){
+    var overlap=(s.tags||[]).filter(function(t){return myTags.indexOf(t)>-1}).length;
+    return {s:s,score:overlap};
+  });
+  scored.sort(function(a,b){return b.score-a.score});
+  var top=scored.filter(function(x){return x.score===scored[0].score});
+  return top[Math.floor(Math.random()*top.length)].s;
+}
+function showRecommendation(){
+  var rec=pickRecommendation();
+  if(!rec)return;
+  var card=document.getElementById('rn-card');
+  card.href='reader.html?id='+rec.id;
+  card.innerHTML=(rec.cover?'<img class="rn-cover" src="'+rec.cover+'">':'')+'<div><div class="rn-title">'+escHtml(rec.title)+'</div><div class="rn-synopsis">'+escHtml(rec.synopsis||'')+'</div></div>';
+  document.getElementById('recommend-next').classList.add('show');
+}
+
 function buildCommentKey(){if(isNovella)return storyId+'_ch'+(chIndex+1);return storyId}
 
 function rmOn(){return localStorage.getItem('mz_reduce_motion')==='1'}
@@ -477,6 +512,7 @@ function renderChapter(){
   commentKey=buildCommentKey();likeKey='liked_'+commentKey;hasLiked=!!localStorage.getItem(likeKey);
   updateLikeBtn();loadLikes();loadComments();
   window.scrollTo({top:0,behavior:rmOn()?'auto':'smooth'});
+  if(chIndex===total-1){showRecommendation()}else{document.getElementById('recommend-next').classList.remove('show')}
 }
 
 function goChapter(i){
