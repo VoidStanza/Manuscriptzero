@@ -1,90 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-(function(){
-  if (sessionStorage.getItem('mz_unlocked') !== '1') {
-    window.location.replace('gate.html');
-  }
-})();
-</script>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="apple-touch-icon" href="favicon-180.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THE VAULT | COLOPHON</title>
-<meta name="description" content="Accessing the sanctum of Void Stanza.">
-<meta property="og:title" content="THE VAULT | ManuscriptZero">
-<meta property="og:description" content="Accessing the sanctum of Void Stanza.">
-<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
-<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/colophon.html">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
-<meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
-<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
-<script defer src="https://cloud.umami.is/script.js" data-website-id="76ac9d15-8540-48f0-886c-5861388113e4"></script>
+<title>About — ManuscriptZero</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital@0;1&family=Cormorant+Garamond:wght@300&family=Montserrat:wght@300;400&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#0a0a0b;color:#c9c9c9;font-family:'Montserrat',sans-serif;transition:background .4s,color .4s}
-body.light{background:#f5f0e8;color:#1a1a1a}
+  *{box-sizing:border-box;margin:0;padding:0}
 
-nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.05);position:sticky;top:0;background:rgba(10,10,11,.96);backdrop-filter:blur(12px);z-index:50;transition:background .4s,border-color .4s}
-body.light nav{background:rgba(245,240,232,.97);border-bottom-color:rgba(0,0,0,.08)}
-.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:#d4af37;background:none;border:none}
-.nav-title{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#555}
+  body{
+    background:#0a0a0b;
+    color:#c9c9c9;
+    font-family:'Montserrat',sans-serif;
+  }
 
-.wrap{max-width:600px;margin:0 auto;padding:3.5rem 1.75rem 5rem}
-.page-eyebrow{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.65;margin-bottom:.6rem}
-.page-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,5vw,2.4rem);color:#d4af37;line-height:1.2;margin-bottom:2.5rem}
+  /* ---- Top nav, matches reader.html ---- */
+  #top-nav{
+    position:fixed;top:0;left:0;right:0;
+    padding:1.1rem 1.75rem;
+    display:flex;justify-content:space-between;align-items:center;
+    z-index:50;
+    border-bottom:1px solid rgba(255,255,255,.05);
+    background:rgba(10,10,11,.96);
+    backdrop-filter:blur(12px);
+  }
+  .nav-logo{
+    font-family:'Playfair Display',serif;
+    font-size:1.5rem;color:#d4af37;
+    cursor:pointer;background:none;border:none;
+  }
+  .nav-label{
+    font-size:9px;letter-spacing:.4em;text-transform:uppercase;
+    color:#d4af37;opacity:.65;
+  }
 
-.colophon-block{margin-bottom:2.4rem}
-.colophon-block p{font-family:'Lora',serif;font-style:italic;font-size:13.5px;line-height:1.95;color:#999;margin-bottom:1rem}
-body.light .colophon-block p{color:#555}
+  #scroll-bar{
+    position:fixed;top:0;left:0;height:2px;background:#d4af37;
+    width:0%;z-index:100;box-shadow:0 0 8px #d4af37;
+    transition:width .1s linear;
+  }
 
-.spec-list{border-top:1px solid rgba(255,255,255,.06);margin-top:3rem}
-body.light .spec-list{border-top-color:rgba(0,0,0,.08)}
-.spec-row{display:flex;justify-content:space-between;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
-body.light .spec-row{border-bottom-color:rgba(0,0,0,.08)}
-.spec-key{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#555;flex-shrink:0}
-.spec-val{font-size:11.5px;color:#aaa;text-align:right}
-body.light .spec-val{color:#444}
+  main{max-width:640px;margin:0 auto;padding:7.5rem 1.5rem 5rem}
 
-.sigil{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:#b8964a;text-align:center;margin-top:3rem;letter-spacing:.05em}
+  /* ---- Hero portrait ---- */
+  .hero{
+    display:flex;justify-content:center;
+    margin-bottom:3.5rem;
+    opacity:0;transform:translateY(24px);
+    transition:opacity .8s ease,transform .8s ease;
+  }
+  .hero.in-view{opacity:1;transform:translateY(0)}
+  .hero img{
+    width:min(320px,80vw);
+    filter:drop-shadow(0 0 40px rgba(212,175,55,.08));
+  }
+
+  .eyebrow{
+    text-align:center;
+    font-size:9px;letter-spacing:.5em;text-transform:uppercase;
+    color:#d4af37;opacity:.65;
+    margin-bottom:.75rem;
+  }
+  h1{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.9rem,6vw,2.6rem);
+    color:#d4af37;
+    margin-bottom:3.5rem;
+  }
+
+  /* ---- Panels ---- */
+  .panel{
+    opacity:0;transform:translateY(28px);
+    transition:opacity .7s ease,transform .7s ease;
+    margin-bottom:2.6rem;
+  }
+  .panel.in-view{opacity:1;transform:translateY(0)}
+
+  .panel p{
+    font-family:'Lora',serif;
+    font-size:1.08rem;
+    line-height:1.9;
+    color:#a8a8a8;
+  }
+
+  .panel.lead p{
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:1.5rem;
+    color:#e8e4dc;
+    line-height:1.5;
+  }
+
+  .accent{color:#d4af37}
+
+  .divider{
+    width:36px;height:1px;
+    background:rgba(212,175,55,.3);
+    margin:2.6rem auto;
+  }
+
+  /* ---- P.S. block ---- */
+  .ps-block{
+    border-top:1px solid rgba(255,255,255,.06);
+    padding-top:2rem;
+    text-align:center;
+  }
+  .ps-block p{
+    font-family:'Lora',serif;
+    font-style:italic;
+    font-size:.95rem;
+    letter-spacing:.01em;
+    color:#c9c9c9;
+    line-height:1.9;
+  }
+  .ps-block a{
+    color:#d4af37;text-decoration:none;
+    border-bottom:1px solid rgba(212,175,55,.35);
+  }
+  .ps-block a:hover{border-color:#d4af37}
+
+  footer{
+    text-align:center;
+    padding:4rem 1.5rem 3rem;
+    font-size:9px;letter-spacing:.35em;
+    text-transform:uppercase;
+    color:#3a3a3a;
+  }
 </style>
 </head>
 <body>
 
-<nav>
-  <button class="nav-logo">V.</button>
-  <span class="nav-title">Colophon</span>
-</nav>
+  <div id="scroll-bar"></div>
 
-<div class="wrap">
-  <div class="page-eyebrow">On This Archive</div>
-  <h1 class="page-title">Colophon</h1>
-
-  <div class="colophon-block">
-    <p>ManuscriptZero is a private literary archive — built, not templated, one page at a time, for a small and specific readership rather than an audience. The raven at the door is not a mascot. It watches, it remembers, and it does not explain itself more than it has to.</p>
-    <p>The seven records held here share a single preoccupation: the cost of not paying attention to people. The site tries, in its own small way, to practice what it publishes — restraint over ornament, implication over statement.</p>
+  <div id="top-nav">
+    <button class="nav-logo" onclick="window.location.href='index.html'">V.</button>
+    <div class="nav-label">About</div>
   </div>
 
-  <div class="spec-list">
-    <div class="spec-row"><div class="spec-key">Display</div><div class="spec-val">Playfair Display</div></div>
-    <div class="spec-row"><div class="spec-key">Body</div><div class="spec-val">Lora</div></div>
-    <div class="spec-row"><div class="spec-key">Utility</div><div class="spec-val">Montserrat, 300</div></div>
-    <div class="spec-row"><div class="spec-key">Palette</div><div class="spec-val">Aubergine-black &middot; Dying amber &middot; Jewel plum</div></div>
-    <div class="spec-row"><div class="spec-key">Author</div><div class="spec-val">Void Stanza</div></div>
-  </div>
+  <main>
 
-  <div class="sigil">The Raven Has Been Expecting You</div>
-</div>
+    <div class="hero panel">
+      <img src="assets/raven-framed.png" alt="Void Stanza portrait" loading="lazy">
+    </div>
 
-<script src="sidebar.js" defer></script>
-<script>
-(function(){var t=localStorage.getItem('vaultTheme')||'dark';if(t==='light')document.body.classList.add('light')})();
-</script>
+    <div class="eyebrow panel">The Maker</div>
+    <h1 class="panel">About</h1>
+
+    <div class="panel lead">
+      <p>Hi, I'm Void Stanza.</p>
+    </div>
+
+    <div class="panel">
+      <p>That raven up there? Yeah — <span class="accent">raven</span>, not a crow. I will die on this hill. 🫠 That's me. I clean up pretty well.</p>
+    </div>
+
+    <div class="panel">
+      <p>But let's go a layer deeper than the feathers.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="panel">
+      <p>I'm the kind of creature who gets stuck on the unsaid — the glance someone didn't return, the sentence left unfinished, the feeling that never got a name.</p>
+    </div>
+
+    <div class="panel">
+      <p>This corner of the internet won't stay in one genre for long. Come along while I figure out my writing style and follow whichever story insists on being told.</p>
+    </div>
+
+    <div class="panel">
+      <p>Every character's name and every odd little detail is there for a reason, so use the Marginalia. Leave your theories — I genuinely want to hear them.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="panel ps-block">
+      <p>P.S. Novel, manhwa, and comic recs are always welcome.<br>
+      My DMs on <a href="https://instagram.com/void.stanza" target="_blank">@void.stanza</a> are open.</p>
+    </div>
+
+  </main>
+
+  <footer>© Void Stanza · ManuscriptZero</footer>
+
+  <script>
+    // Scroll progress bar
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+      document.getElementById('scroll-bar').style.width = scrolled + '%';
+    });
+
+    // Reveal panels on scroll (comic-beat reveal)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.panel').forEach(p => observer.observe(p));
+  </script>
+
 </body>
 </html>
-
