@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  if (sessionStorage.getItem('mz_unlocked') !== '1') {
+    window.location.replace('gate.html');
+  }
+})();
+</script>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE VAULT | SETTINGS</title>
+<meta name="description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:title" content="THE VAULT | ManuscriptZero">
+<meta property="og:description" content="Accessing the sanctum of Void Stanza.">
+<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/settings.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+<meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
+<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="76ac9d15-8540-48f0-886c-5861388113e4"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital@1&family=Montserrat:wght@300;400;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0b;color:#c9c9c9;font-family:'Montserrat',sans-serif;transition:background .4s,color .4s}
+body.light{background:#f5f0e8;color:#1a1a1a}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.05);position:sticky;top:0;background:rgba(10,10,11,.96);backdrop-filter:blur(12px);z-index:50;transition:background .4s,border-color .4s}
+body.light nav{background:rgba(245,240,232,.97);border-bottom-color:rgba(0,0,0,.08)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:#d4af37;background:none;border:none}
+.nav-title{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#555}
+
+.wrap{max-width:600px;margin:0 auto;padding:3rem 1.75rem 5rem}
+
+.page-header{margin-bottom:2.5rem}
+.page-eyebrow{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.65;margin-bottom:.6rem}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,5vw,2.4rem);color:#d4af37;line-height:1.2}
+
+.section{margin-bottom:2.75rem}
+.section-title{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:#555;padding-bottom:.75rem;margin-bottom:1.25rem;border-bottom:1px solid rgba(255,255,255,.06)}
+body.light .section-title{border-bottom-color:rgba(0,0,0,.08)}
+
+.setting-row{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;padding:1.15rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+body.light .setting-row{border-bottom-color:rgba(0,0,0,.06)}
+.setting-row:last-child{border-bottom:none}
+.setting-copy{flex:1}
+.setting-label{font-size:12.5px;color:#d8d8d8;margin-bottom:.3rem;font-weight:400}
+body.light .setting-label{color:#222}
+.setting-desc{font-family:'Lora',serif;font-style:italic;font-size:11.5px;color:#555;line-height:1.6}
+body.light .setting-desc{color:#888}
+
+.toggle-btn{flex-shrink:0;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#666;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.25em;text-transform:uppercase;padding:0 16px;height:38px;min-width:64px;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+body.light .toggle-btn{border-color:rgba(0,0,0,.12);background:rgba(0,0,0,.03)}
+.toggle-btn.on{color:#d4af37;border-color:rgba(212,175,55,.45);background:rgba(212,175,55,.08)}
+.toggle-btn:hover{border-color:rgba(212,175,55,.4)}
+
+.segmented{flex-shrink:0;display:flex;border:1px solid rgba(255,255,255,.1);overflow:hidden}
+body.light .segmented{border-color:rgba(0,0,0,.12)}
+.segmented button{background:none;border:none;color:#666;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;padding:0 14px;height:38px;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.segmented button + button{border-left:1px solid rgba(255,255,255,.1)}
+body.light .segmented button + button{border-left-color:rgba(0,0,0,.12)}
+.segmented button.on{color:#d4af37;background:rgba(212,175,55,.08)}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06)}
+body.light .stats-grid{background:rgba(0,0,0,.08);border-color:rgba(0,0,0,.08)}
+.stat-cell{background:#0a0a0b;padding:1.4rem 1rem;text-align:center}
+body.light .stat-cell{background:#f5f0e8}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.9rem;color:#d4af37;line-height:1}
+.stat-label{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:#555;margin-top:.5rem}
+body.light .stat-label{color:#888}
+
+.danger-zone{border:1px solid rgba(139,64,64,.3);padding:1.25rem 1.4rem;margin-top:.5rem}
+.danger-copy{font-size:11.5px;color:#999;line-height:1.6;margin-bottom:1rem;font-family:'Lora',serif;font-style:italic}
+body.light .danger-copy{color:#666}
+.danger-btn{background:none;border:1px solid rgba(139,64,64,.45);color:#a05a5a;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;padding:11px 20px;cursor:pointer;transition:all .2s;min-height:44px}
+.danger-btn:hover{background:rgba(139,64,64,.5);color:#f5e8e8}
+
+.confirm-note{font-size:10px;letter-spacing:.1em;color:#b8964a;margin-top:.75rem;min-height:14px;font-family:'Montserrat',sans-serif}
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="nav-logo">V.</button>
+  <span class="nav-title">Settings</span>
+</nav>
+
+<div class="wrap">
+  <div class="page-header">
+    <div class="page-eyebrow">Configuration</div>
+    <h1 class="page-title">Settings</h1>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Reading Experience</div>
+
+    <div class="setting-row">
+      <div class="setting-copy">
+        <div class="setting-label">Reduce Motion</div>
+        <div class="setting-desc">Minimizes transitions, fades, and smooth scrolling throughout the vault.</div>
+      </div>
+      <button class="toggle-btn" id="toggle-motion" onclick="toggleSetting('mz_reduce_motion','toggle-motion')">Off</button>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-copy">
+        <div class="setting-label">Tap Zones</div>
+        <div class="setting-desc">In multi-chapter records, tap the left or right edge of the screen to turn pages.</div>
+      </div>
+      <button class="toggle-btn" id="toggle-tapzones" onclick="toggleSetting('mz_tap_zones','toggle-tapzones')">Off</button>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-copy">
+        <div class="setting-label">Marginalia Order</div>
+        <div class="setting-desc">How comments are sorted beneath each record.</div>
+      </div>
+      <div class="segmented" id="segment-marginalia">
+        <button data-val="asc" onclick="setMarginaliaOrder('asc')">Oldest</button>
+        <button data-val="desc" onclick="setMarginaliaOrder('desc')">Newest</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Reading Stats <span style="opacity:.5;letter-spacing:.1em;text-transform:none;">— this device only</span></div>
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-num" id="stat-active">0</div>
+        <div class="stat-label">In Progress</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num" id="stat-sealed">0</div>
+        <div class="stat-label">Sealed</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">Total Opened</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Data</div>
+    <div class="danger-zone">
+      <div class="danger-copy">Erases all reading progress and marks left on this device. Your comments and their approval status on the server are not affected. This cannot be undone.</div>
+      <button class="danger-btn" onclick="clearProgress()">Clear Reading Progress</button>
+      <div class="confirm-note" id="clear-note"></div>
+    </div>
+  </div>
+</div>
+
+<script src="sidebar.js" defer></script>
+<script>
+(function(){var t=localStorage.getItem('vaultTheme')||'dark';if(t==='light')document.body.classList.add('light')})();
+
+function toggleSetting(key,btnId){
+  var cur=localStorage.getItem(key)==='1';
+  var next=!cur;
+  localStorage.setItem(key,next?'1':'0');
+  paintToggle(btnId,next);
+}
+function paintToggle(btnId,on){
+  var btn=document.getElementById(btnId);
+  btn.textContent=on?'On':'Off';
+  btn.classList.toggle('on',on);
+}
+
+function setMarginaliaOrder(val){
+  localStorage.setItem('mz_marginalia_sort',val);
+  paintSegment(val);
+}
+function paintSegment(val){
+  var seg=document.getElementById('segment-marginalia');
+  Array.prototype.forEach.call(seg.querySelectorAll('button'),function(b){
+    b.classList.toggle('on', b.getAttribute('data-val')===val);
+  });
+}
+
+function computeStats(){
+  var total=0, sealed=0, active=0;
+  for(var i=0;i<localStorage.length;i++){
+    var k=localStorage.key(i);
+    if(k && k.indexOf('progress_')===0){
+      try{
+        var d=JSON.parse(localStorage.getItem(k));
+        if(!d || !d.opened) continue;
+        total++;
+        var pct=parseFloat(d.pct||0);
+        if(pct>=90) sealed++; else active++;
+      }catch(e){}
+    }
+  }
+  return {total:total, sealed:sealed, active:active};
+}
+function renderStats(){
+  var s=computeStats();
+  document.getElementById('stat-active').textContent=s.active;
+  document.getElementById('stat-sealed').textContent=s.sealed;
+  document.getElementById('stat-total').textContent=s.total;
+}
+
+function clearProgress(){
+  var note=document.getElementById('clear-note');
+  if(!confirm('This will erase all reading progress and marks on this device. This cannot be undone. Continue?')) return;
+  var keys=[];
+  for(var i=0;i<localStorage.length;i++){
+    var k=localStorage.key(i);
+    if(k && (k.indexOf('progress_')===0 || k.indexOf('liked_')===0)) keys.push(k);
+  }
+  keys.forEach(function(k){localStorage.removeItem(k)});
+  renderStats();
+  note.textContent='Reading progress cleared.';
+  setTimeout(function(){note.textContent=''},4000);
+}
+
+(function init(){
+  paintToggle('toggle-motion', localStorage.getItem('mz_reduce_motion')==='1');
+  paintToggle('toggle-tapzones', localStorage.getItem('mz_tap_zones')==='1');
+  paintSegment(localStorage.getItem('mz_marginalia_sort')||'asc');
+  renderStats();
+})();
+</script>
+</body>
+</html>
+
