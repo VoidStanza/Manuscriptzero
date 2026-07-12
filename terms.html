@@ -1,261 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+(function(){
+  if (sessionStorage.getItem('mz_unlocked') !== '1') {
+    window.location.replace('gate.html');
+  }
+})();
+</script>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="favicon-180.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Terms & Conditions — ManuscriptZero</title>
+<title>THE VAULT | TERMS</title>
 <meta name="description" content="Terms & Conditions for ManuscriptZero, an independent literary archive.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<meta property="og:title" content="THE VAULT | ManuscriptZero">
+<meta property="og:description" content="Terms & Conditions for ManuscriptZero, an independent literary archive.">
+<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/terms.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+<meta name="twitter:description" content="Terms & Conditions for ManuscriptZero, an independent literary archive.">
+<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="76ac9d15-8540-48f0-886c-5861388113e4"></script>
 <style>
-  :root {
-    --aubergine-black: #16101a;
-    --plum: #4a2545;
-    --plum-light: #6b3a63;
-    --amber: #c99a5b;
-    --amber-dim: #8a6b40;
-    --ink: #e8dfe4;
-    --ink-dim: #a89aa6;
-    --rule: #33232f;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0b;color:#c9c9c9;font-family:'Montserrat',sans-serif;transition:background .4s,color .4s}
+body.light{background:#f5f0e8;color:#1a1a1a}
 
-  * { box-sizing: border-box; }
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.05);position:sticky;top:0;background:rgba(10,10,11,.96);backdrop-filter:blur(12px);z-index:50;transition:background .4s,border-color .4s}
+body.light nav{background:rgba(245,240,232,.97);border-bottom-color:rgba(0,0,0,.08)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:#d4af37;background:none;border:none}
+.nav-title{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#555}
 
-  body {
-    margin: 0;
-    background: var(--aubergine-black);
-    background-image:
-      radial-gradient(ellipse at top, rgba(74,37,69,0.35), transparent 60%);
-    color: var(--ink);
-    font-family: 'Lora', Georgia, serif;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
+.wrap{max-width:600px;margin:0 auto;padding:3.5rem 1.75rem 5rem}
+.page-eyebrow{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.65;margin-bottom:.6rem}
+.page-title{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.4rem);color:#d4af37;line-height:1.2;margin-bottom:.6rem}
+.page-updated{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#555;margin-bottom:2rem}
+body.light .page-updated{color:#888}
 
-  .page {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 48px 24px 96px;
-  }
+.tc-intro{font-family:'Lora',serif;font-style:italic;font-size:.88rem;line-height:1.8;color:#999;border-left:2px solid rgba(212,175,55,.4);padding-left:1rem;margin-bottom:2.75rem}
+body.light .tc-intro{color:#555}
+.tc-intro a{color:#b8964a;text-decoration:none;border-bottom:1px solid rgba(184,150,74,.4)}
 
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-dim);
-    text-decoration: none;
-    margin-bottom: 40px;
-    transition: color 0.25s ease;
-  }
-  .back-link:hover { color: var(--amber); }
-  .back-link svg { width: 14px; height: 14px; }
+.tc-rule{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:1.6rem;color:#bbb}
+body.light .tc-rule{color:#333}
+.tc-rule-num{font-family:'Lora',serif;font-size:.85rem;color:#b8964a;min-width:1.6rem;padding-top:.15rem;font-style:italic}
+.tc-rule-text{font-family:'Lora',serif;font-size:.85rem;line-height:1.85}
+.tc-rule-text strong{display:block;color:#e8e4dc;font-weight:500;font-size:1rem;letter-spacing:.02em;margin-bottom:.4rem;font-family:'Playfair Display',serif}
+body.light .tc-rule-text strong{color:#111}
+.tc-rule-text p{margin-bottom:.7rem}
+.tc-rule-text p:last-child{margin-bottom:0}
+.tc-rule-text ul{margin:.5rem 0 .7rem 1.1rem}
+.tc-rule-text li{margin-bottom:.4rem}
+.tc-rule-text a{color:#b8964a;text-decoration:none;border-bottom:1px solid rgba(184,150,74,.4)}
 
-  .eyebrow {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--amber-dim);
-    margin: 0 0 12px;
-  }
+.tc-contact{margin-top:.6rem;padding:.9rem 1.1rem;border:1px solid rgba(255,255,255,.08);border-radius:2px}
+body.light .tc-contact{border-color:rgba(0,0,0,.1)}
+.tc-contact-label{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#666;display:block;margin-bottom:.25rem}
 
-  h1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-style: italic;
-    font-weight: 500;
-    font-size: 2.1rem;
-    margin: 0 0 8px;
-    color: var(--ink);
-    letter-spacing: 0.01em;
-  }
+.tc-divider{border:none;border-top:1px solid rgba(255,255,255,.08);margin:2rem 0}
+body.light .tc-divider{border-top-color:rgba(0,0,0,.1)}
 
-  .updated {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    color: var(--ink-dim);
-    margin: 0 0 44px;
-  }
-
-  .intro {
-    color: var(--ink-dim);
-    font-style: italic;
-    font-size: 0.98rem;
-    border-left: 2px solid var(--amber-dim);
-    padding-left: 18px;
-    margin: 0 0 52px;
-  }
-
-  section { margin-bottom: 38px; }
-
-  h2 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--amber);
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin: 0 0 14px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  h2 .num {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--amber-dim);
-    letter-spacing: 0.05em;
-  }
-
-  p { margin: 0 0 14px; color: var(--ink); font-size: 0.96rem; }
-  p:last-child { margin-bottom: 0; }
-
-  ul {
-    margin: 0 0 14px;
-    padding-left: 20px;
-  }
-  ul:last-child { margin-bottom: 0; }
-  li {
-    margin-bottom: 8px;
-    color: var(--ink);
-    font-size: 0.96rem;
-  }
-  li:last-child { margin-bottom: 0; }
-  li strong { color: var(--ink); font-weight: 600; }
-
-  a.inline-link {
-    color: var(--amber);
-    text-decoration: none;
-    border-bottom: 1px solid var(--amber-dim);
-    transition: border-color 0.25s ease;
-  }
-  a.inline-link:hover { border-color: var(--amber); }
-
-  .contact-block {
-    margin-top: 8px;
-    padding: 20px 22px;
-    background: rgba(74,37,69,0.22);
-    border: 1px solid var(--rule);
-    border-radius: 2px;
-  }
-  .contact-block p { margin: 0 0 8px; font-size: 0.92rem; }
-  .contact-block p:last-child { margin-bottom: 0; }
-  .contact-block .label {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-dim);
-    display: block;
-    margin-bottom: 3px;
-  }
-
-  footer {
-    margin-top: 64px;
-    padding-top: 24px;
-    border-top: 1px solid var(--rule);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    color: var(--ink-dim);
-    text-align: center;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .back-link { transition: none; }
-  }
+.tc-closing{font-family:'Lora',serif;font-size:.7rem;line-height:1.9;color:#555;font-style:italic;text-align:center}
+body.light .tc-closing{color:#888}
 </style>
 </head>
 <body>
-<div class="page">
 
-  <a href="gallery.html" class="back-link">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-    Return to the Archive
-  </a>
+<nav>
+  <button class="nav-logo">V.</button>
+  <span class="nav-title">Terms &amp; Conditions</span>
+</nav>
 
-  <p class="eyebrow">ManuscriptZero</p>
-  <h1>Terms &amp; Conditions</h1>
-  <p class="updated">Last updated · July 11, 2026</p>
+<div class="wrap">
+  <div class="page-eyebrow">ManuscriptZero &mdash; Terms &amp; Conditions</div>
+  <h1 class="page-title">Before you enter</h1>
+  <div class="page-updated">Last updated &middot; July 11, 2026</div>
 
-  <p class="intro">These Terms govern your use of the Archive itself — the work, its ownership, and what's expected of you while you're here. For how your data is handled, see the Privacy Policy. For conduct in Marginalia, see the Community Guidelines.</p>
+  <p class="tc-intro">These Terms govern your use of the Archive itself &mdash; the work, its ownership, and what's expected of you while you're here. For how your data is handled, see the Privacy Policy. For conduct in Marginalia, see the <a href="community-guidelines.html">Community Guidelines</a>.</p>
 
-  <section>
-    <h2><span class="num">01</span> Acceptance</h2>
-    <p>By accessing or using ManuscriptZero ("the Archive"), you agree to be bound by these Terms &amp; Conditions. If you do not agree, please discontinue use of the Archive.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">I.</span>
+    <span class="tc-rule-text">
+      <strong>Acceptance</strong>
+      <p>By accessing or using ManuscriptZero (&ldquo;the Archive&rdquo;), you agree to be bound by these Terms &amp; Conditions. If you do not agree, please discontinue use of the Archive.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">02</span> Intellectual Property</h2>
-    <p>Unless otherwise stated, all fiction, essays, artwork, design elements, branding, and original content published on ManuscriptZero are the intellectual property of Void Stanza and are protected under applicable copyright law. No ownership or license is transferred through access to this site.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">II.</span>
+    <span class="tc-rule-text">
+      <strong>Intellectual Property</strong>
+      <p>Unless otherwise stated, all fiction, essays, artwork, design elements, branding, and original content published on ManuscriptZero are the intellectual property of Void Stanza and are protected under applicable copyright law. No ownership or license is transferred through access to this site.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">03</span> Permitted Use</h2>
-    <p>You may read published works, share direct links to pages, and quote brief excerpts with proper attribution where permitted by law.</p>
-    <p>You may not:</p>
-    <ul>
-      <li>Copy or republish substantial portions of any work</li>
-      <li>Remove attribution or copyright notices</li>
-      <li>Use Archive material to train machine learning systems without written permission</li>
-      <li>Commercially exploit any content</li>
-      <li>Misrepresent authorship</li>
-    </ul>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">III.</span>
+    <span class="tc-rule-text">
+      <strong>Permitted Use</strong>
+      <p>You may read published works, share direct links to pages, and quote brief excerpts with proper attribution where permitted by law.</p>
+      <p>You may not:</p>
+      <ul>
+        <li>Copy or republish substantial portions of any work</li>
+        <li>Remove attribution or copyright notices</li>
+        <li>Use Archive material to train machine learning systems without written permission</li>
+        <li>Commercially exploit any content</li>
+        <li>Misrepresent authorship</li>
+      </ul>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">04</span> Reader Contributions</h2>
-    <p>Comments submitted through Marginalia remain the intellectual property of their respective authors. By submitting a comment, you grant ManuscriptZero a worldwide, non-exclusive, royalty-free license to display, archive, moderate, and reproduce that content solely for operating the Archive. Conduct standards for comments are set out in the <a class="inline-link" href="community-guidelines.html">Community Guidelines</a>.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">IV.</span>
+    <span class="tc-rule-text">
+      <strong>Reader Contributions</strong>
+      <p>Comments submitted through Marginalia remain the intellectual property of their respective authors. By submitting a comment, you grant ManuscriptZero a worldwide, non-exclusive, royalty-free license to display, archive, moderate, and reproduce that content solely for operating the Archive. Conduct standards for comments are set out in the <a href="community-guidelines.html">Community Guidelines</a>.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">05</span> Moderation</h2>
-    <p>The Archive reserves the right to review, edit, refuse, or remove submissions that violate the Community Guidelines or applicable law. Repeated violations may result in restricted participation.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">V.</span>
+    <span class="tc-rule-text">
+      <strong>Moderation</strong>
+      <p>The Archive reserves the right to review, edit, refuse, or remove submissions that violate the Community Guidelines or applicable law. Repeated violations may result in restricted participation.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">06</span> External Links</h2>
-    <p>The Archive may reference third-party websites. ManuscriptZero assumes no responsibility for their availability, accuracy, or content.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">VI.</span>
+    <span class="tc-rule-text">
+      <strong>External Links</strong>
+      <p>The Archive may reference third-party websites. ManuscriptZero assumes no responsibility for their availability, accuracy, or content.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">07</span> Disclaimer</h2>
-    <p>Content is provided for literary purposes only. No warranty is made regarding completeness, availability, or uninterrupted access.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">VII.</span>
+    <span class="tc-rule-text">
+      <strong>Disclaimer</strong>
+      <p>Content is provided for literary purposes only. No warranty is made regarding completeness, availability, or uninterrupted access.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">08</span> Limitation of Liability</h2>
-    <p>To the fullest extent permitted by law, Void Stanza is not liable for any direct, indirect, incidental, or consequential damages arising from use of the Archive.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">VIII.</span>
+    <span class="tc-rule-text">
+      <strong>Limitation of Liability</strong>
+      <p>To the fullest extent permitted by law, Void Stanza is not liable for any direct, indirect, incidental, or consequential damages arising from use of the Archive.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">09</span> Changes</h2>
-    <p>These Terms may be revised at any time. Continued use of the Archive after changes constitutes acceptance of the revised Terms.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">IX.</span>
+    <span class="tc-rule-text">
+      <strong>Changes</strong>
+      <p>These Terms may be revised at any time. Continued use of the Archive after changes constitutes acceptance of the revised Terms.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">10</span> Governing Law</h2>
-    <p>These Terms are governed by the laws of India, without regard to conflict-of-law principles.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">X.</span>
+    <span class="tc-rule-text">
+      <strong>Governing Law</strong>
+      <p>These Terms are governed by the laws of India, without regard to conflict-of-law principles.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">11</span> Contact</h2>
-    <p>Questions about these Terms may be sent to:</p>
-    <div class="contact-block">
-      <p><span class="label">Email</span><a class="inline-link" href="mailto:mailme.voidstanza@gmail.com">mailme.voidstanza@gmail.com</a></p>
-    </div>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">XI.</span>
+    <span class="tc-rule-text">
+      <strong>Contact</strong>
+      <p>Questions about these Terms may be sent to:</p>
+      <div class="tc-contact">
+        <span class="tc-contact-label">Email</span>
+        <a href="mailto:mailme.voidstanza@gmail.com">mailme.voidstanza@gmail.com</a>
+      </div>
+    </span>
+  </div>
 
-  <footer>© Void Stanza · ManuscriptZero</footer>
+  <hr class="tc-divider">
 
+  <p class="tc-closing">By entering, you accept these terms as the price of admission. ManuscriptZero is a private literary space &mdash; treat it accordingly.<br>&copy; Void Stanza &middot; ManuscriptZero</p>
 </div>
+
+<script src="sidebar.js" defer></script>
+<script>
+(function(){var t=localStorage.getItem('vaultTheme')||'dark';if(t==='light')document.body.classList.add('light')})();
+</script>
 </body>
 </html>
-
