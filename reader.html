@@ -194,7 +194,7 @@ body.light .rn-synopsis{color:#888}
 .tc-rule{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:.9rem;color:#bbb}
 .tc-rule-num{font-family:'Cormorant Garamond',serif;font-size:.75rem;color:#b8964a;min-width:1.2rem;padding-top:.05rem;font-style:italic}
 .tc-rule-text{font-size:.68rem;line-height:1.75}
-.tc-rule-text strong{color:#e8e4dc;font-weight:400;font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.03em}
+ .tc-rule-text strong{color:#e8e4dc;font-weight:400;font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.03em}
 .tc-divider{border:none;border-top:1px solid #1e1e1e;margin:1.2rem 0}
 .tc-footer{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .tc-note{font-family:'Montserrat',sans-serif;font-weight:300;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:#444;flex:1}
@@ -477,9 +477,8 @@ function handleCommentSubmit(){
       }else{setMsg(msg,'Something went wrong.',true)}
     });
   });
-}
-
-function deleteComment(id){if(!confirm('Remove this trace from the marginalia?'))return;sbFetch('comments?id=eq.'+id,'DELETE').then(function(){loadComments()})}
+ }
+ function deleteComment(id){if(!confirm('Remove this trace from the marginalia?'))return;sbFetch('comments?id=eq.'+id,'DELETE').then(function(){loadComments()})}
 function setMsg(el,text,isErr){el.textContent=text;el.className='comment-msg'+(isErr?' err':' ok')}
 function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
@@ -536,12 +535,53 @@ function buildCommentKey(){if(isNovella)return storyId+'_ch'+(chIndex+1);return 
 function rmOn(){return localStorage.getItem('mz_reduce_motion')==='1'}
 function marginaliaOrder(){return localStorage.getItem('mz_marginalia_sort')==='desc'?'desc':'asc'}
 
+// --- Tracer system ---
+var ZW={0:'\u200B',1:'\u200C',start:'\u200D',end:'\u2060'};
+function getTracerID(){
+  var id=localStorage.getItem('mz_tracer_id');
+  if(!id){
+    id=Array.from(crypto.getRandomValues(new Uint8Array(4))).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+    localStorage.setItem('mz_tracer_id',id);
+  }
+  return id;
+}
+function encodeTracer(id){
+  var bits='';
+  for(var i=0;i<id.length;i++){bits+=parseInt(id[i],16).toString(2).padStart(4,'0')}
+  var seq=ZW.start;
+  for(var j=0;j<bits.length;j++){seq+=ZW[bits[j]]}
+  seq+=ZW.end;
+  return seq;
+}
+function embedTracer(containerEl){
+  if(!containerEl)return;
+  var marker=encodeTracer(getTracerID());
+  var paras=containerEl.querySelectorAll('p');
+  paras.forEach(function(p){
+    if(!p.textContent.trim())return;
+    var html=p.innerHTML;
+    var firstSpace=html.indexOf(' ');
+    p.innerHTML=firstSpace>-1?html.slice(0,firstSpace)+marker+html.slice(firstSpace):html+marker;
+  });
+}
+function logTracerRead(sId){
+  try{
+    sbFetch('tracer_reads','POST',{
+      tracer_id:getTracerID(),
+      story_id:sId,
+      created_at:new Date().toISOString()
+    }).catch(function(){});
+  }catch(e){}
+}
+
 function renderChapter(){
   var ch=story.chapters[chIndex],total=story.chapters.length;
   document.getElementById('chapter-eyebrow').textContent=story.title+'  -  Chapter '+(chIndex+1)+' of '+total;
   document.getElementById('story-title').textContent=ch.title||('Chapter '+(chIndex+1));
   document.getElementById('story-synopsis').textContent=ch.synopsis||'';
   document.getElementById('story-content').innerHTML=ch.text||'';
+  embedTracer(document.getElementById('story-content'));
+  logTracerRead(storyId);
   document.getElementById('story-content').style.fontSize=fontSize+'px';
   document.title='THE VAULT | '+story.title+' Ch.'+(chIndex+1);
   document.getElementById('ch-label').textContent=(chIndex+1)+' / '+total;
@@ -582,6 +622,8 @@ function init(){
     document.getElementById('story-title').textContent=story.title;
     document.getElementById('story-synopsis').textContent=story.synopsis||'';
     document.getElementById('story-content').innerHTML=story.text||story.content||'';
+    embedTracer(document.getElementById('story-content'));
+    logTracerRead(storyId);
     document.getElementById('story-content').style.fontSize=fontSize+'px';
     document.getElementById('story-container').classList.add('loaded');
     commentKey=storyId;likeKey='liked_'+commentKey;hasLiked=!!localStorage.getItem(likeKey);
@@ -598,4 +640,3 @@ function acceptTerms(){localStorage.setItem('mz_terms_accepted','1');var o=docum
 </script>
 </body>
 </html>
-  
