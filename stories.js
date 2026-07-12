@@ -16,7 +16,7 @@ warnings: ["Emotional Neglect"],
                 synopsis: "Two crowns, one dance, and a shared history.",
                         tags: ["fantasy", "royalty", "slow-burn"],
                 cover: "https://i.pinimg.com/736x/b5/34/43/b53443eaeed068570e1084f73bebeaf5.jpg",
-            text: `<div class="reading-font text-gray-300">
+            text: `<div class="reading-font">
     <p class="mb-6">The crown didn’t feel any heavier today — but something beneath it did. Was it her heart, lost somewhere amidst this gilded court? Or her mind, spiraling into the complexities of the Empire’s current political stance and the growing stack of orders she had yet to sign? Or maybe it was her body — weary and still waiting for the warmth she had once been promised.</p>
     
     <p class="mb-6">She shook the feeling off as best she could. The court watched her. The sound that finally broke through the tension wasn’t the music — it was the voice she knew best. Her only true friend — now the Emperor of the South — stood before her, asking for her hand. Not for a game in the palace garden this time, but for a dance in the ballroom. A dance between two powerful nations, under the eyes of a hundred watching nobles.
@@ -102,7 +102,7 @@ warnings: ["Emotional Neglect"],
                 synopsis: "Silver edges, different worlds: the same inherited precision",
                   tags: ["family-drama", "legacy", "emotional"],
                cover: "https://i.pinimg.com/736x/5d/93/03/5d9303e132be04d9dbfe7aff8031c188.jpg" ,
-                        text: `<div class="reading-font text-gray-300">
+                        text: `<div class="reading-font">
     <p class="mb-6">The old woman’s bangles sang a sharp, glass melody as she worked, a rhythmic percussion that cut through the humid air of the bazaar. To the passing crowds, she was just the "Guava Lady," a fixture of the pavement, but to the young girl sitting at her feet, she was a surgeon of the streets.</p>
     
     <p class="mb-6">"Watch the wrist, Meena," her mother would say, never once looking up from her work. With a swift, silver flash of her paring knife, a firm guava was transformed into perfect, bite-sized pieces of hospitality. Meena watched those hands every day, stained with the nectar of the fruit and the rust-coloured dust of chilli powder, weathered by the relentless sun, yet moving with the grace of a conductor leading a symphony. The cuts seemed effortless yet precise to the millimeter, and in that precision, she honored the fruit by wasting nothing.</p>
@@ -131,7 +131,7 @@ warnings: ["Emotional Neglect"],
                         tags: ["trauma", "healing", "psychological"],
 warnings: ["Domestic Violence", "Child Abuse", "Trauma", "Blood", "Death", "Self-Defense"],
                         cover: "https://i.pinimg.com/736x/61/90/b9/6190b9bff1fae3657da043473a061f13.jpg",
-                text:`<div class="reading-font text-gray-300">
+                text:`<div  class="reading-font">
         <p class="mb-6">The bottle did not shatter loudly. It split with a dull, imperfect crack — like something already fractured simply admitting it.</p>
         
         <p class="mb-6">When the police entered the apartment, blood had already decided its direction. It traced the tile in thin deliberate rivers, curved around chair legs, paused beneath the couch where shadows gathered. The broken alcohol bottle lay on its side, glinting faintly, no longer weapon nor glass — only aftermath. Daichi’s body was still. Akira was not.</p>
