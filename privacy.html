@@ -1,276 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+(function(){
+  if (sessionStorage.getItem('mz_unlocked') !== '1') {
+    window.location.replace('gate.html');
+  }
+})();
+</script>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="favicon-180.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy — ManuscriptZero</title>
+<title>THE VAULT | PRIVACY</title>
 <meta name="description" content="Privacy Policy for ManuscriptZero, an independent literary archive.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<meta property="og:title" content="THE VAULT | ManuscriptZero">
+<meta property="og:description" content="Privacy Policy for ManuscriptZero, an independent literary archive.">
+<meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/privacy.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+<meta name="twitter:description" content="Privacy Policy for ManuscriptZero, an independent literary archive.">
+<meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="76ac9d15-8540-48f0-886c-5861388113e4"></script>
 <style>
-  :root {
-    --aubergine-black: #16101a;
-    --plum: #4a2545;
-    --plum-light: #6b3a63;
-    --amber: #c99a5b;
-    --amber-dim: #8a6b40;
-    --ink: #e8dfe4;
-    --ink-dim: #a89aa6;
-    --rule: #33232f;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0b;color:#c9c9c9;font-family:'Montserrat',sans-serif;transition:background .4s,color .4s}
+body.light{background:#f5f0e8;color:#1a1a1a}
 
-  * { box-sizing: border-box; }
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.05);position:sticky;top:0;background:rgba(10,10,11,.96);backdrop-filter:blur(12px);z-index:50;transition:background .4s,border-color .4s}
+body.light nav{background:rgba(245,240,232,.97);border-bottom-color:rgba(0,0,0,.08)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:#d4af37;background:none;border:none}
+.nav-title{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#555}
 
-  body {
-    margin: 0;
-    background: var(--aubergine-black);
-    background-image:
-      radial-gradient(ellipse at top, rgba(74,37,69,0.35), transparent 60%);
-    color: var(--ink);
-    font-family: 'Lora', Georgia, serif;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
+.wrap{max-width:600px;margin:0 auto;padding:3.5rem 1.75rem 5rem}
+.page-eyebrow{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.65;margin-bottom:.6rem}
+.page-title{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.4rem);color:#d4af37;line-height:1.2;margin-bottom:.6rem}
+.page-updated{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#555;margin-bottom:2rem}
+body.light .page-updated{color:#888}
 
-  .page {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 48px 24px 96px;
-  }
+.tc-intro{font-family:'Lora',serif;font-style:italic;font-size:.88rem;line-height:1.8;color:#999;border-left:2px solid rgba(212,175,55,.4);padding-left:1rem;margin-bottom:2.75rem}
+body.light .tc-intro{color:#555}
 
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-dim);
-    text-decoration: none;
-    margin-bottom: 40px;
-    transition: color 0.25s ease;
-  }
-  .back-link:hover { color: var(--amber); }
-  .back-link svg { width: 14px; height: 14px; }
+.tc-rule{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:1.6rem;color:#bbb}
+body.light .tc-rule{color:#333}
+.tc-rule-num{font-family:'Lora',serif;font-size:.85rem;color:#b8964a;min-width:1.6rem;padding-top:.15rem;font-style:italic}
+.tc-rule-text{font-family:'Lora',serif;font-size:.85rem;line-height:1.85}
+.tc-rule-text strong.head{display:block;color:#e8e4dc;font-weight:500;font-size:1rem;letter-spacing:.02em;margin-bottom:.4rem;font-family:'Playfair Display',serif}
+body.light .tc-rule-text strong.head{color:#111}
+.tc-rule-text strong{color:#e8e4dc;font-weight:600}
+body.light .tc-rule-text strong{color:#111}
+.tc-rule-text p{margin-bottom:.7rem}
+.tc-rule-text p:last-child{margin-bottom:0}
+.tc-rule-text ul{margin:.5rem 0 .7rem 1.1rem}
+.tc-rule-text li{margin-bottom:.5rem}
+.tc-rule-text a{color:#b8964a;text-decoration:none;border-bottom:1px solid rgba(184,150,74,.4)}
 
-  .eyebrow {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--amber-dim);
-    margin: 0 0 12px;
-  }
+.tc-contact{margin-top:.6rem;padding:.9rem 1.1rem;border:1px solid rgba(255,255,255,.08);border-radius:2px}
+body.light .tc-contact{border-color:rgba(0,0,0,.1)}
+.tc-contact-label{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#666;display:block;margin-bottom:.25rem}
 
-  h1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-style: italic;
-    font-weight: 500;
-    font-size: 2.1rem;
-    margin: 0 0 8px;
-    color: var(--ink);
-    letter-spacing: 0.01em;
-  }
+.tc-divider{border:none;border-top:1px solid rgba(255,255,255,.08);margin:2rem 0}
+body.light .tc-divider{border-top-color:rgba(0,0,0,.1)}
 
-  .updated {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    color: var(--ink-dim);
-    margin: 0 0 44px;
-  }
-
-  .intro {
-    color: var(--ink-dim);
-    font-style: italic;
-    font-size: 0.98rem;
-    border-left: 2px solid var(--amber-dim);
-    padding-left: 18px;
-    margin: 0 0 52px;
-  }
-
-  section { margin-bottom: 38px; }
-
-  h2 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--amber);
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin: 0 0 14px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  h2 .num {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--amber-dim);
-    letter-spacing: 0.05em;
-  }
-
-  p { margin: 0 0 14px; color: var(--ink); font-size: 0.96rem; }
-  p:last-child { margin-bottom: 0; }
-
-  ul {
-    margin: 0 0 14px;
-    padding-left: 20px;
-  }
-  ul:last-child { margin-bottom: 0; }
-  li {
-    margin-bottom: 8px;
-    color: var(--ink);
-    font-size: 0.96rem;
-  }
-  li:last-child { margin-bottom: 0; }
-  li strong { color: var(--ink); font-weight: 600; }
-
-  a.inline-link {
-    color: var(--amber);
-    text-decoration: none;
-    border-bottom: 1px solid var(--amber-dim);
-    transition: border-color 0.25s ease;
-  }
-  a.inline-link:hover { border-color: var(--amber); }
-
-  .contact-block {
-    margin-top: 8px;
-    padding: 20px 22px;
-    background: rgba(74,37,69,0.22);
-    border: 1px solid var(--rule);
-    border-radius: 2px;
-  }
-  .contact-block p { margin: 0 0 8px; font-size: 0.92rem; }
-  .contact-block p:last-child { margin-bottom: 0; }
-  .contact-block .label {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-dim);
-    display: block;
-    margin-bottom: 3px;
-  }
-
-  footer {
-    margin-top: 64px;
-    padding-top: 24px;
-    border-top: 1px solid var(--rule);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    color: var(--ink-dim);
-    text-align: center;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .back-link { transition: none; }
-  }
+.tc-closing{font-family:'Lora',serif;font-size:.7rem;line-height:1.9;color:#555;font-style:italic;text-align:center}
+body.light .tc-closing{color:#888}
 </style>
 </head>
 <body>
-<div class="page">
 
-  <a href="index.html" class="back-link">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-    Return to the Archive
-  </a>
+<nav>
+  <button class="nav-logo">V.</button>
+  <span class="nav-title">Privacy Policy</span>
+</nav>
 
-  <p class="eyebrow">ManuscriptZero</p>
-  <h1>Privacy Policy</h1>
-  <p class="updated">Last updated · July 11, 2026</p>
+<div class="wrap">
+  <div class="page-eyebrow">ManuscriptZero &mdash; Privacy Policy</div>
+  <h1 class="page-title">What stays with us</h1>
+  <div class="page-updated">Last updated &middot; July 11, 2026</div>
 
-  <p class="intro">This page explains what the Archive collects, why, and what control you have over it. It is written to be read, not skimmed past.</p>
+  <p class="tc-intro">This page explains what the Archive collects, why, and what control you have over it. It is written to be read, not skimmed past.</p>
 
-  <section>
-    <h2><span class="num">01</span> Overview</h2>
-    <p>ManuscriptZero ("the Archive") is a private literary archive operated by Void Stanza. This policy governs what information is collected when you access the Archive, how it is used, and the rights available to you regarding it.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">I.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Overview</strong>
+      <p>ManuscriptZero (&ldquo;the Archive&rdquo;) is a private literary archive operated by Void Stanza. This policy governs what information is collected when you access the Archive, how it is used, and the rights available to you regarding it.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">02</span> Information We Collect</h2>
-    <ul>
-      <li><strong>Access data.</strong> A session marker is stored locally on your device after you enter the correct passphrase. It confirms authorization to view the vault and clears automatically when your browser session ends.</li>
-      <li><strong>Reading progress.</strong> Stored on your device to let you resume where you left off. This does not currently require an account or login.</li>
-      <li><strong>Comments (Marginalia).</strong> If you submit a comment, we store the comment text and the display name you choose. Email addresses are not collected through the comment form.</li>
-      <li><strong>Technical and security data.</strong> To prevent spam and abuse, the Archive may log technical identifiers, such as an IP address, associated with blocked or flagged submissions.</li>
-      <li><strong>Analytics.</strong> We use Umami, a privacy-focused, cookieless analytics service to collect aggregated information such as page views, referring sites, and general browser or device type. No advertising profiles are created.</li>
-    </ul>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">II.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Information We Collect</strong>
+      <ul>
+        <li><strong>Access data.</strong> A session marker is stored locally on your device after you enter the correct passphrase. It confirms authorization to view the vault and clears automatically when your browser session ends.</li>
+        <li><strong>Reading progress.</strong> Stored on your device to let you resume where you left off. This does not currently require an account or login.</li>
+        <li><strong>Comments (Marginalia).</strong> If you submit a comment, we store the comment text and the display name you choose. Email addresses are not collected through the comment form.</li>
+        <li><strong>Technical and security data.</strong> To prevent spam and abuse, the Archive may log technical identifiers, such as an IP address, associated with blocked or flagged submissions.</li>
+        <li><strong>Analytics.</strong> We use Umami, a privacy-focused, cookieless analytics service to collect aggregated information such as page views, referring sites, and general browser or device type. No advertising profiles are created.</li>
+      </ul>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">03</span> How We Use Information</h2>
-    <p>Information is used strictly to operate the Archive: authenticating access, preserving reading progress, moderating comments, preventing spam, and understanding how the site is used so it can be improved. Information is never used for advertising, and it is never sold or rented to any third party.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">III.</span>
+    <span class="tc-rule-text">
+      <strong class="head">How We Use Information</strong>
+      <p>Information is used strictly to operate the Archive: authenticating access, preserving reading progress, moderating comments, preventing spam, and understanding how the site is used so it can be improved. Information is never used for advertising, and it is never sold or rented to any third party.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">04</span> No Payment Information</h2>
-    <p>The Archive does not process payments and collects no financial information of any kind.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">IV.</span>
+    <span class="tc-rule-text">
+      <strong class="head">No Payment Information</strong>
+      <p>The Archive does not process payments and collects no financial information of any kind.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">05</span> Third-Party Services</h2>
-    <p>The Archive relies on the following providers to operate. Each processes only what is required to perform its function, and each maintains its own independent privacy practices:</p>
-    <ul>
-      <li><strong>GitHub Pages</strong> — website hosting</li>
-      <li><strong>Supabase</strong> — database, comment storage, and moderation</li>
-      <li><strong>Resend</strong> — transactional email delivery</li>
-      <li><strong>Umami</strong> — privacy-focused analytics</li>
-      <li><strong>Google Fonts</strong> — font delivery</li>
-    </ul>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">V.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Third-Party Services</strong>
+      <p>The Archive relies on the following providers to operate. Each processes only what is required to perform its function, and each maintains its own independent privacy practices:</p>
+      <ul>
+        <li><strong>GitHub Pages</strong> &mdash; website hosting</li>
+        <li><strong>Supabase</strong> &mdash; database, comment storage, and moderation</li>
+        <li><strong>Resend</strong> &mdash; transactional email delivery</li>
+        <li><strong>Umami</strong> &mdash; privacy-focused analytics</li>
+        <li><strong>Google Fonts</strong> &mdash; font delivery</li>
+      </ul>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">06</span> Cookies &amp; Local Storage</h2>
-    <p>The Archive does not use cookies. It uses your browser's sessionStorage to hold a passphrase-verified session; this data lives only in your browser and clears when the tab or browser closes.</p>
-    <p>Some third-party services may use their own technologies necessary to deliver their services. Please refer to their respective privacy policies for details.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">VI.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Cookies &amp; Local Storage</strong>
+      <p>The Archive does not use cookies. It uses your browser's sessionStorage to hold a passphrase-verified session; this data lives only in your browser and clears when the tab or browser closes.</p>
+      <p>Some third-party services may use their own technologies necessary to deliver their services. Please refer to their respective privacy policies for details.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">07</span> Data Retention</h2>
-    <p>Comments are retained until removed by the Archive or by request. Reading progress persists on-device until cleared. Security logs are retained only for as long as reasonably necessary to detect, investigate, or prevent abuse.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">VII.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Data Retention</strong>
+      <p>Comments are retained until removed by the Archive or by request. Reading progress persists on-device until cleared. Security logs are retained only for as long as reasonably necessary to detect, investigate, or prevent abuse.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">08</span> Your Rights</h2>
-    <p>Where applicable under relevant privacy laws, you may request access to, correction of, deletion of, or restriction of personal data held about you — such as a submitted comment — through the contact details below.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">VIII.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Your Rights</strong>
+      <p>Where applicable under relevant privacy laws, you may request access to, correction of, deletion of, or restriction of personal data held about you &mdash; such as a submitted comment &mdash; through the contact details below.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">09</span> Security</h2>
-    <p>Reasonable administrative and technical safeguards are used to protect information held by the Archive. However, no method of transmission or electronic storage is completely secure, and absolute security cannot be guaranteed.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">IX.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Security</strong>
+      <p>Reasonable administrative and technical safeguards are used to protect information held by the Archive. However, no method of transmission or electronic storage is completely secure, and absolute security cannot be guaranteed.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">10</span> Children's Privacy</h2>
-    <p>The Archive is not intended for children under 13 (or the minimum age required by applicable law) and does not knowingly collect personal information from them.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">X.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Children's Privacy</strong>
+      <p>The Archive is not intended for children under 13 (or the minimum age required by applicable law) and does not knowingly collect personal information from them.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">11</span> International Visitors</h2>
-    <p>The Archive is operated from India. If you access it from another country, your information may be processed in jurisdictions whose data protection laws differ from those of your own.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">XI.</span>
+    <span class="tc-rule-text">
+      <strong class="head">International Visitors</strong>
+      <p>The Archive is operated from India. If you access it from another country, your information may be processed in jurisdictions whose data protection laws differ from those of your own.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">12</span> Changes to This Policy</h2>
-    <p>This policy may be updated periodically. The date at the top of this page reflects the most recent revision. Continued use of the Archive after changes constitutes acceptance of the revised policy.</p>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">XII.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Changes to This Policy</strong>
+      <p>This policy may be updated periodically. The date at the top of this page reflects the most recent revision. Continued use of the Archive after changes constitutes acceptance of the revised policy.</p>
+    </span>
+  </div>
 
-  <section>
-    <h2><span class="num">13</span> Contact</h2>
-    <p>Privacy-related requests may be sent to:</p>
-    <div class="contact-block">
-      <p><span class="label">Email</span><a class="inline-link" href="mailto:mailme.voidstanza@gmail.com">mailme.voidstanza@gmail.com</a></p>
-    </div>
-  </section>
+  <div class="tc-rule">
+    <span class="tc-rule-num">XIII.</span>
+    <span class="tc-rule-text">
+      <strong class="head">Contact</strong>
+      <p>Privacy-related requests may be sent to:</p>
+      <div class="tc-contact">
+        <span class="tc-contact-label">Email</span>
+        <a href="mailto:mailme.voidstanza@gmail.com">mailme.voidstanza@gmail.com</a>
+      </div>
+    </span>
+  </div>
 
-  <footer>© Void Stanza · ManuscriptZero</footer>
+  <hr class="tc-divider">
 
+  <p class="tc-closing">What is kept is kept only to keep the Archive running &mdash; nothing more.<br>&copy; Void Stanza &middot; ManuscriptZero</p>
 </div>
+
+<script src="sidebar.js" defer></script>
+<script>
+(function(){var t=localStorage.getItem('vaultTheme')||'dark';if(t==='light')document.body.classList.add('light')})();
+</script>
 </body>
 </html>
