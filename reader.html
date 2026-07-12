@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <script>
@@ -477,8 +477,9 @@ function handleCommentSubmit(){
       }else{setMsg(msg,'Something went wrong.',true)}
     });
   });
- }
- function deleteComment(id){if(!confirm('Remove this trace from the marginalia?'))return;sbFetch('comments?id=eq.'+id,'DELETE').then(function(){loadComments()})}
+}
+
+function deleteComment(id){if(!confirm('Remove this trace from the marginalia?'))return;sbFetch('comments?id=eq.'+id,'DELETE').then(function(){loadComments()})}
 function setMsg(el,text,isErr){el.textContent=text;el.className='comment-msg'+(isErr?' err':' ok')}
 function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
@@ -566,10 +567,10 @@ function embedTracer(containerEl){
 }
 function logTracerRead(sId){
   try{
-    sbFetch('tracer_reads','POST',{
-      tracer_id:getTracerID(),
-      story_id:sId,
-      created_at:new Date().toISOString()
+    fetch(SUPABASE_URL+'/rest/v1/tracer_reads',{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({tracer_id:getTracerID(),story_id:sId,created_at:new Date().toISOString()})
     }).catch(function(){});
   }catch(e){}
 }
