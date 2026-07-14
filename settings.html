@@ -125,6 +125,16 @@ body.light .danger-copy{color:#666}
         <button data-val="desc" onclick="setMarginaliaOrder('desc')">Newest</button>
       </div>
     </div>
+    <div class="setting-row">
+  <div class="setting-copy">
+    <div class="setting-label">Gallery Order</div>
+    <div class="setting-desc">How records are sorted in The Archive.</div>
+  </div>
+  <div class="segmented" id="segment-gallery">
+    <button data-val="asc" onclick="setGalleryOrder('asc')">Oldest</button>
+    <button data-val="desc" onclick="setGalleryOrder('desc')">Latest</button>
+  </div>
+    </div>
   </div>
 
   <div class="section">
@@ -181,7 +191,16 @@ function paintSegment(val){
     b.classList.toggle('on', b.getAttribute('data-val')===val);
   });
 }
-
+function setGalleryOrder(val){
+  localStorage.setItem('mz_gallery_sort',val);
+  paintGallerySegment(val);
+}
+function paintGallerySegment(val){
+  var seg=document.getElementById('segment-gallery');
+  Array.prototype.forEach.call(seg.querySelectorAll('button'),function(b){
+    b.classList.toggle('on', b.getAttribute('data-val')===val);
+  });
+}
 function computeStats(){
   var total=0, sealed=0, active=0;
   for(var i=0;i<localStorage.length;i++){
@@ -223,6 +242,7 @@ function clearProgress(){
   paintToggle('toggle-motion', localStorage.getItem('mz_reduce_motion')==='1');
   paintToggle('toggle-tapzones', localStorage.getItem('mz_tap_zones')==='1');
   paintSegment(localStorage.getItem('mz_marginalia_sort')||'asc');
+  paintGallerySegment(localStorage.getItem('mz_gallery_sort')||'desc');
   renderStats();
 })();
 </script>
