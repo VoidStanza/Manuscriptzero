@@ -188,7 +188,7 @@ body.light .rn-card{border-color:rgba(212,175,55,.3);background:rgba(0,0,0,.02)}
 .rn-synopsis{font-family:'Lora',serif;font-style:italic;font-size:.8rem;color:#666;line-height:1.5}
 body.light .rn-synopsis{color:#888}
 /* T&C */
-#tc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;transition:opacity .5s ease;pointer-events:none}
+  #tc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;transition:opacity .5s ease;pointer-events:none}
 #tc-overlay.visible{opacity:1;pointer-events:all}
 #tc-modal{width:min(560px,95vw);background:#0f0f0f;border:1px solid #2a2a2a;padding:2.8rem 2.5rem 2rem;position:relative;transform:translateY(20px);transition:transform .5s ease;max-height:90vh;display:flex;flex-direction:column}
 #tc-overlay.visible #tc-modal{transform:translateY(0)}
@@ -413,9 +413,8 @@ function renderCommentCard(c){
       '<div class="comment-msg" id="rm-'+c.id+'"></div>'+
     '</div>'+
   '</div>';
-}
-
-function renderReplyCard(r){
+  }
+  function renderReplyCard(r){
   var date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
   var name=r.author&&r.author.trim()?r.author:'Anonymous';
   var canDel=!!getToken(r.id);
@@ -494,7 +493,9 @@ function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt
 function warningKey(){return 'mz_cw_seen_'+storyId}
 function needsWarningModal(){
   var warnings=story&&story.warnings;
-  return !!(warnings&&warnings.length&&localStorage.getItem(warningKey())!=='1');
+  if(!warnings||!warnings.length)return false;
+  if(localStorage.getItem(warningKey())!=='1')return true;
+  return getStoryProgressPct(storyId)<2;
 }
 function showWarningModal(cb){
   document.getElementById('cw-list').innerHTML=story.warnings.map(function(w){return '<li>'+escHtml(w)+'</li>'}).join('');
@@ -631,7 +632,7 @@ function init(){
   var curPct=savedData?savedData.pct:'0',curCh=savedData?savedData.ch:0;
   localStorage.setItem('progress_'+storyId,JSON.stringify({pct:curPct,ch:curCh,opened:true}));
   if(isNovella){
-    document.getElementById('ch-bar').classList.add('show');chIndex=0;commentKey=buildCommentKey();renderChapter();document.getElementById('story-container').classList.add('loaded');if(savedData&&savedData.opened)setTimeout(showPopup,700);
+    document.getElementById('ch-bar').classList.add('show');chIndex=0;commentKey=buildCommentKey();renderChapter();document.getElementById('story-container').classList.add('loaded');if(savedData&&savedData.opened&&parseFloat(savedData.pct||0)>=7)setTimeout(showPopup,700);
   }else{
     document.title='THE VAULT | '+story.title;
     document.getElementById('story-title').textContent=story.title;
@@ -642,7 +643,7 @@ function init(){
     document.getElementById('story-content').style.fontSize=fontSize+'px';
     document.getElementById('story-container').classList.add('loaded');
     commentKey=storyId;likeKey='liked_'+commentKey;hasLiked=!!localStorage.getItem(likeKey);
-    updateLikeBtn();loadLikes();loadComments();if(savedData&&savedData.opened)setTimeout(showPopup,700);
+    updateLikeBtn();loadLikes();loadComments();if(savedData&&savedData.opened&&parseFloat(savedData.pct||0)>=7)setTimeout(showPopup,700);
   }
   document.getElementById('engagement-section').style.display='block';
   getCommenterToken();
@@ -655,3 +656,4 @@ function acceptTerms(){localStorage.setItem('mz_terms_accepted','1');var o=docum
 </script>
 </body>
 </html>
+  
