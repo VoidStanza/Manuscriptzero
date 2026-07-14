@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+  (function(){
+    if (sessionStorage.getItem('mz_unlocked') !== '1') {
+      window.location.replace('gate.html');
+    }
+  })();
+  </script>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="favicon-180.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE VAULT | RECORD</title>
+  <meta name="description" content="Accessing the sanctum of Void Stanza.">
+  <meta property="og:title" content="THE VAULT | ManuscriptZero">
+  <meta property="og:description" content="Accessing the sanctum of Void Stanza.">
+  <meta property="og:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+  <meta property="og:url" content="https://voidstanza.github.io/Manuscriptzero/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="THE VAULT | ManuscriptZero">
+  <meta name="twitter:description" content="Accessing the sanctum of Void Stanza.">
+  <meta name="twitter:image" content="https://voidstanza.github.io/Manuscriptzero/preview.png">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="76ac9d15-8540-48f0-886c-5861388113e4"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <script src="stories.js" defer></script>
+  <script src="sidebar.js" defer></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400&family=Montserrat:wght@300;400;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0b;color:#c9c9c9;font-family:'Montserrat',sans-serif;transition:background .4s,color .4s}
+body.light{background:#f5f0e8;color:#1a1a1a}
+body.reduce-motion,body.reduce-motion *{transition:none !important;animation:none !important;scroll-behavior:auto !important}
+#top-nav{position:fixed;top:0;left:0;right:0;padding:1.1rem 1.75rem;display:flex;justify-content:space-between;align-items:center;z-index:50;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(10,10,11,.96);backdrop-filter:blur(12px);transition:background .4s,border-color .4s}
+body.light #top-nav{background:rgba(245,240,232,.97);border-bottom-color:rgba(0,0,0,.08)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:#d4af37;cursor:pointer;background:none;border:none}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.font-pill{display:flex;align-items:center;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(255,255,255,.03);transition:border-color .4s,background .4s;overflow:hidden}
+body.light .font-pill{border-color:rgba(0,0,0,.1);background:rgba(0,0,0,.04)}
+.font-pill button{background:none;border:none;cursor:pointer;font-weight:700;font-size:11px;color:#666;font-family:'Montserrat',sans-serif;min-width:44px;min-height:44px;padding:0 10px;display:flex;align-items:center;justify-content:center;transition:color .2s,background .15s;-webkit-tap-highlight-color:transparent}
+.font-pill button:hover{color:#d4af37}
+.font-pill button:active{background:rgba(212,175,55,.1)}
+body.light .font-pill button{color:#888}
+body.light .font-pill button:hover{color:#d4af37}
+.font-sep{width:1px;height:20px;background:rgba(255,255,255,.08);flex-shrink:0}
+body.light .font-sep{background:rgba(0,0,0,.1)}
+#theme-btn{border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:0 16px;min-height:44px;background:rgba(255,255,255,.03);color:#888;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;-webkit-tap-highlight-color:transparent}
+#theme-btn:hover{color:#d4af37;border-color:rgba(212,175,55,.4)}
+body.light #theme-btn{border-color:rgba(0,0,0,.1);background:rgba(0,0,0,.04);color:#666}
+#scroll-bar{position:fixed;top:0;left:0;height:2px;background:#d4af37;width:0%;z-index:100;box-shadow:0 0 8px #d4af37;transition:width .1s linear}
+#story-container{max-width:660px;margin:0 auto;padding:6.5rem 1.75rem 5rem;opacity:0;transition:opacity .7s ease}
+#story-container.loaded{opacity:1}
+#chapter-eyebrow{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.65;margin-bottom:.6rem;font-family:'Montserrat',sans-serif}
+#breadcrumb{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:#555;margin-bottom:1.1rem;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+#breadcrumb a{color:#555;text-decoration:none;transition:color .2s}
+#breadcrumb a:hover{color:#d4af37}
+.bc-sep{color:#333}
+#bc-story{color:#888}
+#bc-chapter{color:#d4af37}
+#story-title{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,5vw,3.2rem);color:#d4af37;line-height:1.15;margin-bottom:1rem}
+#story-synopsis{font-family:'Lora',serif;font-style:italic;font-size:1rem;color:#555;margin-bottom:2.5rem;line-height:1.7}
+body.light #story-synopsis{color:#777}
+#ch-bar{display:none;justify-content:space-between;align-items:center;padding:.65rem 1rem;margin-bottom:2rem;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);transition:background .4s,border-color .4s}
+#ch-bar.show{display:flex}
+body.light #ch-bar{border-color:rgba(0,0,0,.08);background:rgba(0,0,0,.02)}
+.ch-btn{background:none;border:none;cursor:pointer;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#555;font-family:'Montserrat',sans-serif;transition:color .2s;min-width:44px;min-height:44px;padding:0 8px;display:flex;align-items:center;-webkit-tap-highlight-color:transparent}
+.ch-btn:hover{color:#d4af37}
+.ch-btn:disabled{opacity:.2;cursor:default}
+#ch-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:#d4af37;font-family:'Montserrat',sans-serif}
+#story-content{font-family:'Lora',serif;line-height:1.95;font-size:18px;transition:font-size .2s,color .4s;color:#a8a8a8}
+body.light #story-content{color:#1c1c1c}
+#story-content [class*="text-gray"]{color:inherit}
+#story-content p{margin-bottom:1.5rem}
+#story-content blockquote{border-left:2px solid #d4af37;padding:.5rem 1rem;margin:2rem 0;font-style:italic;color:rgba(212,175,55,.8)}
+#ch-footer{display:none;flex-direction:column;align-items:center;gap:1rem;padding:3rem 0 2rem;margin-top:3rem;border-top:1px solid rgba(255,255,255,.05)}
+#ch-footer.show{display:flex}
+body.light #ch-footer{border-top-color:rgba(0,0,0,.08)}
+.ch-end-label{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#555;font-family:'Montserrat',sans-serif}
+#next-ch-btn{border:1px solid rgba(212,175,55,.4);color:#d4af37;background:none;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.4em;text-transform:uppercase;padding:13px 30px;cursor:pointer;transition:all .25s}
+#next-ch-btn:hover{background:#d4af37;color:#000}
+#prev-ch-link{background:none;border:none;cursor:pointer;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#555;font-family:'Montserrat',sans-serif;transition:color .2s}
+#prev-ch-link:hover{color:#d4af37}
+#resume-popup{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.75);align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#resume-popup.show{display:flex}
+.popup-inner{background:#0f0f10;border:1px solid rgba(212,175,55,.25);padding:2.5rem 2rem;max-width:340px;width:90%;text-align:center}
+body.light .popup-inner{background:#ede8de;border-color:rgba(212,175,55,.35)}
+.popup-heading{font-family:'Playfair Display',serif;color:#d4af37;font-size:1.3rem;margin-bottom:.65rem}
+.popup-body{font-size:11px;color:#666;letter-spacing:.08em;margin-bottom:1.75rem;line-height:1.65;font-family:'Montserrat',sans-serif}
+.popup-actions{display:flex;gap:.75rem;justify-content:center}
+.popup-yes{background:#d4af37;color:#000;border:none;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.35em;text-transform:uppercase;padding:12px 22px;cursor:pointer;transition:background .2s;min-height:44px}
+.popup-yes:hover{background:#c9a227}
+.popup-no{background:transparent;color:#666;border:1px solid rgba(255,255,255,.08);font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.35em;text-transform:uppercase;padding:12px 22px;cursor:pointer;transition:all .2s;min-height:44px}
+body.light .popup-no{border-color:rgba(0,0,0,.12)}
+.popup-no:hover{color:#d4af37;border-color:rgba(212,175,55,.4)}
+#like-bar{display:flex;align-items:center;gap:1rem;padding:2rem 0 1.5rem;border-top:1px solid rgba(212,175,55,.12)}
+body.light #like-bar{border-top-color:rgba(212,175,55,.2)}
+#like-btn{background:none;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#555;transition:all .2s;min-height:40px;-webkit-tap-highlight-color:transparent}
+#like-btn:hover{border-color:rgba(212,175,55,.4);color:#d4af37}
+#like-btn.liked{border-color:rgba(212,175,55,.5);color:#d4af37;background:rgba(212,175,55,.07)}
+body.light #like-btn{border-color:rgba(0,0,0,.1);color:#888}
+body.light #like-btn.liked{border-color:rgba(212,175,55,.5);color:#d4af37}
+#like-count{font-size:11px;color:#444;font-family:'Montserrat',sans-serif;letter-spacing:.1em}
+body.light #like-count{color:#999}
+#comment-section{max-width:660px;margin:0 auto;padding:0 1.75rem 6rem}
+.comment-section-title{font-size:13px;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:#d4af37;opacity:.95;margin-bottom:2rem;padding-top:2rem;font-family:'Montserrat',sans-serif;border-top:1px solid rgba(255,255,255,.04)}
+body.light .comment-section-title{border-top-color:rgba(0,0,0,.06)}
+.comment-form{margin-bottom:3rem}
+.comment-textarea{width:100%;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);color:#c9c9c9;font-family:'Lora',serif;font-size:.9rem;line-height:1.7;padding:1rem 1.2rem;resize:vertical;min-height:100px;transition:border-color .2s,background .4s;outline:none}
+.comment-textarea:focus{border-color:rgba(212,175,55,.35);background:rgba(255,255,255,.03)}
+body.light .comment-textarea{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.1);color:#1a1a1a}
+.comment-textarea::placeholder{color:#444;font-style:italic}
+body.light .comment-textarea::placeholder{color:#999}
+.form-row{display:flex;gap:.65rem;margin-top:.65rem;flex-wrap:wrap}
+.form-input{flex:1;min-width:140px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);color:#c9c9c9;font-family:'Montserrat',sans-serif;font-size:.78rem;letter-spacing:.08em;padding:0 1rem;height:44px;outline:none;transition:border-color .2s,background .4s}
+.form-input:focus{border-color:rgba(212,175,55,.35)}
+body.light .form-input{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.1);color:#1a1a1a}
+.form-input::placeholder{color:#444;font-style:italic;letter-spacing:.04em}
+body.light .form-input::placeholder{color:#999}
+.comment-submit{background:none;border:1px solid rgba(212,175,55,.35);color:#d4af37;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;padding:0 1.4rem;height:44px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.comment-submit:hover{background:#d4af37;color:#000}
+.comment-submit:disabled{opacity:.4;cursor:default}
+.comment-msg{margin-top:.55rem;font-size:10px;letter-spacing:.15em;font-family:'Montserrat',sans-serif;min-height:18px}
+.comment-msg.ok{color:rgba(212,175,55,.75)}
+.comment-msg.err{color:#c0504d}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+.comment-pending-notice{font-family:'Montserrat',sans-serif;font-weight:300;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:#b8964a;border:1px solid #2a2a2a;padding:.8rem 1rem;margin-top:1rem;opacity:0;animation:fadeUp .5s ease forwards}
+.comment-blocked-notice{font-family:'Montserrat',sans-serif;font-weight:300;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:#8b4040;border:1px solid #2a1a1a;padding:.8rem 1rem;margin-top:1rem}
+.comments-list{display:flex;flex-direction:column;gap:0}
+.comment-card{padding:1.2rem 1.4rem;border:1px solid rgba(255,255,255,.05);border-bottom:none;background:rgba(255,255,255,.015);transition:background .4s,border-color .4s;animation:fadeInUp .35s ease forwards}
+.comment-card:last-child{border-bottom:1px solid rgba(255,255,255,.05)}
+body.light .comment-card{border-color:rgba(0,0,0,.07);background:rgba(0,0,0,.025)}
+.comment-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.comment-anon{font-size:11px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:#d4af37;opacity:.85;font-family:'Montserrat',sans-serif}
+.comment-date{font-size:10px;letter-spacing:.1em;color:#777;font-family:'Montserrat',sans-serif}
+body.light .comment-date{color:#999}
+.comment-text{font-family:'Lora',serif;font-size:.92rem;line-height:1.75;color:#ccc}
+body.light .comment-text{color:#2a2a2a}
+.comment-actions{display:flex;align-items:center;gap:1.2rem;margin-top:.75rem}
+.comment-like-btn{background:none;border:none;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#999;font-family:'Montserrat',sans-serif;padding:0;display:inline-flex;align-items:center;gap:5px;transition:color .2s;-webkit-tap-highlight-color:transparent}
+.comment-like-btn:hover{color:#d4af37}
+.comment-like-btn.liked{color:#d4af37}
+body.light .comment-like-btn{color:#888}
+body.light .comment-like-btn.liked{color:#d4af37}
+.heart-icon{font-size:14px;line-height:1}
+.reply-actions-row{display:flex;align-items:center;gap:1rem;margin-top:.4rem}
+.reply-btn{background:none;border:none;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#999;font-family:'Montserrat',sans-serif;padding:0;transition:color .2s;-webkit-tap-highlight-color:transparent}
+.reply-btn:hover{color:#d4af37}
+body.light .reply-btn{color:#888}
+.delete-btn{background:none;border:none;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#a05050;font-family:'Montserrat',sans-serif;padding:0;transition:color .2s;-webkit-tap-highlight-color:transparent}
+.delete-btn:hover{color:#c0504d}
+.reply-form{margin-top:.85rem;display:none;flex-direction:column;gap:.5rem}
+.reply-form.open{display:flex}
+.reply-textarea{width:100%;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.06);color:#c9c9c9;font-family:'Lora',serif;font-size:.82rem;line-height:1.65;padding:.7rem 1rem;resize:vertical;min-height:70px;outline:none;transition:border-color .2s}
+.reply-textarea:focus{border-color:rgba(212,175,55,.3)}
+body.light .reply-textarea{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08);color:#1a1a1a}
+.reply-textarea::placeholder{color:#444;font-style:italic}
+.reply-actions{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.reply-submit{background:none;border:1px solid rgba(212,175,55,.3);color:#d4af37;font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:.35em;text-transform:uppercase;padding:0 1rem;height:36px;cursor:pointer;transition:all .2s}
+.reply-submit:hover{background:#d4af37;color:#000}
+.reply-submit:disabled{opacity:.4;cursor:default}
+.reply-cancel{background:none;border:none;cursor:pointer;font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:#444;font-family:'Montserrat',sans-serif;transition:color .2s}
+.reply-cancel:hover{color:#888}
+.replies-list{margin-top:.85rem;border-left:1px solid rgba(212,175,55,.14);padding-left:1rem;display:flex;flex-direction:column;gap:.75rem}
+body.light .replies-list{border-left-color:rgba(212,175,55,.28)}
+.reply-card{animation:fadeInUp .3s ease forwards}
+.reply-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem}
+.reply-anon{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#d4af37;opacity:.75;font-family:'Montserrat',sans-serif}
+.reply-date{font-size:9px;letter-spacing:.1em;color:#777;font-family:'Montserrat',sans-serif}
+body.light .reply-date{color:#999}
+.reply-text{font-family:'Lora',serif;font-size:.86rem;line-height:1.7;color:#bbb}
+body.light .reply-text{color:#3a3a3a}
+.reply-delete-btn{background:none;border:none;cursor:pointer;font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#a05050;font-family:'Montserrat',sans-serif;margin-top:.4rem;padding:0;transition:color .2s}
+.reply-delete-btn:hover{color:#c0504d}
+.like-comment-btn{background:none;border:none;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#999;font-family:'Montserrat',sans-serif;padding:0;display:flex;align-items:center;gap:5px;transition:color .2s;-webkit-tap-highlight-color:transparent}
+.like-comment-btn:hover{color:#d4af37}
+.like-comment-btn.liked{color:#d4af37}
+body.light .like-comment-btn{color:#888}
+body.light .like-comment-btn.liked{color:#d4af37}
+.comments-empty{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#2e2e2e;font-family:'Montserrat',sans-serif;text-align:center;padding:2.5rem 0}
+body.light .comments-empty{color:#ccc}
+.comments-loading{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#2e2e2e;font-family:'Montserrat',sans-serif;text-align:center;padding:2rem 0;animation:pulse 1.5s ease-in-out infinite}
+#cw-overlay{display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,.8);align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#cw-overlay.show{display:flex}
+.cw-inner{max-width:400px}
+.cw-list{text-align:left;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.65rem}
+.cw-list li{font-family:'Lora',serif;font-style:italic;font-size:.85rem;color:#999;line-height:1.6;padding-left:1rem;border-left:2px solid rgba(212,175,55,.3)}
+body.light .cw-list li{color:#555}
+#recommend-next{display:none;max-width:660px;margin:0 auto;padding:0 1.75rem 3rem}
+#recommend-next.show{display:block}
+.rn-label{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#d4af37;opacity:.6;margin-bottom:1.2rem;font-family:'Montserrat',sans-serif}
+.rn-card{display:flex;gap:1.1rem;align-items:center;border:1px solid rgba(212,175,55,.2);background:rgba(255,255,255,.02);padding:1rem;cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none}
+.rn-card:hover{border-color:rgba(212,175,55,.5);background:rgba(212,175,55,.05)}
+body.light .rn-card{border-color:rgba(212,175,55,.3);background:rgba(0,0,0,.02)}
+.rn-cover{width:64px;height:86px;object-fit:cover;flex-shrink:0}
+.rn-title{font-family:'Playfair Display',serif;color:#d4af37;font-size:1.05rem;margin-bottom:.35rem;line-height:1.2}
+.rn-synopsis{font-family:'Lora',serif;font-style:italic;font-size:.8rem;color:#666;line-height:1.5}
+body.light .rn-synopsis{color:#888}
+  /* T&C */
+#tc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;transition:opacity .5s ease;pointer-events:none}
+#tc-overlay.visible{opacity:1;pointer-events:all}
+#tc-modal{width:min(560px,95vw);background:#0f0f0f;border:1px solid #2a2a2a;padding:2.8rem 2.5rem 2rem;position:relative;transform:translateY(20px);transition:transform .5s ease;max-height:90vh;display:flex;flex-direction:column}
+#tc-overlay.visible #tc-modal{transform:translateY(0)}
+#tc-modal::before{content:'';position:absolute;top:0;left:2.5rem;right:2.5rem;height:1px;background:linear-gradient(to right,transparent,#b8964a,transparent)}
+.tc-eyebrow{font-family:'Montserrat',sans-serif;font-weight:300;font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:#555;margin-bottom:.6rem}
+.tc-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,4vw,1.9rem);font-weight:300;color:#b8964a;letter-spacing:.05em;margin-bottom:1.6rem;line-height:1.2}
+.tc-body{font-family:'Montserrat',sans-serif;font-weight:300;font-size:.7rem;line-height:1.9;color:#999;overflow-y:auto;flex:1;padding-right:.5rem;margin-bottom:1.8rem;scrollbar-width:thin;scrollbar-color:#2a2a2a transparent}
+.tc-body::-webkit-scrollbar{width:3px}
+.tc-body::-webkit-scrollbar-thumb{background:#2a2a2a}
+.tc-rule{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:.9rem;color:#bbb}
+.tc-rule-num{font-family:'Cormorant Garamond',serif;font-size:.75rem;color:#b8964a;min-width:1.2rem;padding-top:.05rem;font-style:italic}
+.tc-rule-text{font-size:.68rem;line-height:1.75}
+ .tc-rule-text strong{color:#e8e4dc;font-weight:400;font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.03em}
+.tc-divider{border:none;border-top:1px solid #1e1e1e;margin:1.2rem 0}
+.tc-footer{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.tc-note{font-family:'Montserrat',sans-serif;font-weight:300;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:#444;flex:1}
+.tc-accept{background:transparent;border:1px solid #b8964a;color:#b8964a;padding:.7rem 1.8rem;font-family:'Montserrat',sans-serif;font-weight:300;font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:background .3s,color .3s;white-space:nowrap}
+.tc-accept:hover{background:#b8964a;color:#0a0a0a}
+</style>
+</head>
+<body>
+<div id="scroll-bar"></div>
+<div id="resume-popup">
+  <div class="popup-inner">
+    <div class="popup-heading">Welcome back.</div>
+    <div class="popup-body" id="popup-msg">Resume from where you left off?</div>
+    <div class="popup-actions">
+      <button class="popup-yes" onclick="doResume()">Resume</button>
+      <button class="popup-no" onclick="doStartOver()">Start Over</button>
+    </div>
+  </div>
+</div>
+<div id="cw-overlay">
+  <div class="popup-inner cw-inner">
+    <div class="popup-heading">Before You Begin</div>
+    <ul class="cw-list" id="cw-list"></ul>
+    <div class="popup-actions" style="margin-top:1.75rem;">
+      <button class="popup-yes" onclick="acknowledgeWarning()">I Understand - Continue</button>
+    </div>
+  </div>
+</div>
+<nav id="top-nav">
+  <button class="nav-logo">V.</button>
+  <div class="nav-right">
+    <div class="font-pill">
+      <button onclick="changeFont(-2)" aria-label="Decrease font size">A-</button>
+      <div class="font-sep"></div>
+      <button onclick="changeFont(2)" aria-label="Increase font size">A+</button>
+    </div>
+    <button id="theme-btn" onclick="toggleTheme()">Dark</button>
+  </div>
+</nav>
+<main id="story-container">
+  <div id="breadcrumb"><a href="gallery.html">Archive</a><span class="bc-sep">/</span><span id="bc-story"></span><span class="bc-sep" id="bc-sep-ch" style="display:none;">/</span><span id="bc-chapter"></span></div>
+  <div id="chapter-eyebrow"></div>
+  <h1 id="story-title"></h1>
+  <p id="story-synopsis"></p>
+  <div id="ch-bar">
+    <button class="ch-btn" id="prev-ch-top" onclick="goChapter(chIndex-1)">Prev</button>
+    <span id="ch-label"></span>
+    <button class="ch-btn" id="next-ch-top" onclick="goChapter(chIndex+1)">Next</button>
+  </div>
+  <div id="story-content"></div>
+  <div id="ch-footer">
+    <div class="ch-end-label">End of Chapter <span id="ch-footer-num"></span></div>
+    <button id="next-ch-btn" onclick="goChapter(chIndex+1)">Next Chapter</button>
+    <button id="prev-ch-link" onclick="goChapter(chIndex-1)">>Previous Chapter</button>
+  </div>
+</main>
+<section id="recommend-next">
+  <div class="rn-label">Recommended Next</div>
+  <a class="rn-card" id="rn-card"></a>
+</section>
+<section id="engagement-section" style="display:none;">
+   <div style="max-width:660px;margin:0 auto;padding:0 1.75rem;">
+    <div id="like-bar">
+      <button id="like-btn" onclick="toggleLike()">
+        <span id="like-icon">+</span>
+        <span>Leave a mark</span>
+      </button>
+      <span id="like-count"></span>
+    </div>
+  </div>
+  <section id="comment-section">
+    <div class="comment-section-title" id="comment-section-title">Marginalia</div>
+    <div class="comment-form" id="comment-form-wrap">
+      <textarea class="comment-textarea" id="comment-text" placeholder="Leave a trace in the marginalia..." maxlength="2000"></textarea>
+      <div class="form-row">
+        <input type="text" class="form-input" id="comment-author" placeholder="Name (optional)" autocomplete="off">
+        <button class="comment-submit" id="comment-btn" onclick="handleCommentSubmit()">Send</button>
+      </div>
+      <div class="comment-msg" id="comment-msg"></div>
+    </div>
+    <div class="comments-list" id="comments-list">
+      <div class="comments-loading">Loading transmissions...</div>
+    </div>
+  </section>
+</section>
+<!-- T&C -->
+<div id="tc-overlay" role="dialog" aria-modal="true" aria-labelledby="tc-title-el">
+  <div id="tc-modal">
+    <div class="tc-eyebrow">ManuscriptZero - Community Guidelines</div>
+    <div class="tc-title" id="tc-title-el">Before you read and write</div>
+    <div class="tc-body">
+      <div class="tc-rule"><span class="tc-rule-num">I.</span><span class="tc-rule-text"><strong>This is a literary space.</strong> ManuscriptZero exists for fiction, craft, and honest response to the written word. Keep all engagement anchored to the work.</span></div>
+      <div class="tc-rule"><span class="tc-rule-num">II.</span><span class="tc-rule-text"><strong>Speak with care.</strong> Criticism is welcome; cruelty is not. Challenge ideas, not people. Comments that exist only to diminish will not be approved.</span></div>
+      <div class="tc-rule"><span class="tc-rule-num">III.</span><span class="tc-rule-text"><strong>No hate, harassment, or harm.</strong> Content targeting anyone on the basis of identity has no place here and will be permanently removed.</span></div>
+      <div class="tc-rule"><span class="tc-rule-num">IV.</span><span class="tc-rule-text"><strong>Spoilers carry weight.</strong> If your comment reveals plot, mark it clearly. Not everyone reads at the same pace.</span></div>
+      <div class="tc-rule"><span class="tc-rule-num">V.</span><span class="tc-rule-text"><strong>Spam and self-promotion are not commentary.</strong> Links, advertisements, and off-topic solicitations will be rejected without notice.</span></div>
+      <div class="tc-rule"><span class="tc-rule-num">VI.</span><span class="tc-rule-text"><strong>Moderation is final.</strong> All comments are reviewed before they appear. The author reserves the right to approve, reject, or remove any submission at their sole discretion.</span></div>
+      <div class="tc-rule"><span class="tc-rule-num">VII.</span><span class="tc-rule-text"><strong>Your words are yours and visible.</strong> Once approved, comments are public. Do not post anything you would not wish to be read by anyone.</span></div>
+      <hr class="tc-divider"/>
+      <div style="font-size:.62rem;line-height:1.8;color:#555;font-style:italic;font-family:'Cormorant Garamond',serif;">These guidelines exist not to restrict, but to protect the integrity of this archive and everyone who enters it. ManuscriptZero is a private literary space - treat it accordingly.</div>
+    </div>
+    <div class="tc-footer">
+      <div class="tc-note">Continuing confirms you have read and agree to these terms</div>
+      <button class="tc-accept" onclick="acceptTerms()">I Understand - Enter</button>
+    </div>
+  </div>
+</div>
+<script>
+var SUPABASE_URL  = 'https://iakkxwghbczalryylqzg.supabase.co';
+var SUPABASE_KEY  = 'sb_publishable_WL-bPgOrYIK-PGgHk3-6YQ_Re7SIb1-';
+var NOTIFY_FN_URL = SUPABASE_URL + '/functions/v1/comment-notify';
+var fontSize=parseInt(localStorage.getItem('readerFontSize'))||18;
+var storyId=null,story=null,isNovella=false,chIndex=0,scrollTimer=null,savedData=null,commentKey=null,likeKey='',hasLiked=false,pendingWarningCb=null;
+
+function myTokens(){try{return JSON.parse(localStorage.getItem('vault_tokens')||'{}')}catch(e){return{}}}
+function saveToken(id,tok){var t=myTokens();t[String(id)]=tok||'1';localStorage.setItem('vault_tokens',JSON.stringify(t))}
+function getToken(id){return myTokens()[String(id)]||null}
+
+function getCommenterToken(){
+  var tok=localStorage.getItem('mz_comment_token');
+  if(!tok){tok=Array.from(crypto.getRandomValues(new Uint8Array(18))).map(function(b){return b.toString(36).padStart(2,'0')}).join('');localStorage.setItem('mz_comment_token',tok)}
+  return tok;
+}
+
+function checkIsBlocked(){
+  var tok=localStorage.getItem('mz_comment_token');
+  if(!tok)return Promise.resolve(false);
+  return fetch(SUPABASE_URL+'/rest/v1/blocked_tokens?token=eq.'+encodeURIComponent(tok)+'&select=token',{headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}).then(function(r){return r.json()}).then(function(d){return Array.isArray(d)&&d.length>0}).catch(function(){return false});
+}
+
+(function(){var t=localStorage.getItem('vaultTheme')||'dark';if(t==='light')document.body.classList.add('light');document.getElementById('theme-btn').textContent=t==='light'?'Light':'Dark';if(rmOn())document.body.classList.add('reduce-motion')})();
+
+document.getElementById('story-content').addEventListener('click',function(e){
+  if(!isNovella||localStorage.getItem('mz_tap_zones')!=='1')return;
+  var rect=this.getBoundingClientRect(),x=e.clientX-rect.left,w=rect.width;
+  if(x<w*0.22)goChapter(chIndex-1);
+  else if(x>w*0.78)goChapter(chIndex+1);
+});
+function toggleTheme(){var l=document.body.classList.toggle('light');localStorage.setItem('vaultTheme',l?'light':'dark');document.getElementById('theme-btn').textContent=l?'Light':'Dark'}
+function changeFont(d){fontSize=Math.min(Math.max(fontSize+d,12),32);document.getElementById('story-content').style.fontSize=fontSize+'px';localStorage.setItem('readerFontSize',fontSize)}
+
+var recommendationShown=false;
+window.addEventListener('scroll',function(){
+  var s=document.documentElement.scrollTop,total=document.documentElement.scrollHeight-document.documentElement.clientHeight,pct=total>0?(s/total)*100:0;
+  document.getElementById('scroll-bar').style.width=pct+'%';
+  if(!storyId)return;
+  clearTimeout(scrollTimer);
+  scrollTimer=setTimeout(function(){localStorage.setItem('progress_'+storyId,JSON.stringify({pct:pct.toFixed(2),ch:chIndex,opened:true}))},1000);
+  if(!isNovella&&!recommendationShown&&pct>=93){recommendationShown=true;showRecommendation()}
+});
+
+  var touchY=0;
+document.addEventListener('touchstart',function(e){touchY=e.touches[0].clientY});
+document.addEventListener('touchend',function(e){
+  if(!isNovella)return;
+  var dy=touchY-e.changedTouches[0].clientY;
+  var atBottom=window.innerHeight+window.scrollY>=document.body.offsetHeight-80;
+  var atTop=window.scrollY<=10;
+  if(dy>80&&atBottom)goChapter(chIndex+1);
+  if(dy<-80&&atTop)goChapter(chIndex-1);
+});
+ function showPopup(){var pct=Math.round(parseFloat(savedData.pct));var msg=isNovella&&savedData.ch>0?'You were on Chapter '+(savedData.ch+1)+'. Pick up from there?':'You were '+pct+'% through. Resume from there?';document.getElementById('popup-msg').textContent=msg;document.getElementById('resume-popup').classList.add('show')}
+function doResume(){document.getElementById('resume-popup').classList.remove('show');if(isNovella){chIndex=savedData.ch||0;renderChapter()}setTimeout(function(){var total=document.documentElement.scrollHeight-document.documentElement.clientHeight;window.scrollTo({top:(parseFloat(savedData.pct)/100)*total,behavior:rmOn()?'auto':'smooth'})},300)}
+function doStartOver(){document.getElementById('resume-popup').classList.remove('show');if(isNovella){chIndex=0;renderChapter()}window.scrollTo({top:0})}
+
+function sbFetch(path,method,body){
+  var opts={method:method||'GET',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'return=representation':''}};
+  if(body)opts.body=JSON.stringify(body);
+  return fetch(SUPABASE_URL+'/rest/v1/'+path,opts).then(function(r){
+    return r.text().then(function(t){
+      var data=null;
+      try{data=t?JSON.parse(t):null}catch(e){data=t}
+      if(!r.ok){console.error('Supabase '+(method||'GET')+' '+path+' failed ('+r.status+'):',data);return Promise.reject(data)}
+      return data;
+    });
+  });
+}
+
+function updateLikeBtn(){var btn=document.getElementById('like-btn');if(hasLiked)btn.classList.add('liked');else btn.classList.remove('liked')}
+function loadLikes(){sbFetch('likes?story_id=eq.'+encodeURIComponent(commentKey)+'&select=id').then(function(data){var count=Array.isArray(data)?data.length:0;document.getElementById('like-count').textContent=count+(count===1?' mark':' marks')}).catch(function(){document.getElementById('like-count').textContent='0 marks'})}
+function toggleLike(){
+  if(hasLiked){
+    var likeId=localStorage.getItem(likeKey+'_id');
+    if(!likeId){hasLiked=false;localStorage.removeItem(likeKey);updateLikeBtn();loadLikes();return}
+    sbFetch('likes?id=eq.'+likeId,'DELETE').then(function(){hasLiked=false;localStorage.removeItem(likeKey);localStorage.removeItem(likeKey+'_id');updateLikeBtn();loadLikes()}).catch(function(){hasLiked=false;localStorage.removeItem(likeKey);localStorage.removeItem(likeKey+'_id');updateLikeBtn();loadLikes()});
+  }
+  else{sbFetch('likes','POST',{story_id:commentKey}).then(function(data){if(Array.isArray(data)&&data[0]&&data[0].id){hasLiked=true;localStorage.setItem(likeKey,'1');localStorage.setItem(likeKey+'_id',data[0].id);updateLikeBtn();loadLikes()}}).catch(function(){})}
+}
+
+function loadComments(){
+  document.getElementById('comments-list').innerHTML='<div class="comments-loading">Loading transmissions...</div>';
+  sbFetch('comments?story_id=eq.'+encodeURIComponent(commentKey)+'&status=eq.approved&order=created_at.'+marginaliaOrder()+'&select=*').then(function(data){
+    var list=document.getElementById('comments-list');
+    var titleEl=document.getElementById('comment-section-title');
+    if(!Array.isArray(data)||data.length===0){
+      list.innerHTML='<div class="comments-empty">No traces yet. Be the first.</div>';
+      if(titleEl)titleEl.textContent='Marginalia';
+      return;
+    }
+    if(titleEl)titleEl.textContent='Marginalia ('+data.length+')';
+    var tops=data.filter(function(c){return!c.parent_id});
+    var replies=data.filter(function(c){return!!c.parent_id});
+    list.innerHTML=tops.map(function(c){
+      var myReplies=replies.filter(function(r){return r.parent_id===c.id});
+      return renderCommentCard(c)+(myReplies.length?'<div class="replies-list">'+myReplies.map(function(r){return renderReplyCard(r)}).join('')+'</div>':'');
+    }).join('');
+    loadCommentLikes(data.map(function(c){return c.id}));
+  }).catch(function(){});
+}
+
+function commentLikeKey(id){return 'liked_comment_'+id}
+
+function loadCommentLikes(ids){
+  if(!ids||!ids.length)return;
+  sbFetch('likes?comment_id=in.('+ids.join(',')+')&select=comment_id').then(function(data){
+    var counts={};
+    (data||[]).forEach(function(r){counts[r.comment_id]=(counts[r.comment_id]||0)+1});
+    ids.forEach(function(id){
+      var el=document.getElementById('cl-count-'+id);
+      if(el)el.textContent=counts[id]||0;
+    });
+  }).catch(function(err){console.error('Loading comment like counts failed:',err)});
+}
+
+function toggleCommentLike(id){
+  var key=commentLikeKey(id),idKey=key+'_id';
+  var btn=document.getElementById('cl-btn-'+id);
+  var countEl=document.getElementById('cl-count-'+id);
+  var hasLiked=!!localStorage.getItem(key);
+  if(hasLiked){
+    var likeId=localStorage.getItem(idKey);
+    if(!likeId){localStorage.removeItem(key);if(btn)btn.classList.remove('liked');return}
+    sbFetch('likes?id=eq.'+likeId,'DELETE').then(function(){
+      localStorage.removeItem(key);localStorage.removeItem(idKey);
+      if(btn){btn.classList.remove('liked');var hi=btn.querySelector('.heart-icon');if(hi)hi.innerHTML='&#9825;'}
+      if(countEl)countEl.textContent=Math.max(0,(parseInt(countEl.textContent||'0',10)||0)-1);
+    }).catch(function(err){console.error('Comment unlike failed for id '+id+':',err);localStorage.removeItem(key);localStorage.removeItem(idKey);if(btn)btn.classList.remove('liked')});
+  }else{
+    sbFetch('likes','POST',{comment_id:id,story_id:null}).then(function(data){
+      if(Array.isArray(data)&&data[0]&&data[0].id){
+        localStorage.setItem(key,'1');localStorage.setItem(idKey,data[0].id);
+        if(btn){btn.classList.add('liked');var hi=btn.querySelector('.heart-icon');if(hi)hi.innerHTML='&#9829;'}
+        if(countEl)countEl.textContent=(parseInt(countEl.textContent||'0',10)||0)+1;
+      }
+    }).catch(function(err){console.error('Comment like failed for id '+id+':',err)});
+  }
+}
+
+function renderCommentCard(c){
+  var date=new Date(c.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  var name=c.author&&c.author.trim()?c.author:'Anonymous';
+  var canDel=!!getToken(c.id);
+  var liked=!!localStorage.getItem(commentLikeKey(c.id));
+  return '<div class="comment-card" id="cc-'+c.id+'">'+
+    '<div class="comment-meta"><span class="comment-anon">'+escHtml(name)+'</span><span class="comment-date">'+date+'</span></div>'+
+    '<div class="comment-text">'+escHtml(c.content)+'</div>'+
+    '<div class="comment-actions"><button class="like-comment-btn'+(liked?' liked':'')+'" id="cl-btn-'+c.id+'" onclick="toggleCommentLike(\''+c.id+'\')"><span class="heart-icon">'+(liked?'&#9829;':'&#9825;')+'</span><span id="cl-count-'+c.id+'">0</span></button><button class="reply-btn" onclick="toggleReplyForm(\''+c.id+'\')">Reply</button>'+(canDel?'<button class="delete-btn" onclick="deleteComment(\''+c.id+'\')">Delete</button>':'')+'</div>'+
+    '<div class="reply-form" id="rf-'+c.id+'">'+
+      '<textarea class="reply-textarea" id="rt-'+c.id+'" placeholder="Your reply..." maxlength="1000"></textarea>'+
+      '<div class="reply-actions">'+
+        '<input type="text" class="form-input" style="height:36px;font-size:.75rem;flex:1;min-width:100px;" id="ra-'+c.id+'" placeholder="Name (optional)">'+
+        '<button class="reply-submit" onclick="handleReplySubmit(\''+c.id+'\')">Reply</button>'+
+        '<button class="reply-cancel" onclick="toggleReplyForm(\''+c.id+'\')">Cancel</button>'+
+      '</div>'+
+      '<div class="comment-msg" id="rm-'+c.id+'"></div>'+
+    '</div>'+
+  '</div>';
+}
+
+function renderReplyCard(r){
+  var date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  var name=r.author&&r.author.trim()?r.author:'Anonymous';
+  var canDel=!!getToken(r.id);
+  var liked=!!localStorage.getItem(commentLikeKey(r.id));
+  return '<div class="reply-card" id="cc-'+r.id+'">'+
+    '<div class="reply-meta"><span class="reply-anon">'+escHtml(name)+'</span><span class="reply-date">'+date+'</span></div>'+
+    '<div class="reply-text">'+escHtml(r.content)+'</div>'+
+    '<div class="comment-actions"><button class="like-comment-btn'+(liked?' liked':'')+'" id="cl-btn-'+r.id+'" onclick="toggleCommentLike(\''+r.id+'\')"><span class="heart-icon">'+(liked?'&#9829;':'&#9825;')+'</span><span id="cl-count-'+r.id+'">0</span></button>'+(canDel?'<button class="reply-delete-btn" onclick="deleteComment(\''+r.id+'\')">Delete</button>':'')+'</div>'+
+  '</div>';
+  }
+  function toggleReplyForm(id){var rf=document.getElementById('rf-'+id);if(rf)rf.classList.toggle('open')}
+
+function handleCommentSubmit(){
+  var text=(document.getElementById('comment-text').value||'').trim();
+  var author=(document.getElementById('comment-author').value||'').trim();
+  var msg=document.getElementById('comment-msg');
+  var btn=document.getElementById('comment-btn');
+  if(!text){setMsg(msg,'Write something first.',true);return}
+  btn.disabled=true;setMsg(msg,'Sending...',false);
+  checkIsBlocked().then(function(blocked){
+    if(blocked){
+      btn.disabled=false;setMsg(msg,'',false);
+      var wrap=document.getElementById('comment-form-wrap');
+      var notice=document.createElement('div');notice.className='comment-blocked-notice';
+      notice.textContent='You are not permitted to submit comments on this archive.';
+      wrap.appendChild(notice);
+      wrap.querySelector('textarea').style.display='none';
+      wrap.querySelector('.form-row').style.display='none';
+      return;
+    }
+    var token=getCommenterToken();
+    sbFetch('comments','POST',{story_id:commentKey,content:text,author:author||null,token:token,status:'pending'}).then(function(data){
+      if(Array.isArray(data)&&data[0]){
+        var commentId=data[0].id;
+        saveToken(commentId,token);
+        fetch(NOTIFY_FN_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({commentId:commentId})}).catch(function(){});
+        document.getElementById('comment-text').value='';
+        document.getElementById('comment-author').value='';
+        setMsg(msg,'',false);
+        var notice=document.createElement('div');notice.className='comment-pending-notice';
+        notice.textContent='Your comment has been submitted and is awaiting approval.';
+        document.getElementById('comment-form-wrap').appendChild(notice);
+        setTimeout(function(){if(notice.parentNode)notice.parentNode.removeChild(notice)},6000);
+      }else{setMsg(msg,'Something went wrong. Try again.',true)}
+      btn.disabled=false;
+    }).catch(function(){setMsg(msg,'Connection error.',true);btn.disabled=false});
+  });
+}
+  function handleReplySubmit(parentId){
+  var text=(document.getElementById('rt-'+parentId).value||'').trim();
+  var author=(document.getElementById('ra-'+parentId).value||'').trim();
+  var msg=document.getElementById('rm-'+parentId);
+  if(!text){setMsg(msg,'Write something first.',true);return}
+  setMsg(msg,'Sending...',false);
+  checkIsBlocked().then(function(blocked){
+    if(blocked){setMsg(msg,'You are not permitted to submit comments.',true);return}
+    var token=getCommenterToken();
+    sbFetch('comments','POST',{story_id:commentKey,parent_id:parentId,content:text,author:author||null,token:token,status:'pending'}).then(function(data){
+      if(Array.isArray(data)&&data[0]){
+        var commentId=data[0].id;
+        saveToken(commentId,token);
+        fetch(NOTIFY_FN_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({commentId:commentId})}).catch(function(){});
+        document.getElementById('rt-'+parentId).value='';
+        document.getElementById('ra-'+parentId).value='';
+        document.getElementById('rf-'+parentId).classList.remove('open');
+        setMsg(msg,'Reply submitted - awaiting approval.',false);
+        setTimeout(function(){setMsg(msg,'',false)},4000);
+      }else{setMsg(msg,'Something went wrong.',true)}
+    });
+  });
+}
+
+function deleteComment(id){if(!confirm('Remove this trace from the marginalia?'))return;sbFetch('comments?id=eq.'+id,'DELETE').then(function(){loadComments()})}
+function setMsg(el,text,isErr){el.textContent=text;el.className='comment-msg'+(isErr?' err':' ok')}
+function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function warningKey(){return 'mz_cw_seen_'+storyId}
+function needsWarningModal(){
+  var warnings=story&&story.warnings;
+  if(!warnings||!warnings.length)return false;
+  if(localStorage.getItem(warningKey())!=='1')return true;
+  return getStoryProgressPct(storyId)<2;
+}
+function showWarningModal(cb){
+  document.getElementById('cw-list').innerHTML=story.warnings.map(function(w){return '<li>'+escHtml(w)+'</li>'}).join('');
+  pendingWarningCb=cb;
+  document.getElementById('cw-overlay').classList.add('show');
+}
+function acknowledgeWarning(){
+  localStorage.setItem(warningKey(),'1');
+  document.getElementById('cw-overlay').classList.remove('show');
+  var cb=pendingWarningCb;pendingWarningCb=null;
+  if(cb)cb();
+}
+
+function getStoryProgressPct(id){
+  try{
+    var raw=localStorage.getItem('progress_'+id);
+    if(!raw)return 0;
+    var data=JSON.parse(raw);
+    return parseFloat(data.pct||0);
+  }catch(e){return 0}
+}
+function pickRecommendation(){
+  if(!story||typeof stories==='undefined')return null;
+  var myTags=story.tags||[];
+  var candidates=stories.filter(function(s){return s.id!=storyId});
+  var unread=candidates.filter(function(s){return getStoryProgressPct(s.id)<13});
+  var pool=unread.length?unread:candidates;
+  var scored=pool.map(function(s){
+    var overlap=(s.tags||[]).filter(function(t){return myTags.indexOf(t)>-1}).length;
+    return {s:s,score:overlap};
+    });
+  scored.sort(function(a,b){return b.score-a.score});
+  var top=scored.filter(function(x){return x.score===scored[0].score});
+  return top[Math.floor(Math.random()*top.length)].s;
+}
+function showRecommendation(){
+  var rec=pickRecommendation();
+  if(!rec)return;
+  var card=document.getElementById('rn-card');
+  card.href='reader.html?id='+rec.id;
+  card.innerHTML=(rec.cover?'<img class="rn-cover" src="'+rec.cover+'">':'')+'<div><div class="rn-title">'+escHtml(rec.title)+'</div><div class="rn-synopsis">'+escHtml(rec.synopsis||'')+'</div></div>';
+  document.getElementById('recommend-next').classList.add('show');
+}
+
+function buildCommentKey(){if(isNovella)return storyId+'_ch'+(chIndex+1);return storyId}
+
+function rmOn(){return localStorage.getItem('mz_reduce_motion')==='1'}
+function marginaliaOrder(){return localStorage.getItem('mz_marginalia_sort')==='desc'?'desc':'asc'}
+
+// --- Tracer system ---
+var ZW={0:'\u200B',1:'\u200C',start:'\u200D',end:'\u2060'};
+function getTracerID(){
+  var id=localStorage.getItem('mz_tracer_id');
+  if(!id){
+    id=Array.from(crypto.getRandomValues(new Uint8Array(4))).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+    localStorage.setItem('mz_tracer_id',id);
+  }
+  return id;
+}
+function encodeTracer(id){
+  var bits='';
+  for(var i=0;i<id.length;i++){bits+=parseInt(id[i],16).toString(2).padStart(4,'0')}
+  var seq=ZW.start;
+  for(var j=0;j<bits.length;j++){seq+=ZW[bits[j]]}
+  seq+=ZW.end;
+  return seq;
+}
+function embedTracer(containerEl){
+  if(!containerEl)return;
+  var marker=encodeTracer(getTracerID());
+  var paras=containerEl.querySelectorAll('p');
+  paras.forEach(function(p){
+    if(!p.textContent.trim())return;
+    var html=p.innerHTML;
+    var firstSpace=html.indexOf(' ');
+    p.innerHTML=firstSpace>-1?html.slice(0,firstSpace)+marker+html.slice(firstSpace):html+marker;
+  });
+}
+function logTracerRead(sId){
+  try{
+    fetch(SUPABASE_URL+'/rest/v1/tracer_reads',{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({tracer_id:getTracerID(),story_id:sId,created_at:new Date().toISOString()})
+    }).catch(function(){});
+  }catch(e){}
+}
+
+function renderChapter(){
+  var ch=story.chapters[chIndex],total=story.chapters.length;
+  document.getElementById('chapter-eyebrow').textContent=story.title+'  -  Chapter '+(chIndex+1)+' of '+total;
+  document.getElementById('bc-story').textContent=story.title;
+document.getElementById('bc-chapter').textContent='Chapter '+(chIndex+1);
+document.getElementById('bc-sep-ch').style.display='inline';
+  document.getElementById('story-title').textContent=ch.title||('Chapter '+(chIndex+1));
+  document.getElementById('story-synopsis').textContent=ch.synopsis||'';
+  document.getElementById('story-content').innerHTML=ch.text||'';
+  embedTracer(document.getElementById('story-content'));
+  logTracerRead(storyId);
+  document.getElementById('story-content').style.fontSize=fontSize+'px';
+  document.title='THE VAULT | '+story.title+' Ch.'+(chIndex+1);
+  document.getElementById('ch-label').textContent=(chIndex+1)+' / '+total;
+  document.getElementById('prev-ch-top').disabled=chIndex===0;
+  document.getElementById('next-ch-top').disabled=chIndex===total-1;
+  document.getElementById('ch-footer-num').textContent=chIndex+1;
+  document.getElementById('next-ch-btn').style.display=chIndex<total-1?'block':'none';
+  document.getElementById('prev-ch-link').style.display=chIndex>0?'block':'none';
+  document.getElementById('ch-footer').classList.add('show');
+  commentKey=buildCommentKey();likeKey='liked_'+commentKey;hasLiked=!!localStorage.getItem(likeKey);
+  updateLikeBtn();loadLikes();loadComments();
+  window.scrollTo({top:0,behavior:rmOn()?'auto':'smooth'});
+  if(chIndex===total-1){showRecommendation()}else{document.getElementById('recommend-next').classList.remove('show')}
+}
+
+function goChapter(i){
+  if(!story||!story.chapters)return;
+  if(i<0||i>=story.chapters.length)return;
+  chIndex=i;localStorage.setItem('progress_'+storyId,JSON.stringify({pct:'0',ch:chIndex,opened:true}));renderChapter();
+}
+
+function init(){
+  var params=new URLSearchParams(window.location.search);storyId=params.get('id');
+  if(!storyId||typeof stories==='undefined'){document.getElementById('story-content').textContent='Archive error.';document.getElementById('story-container').classList.add('loaded');return}
+  story=stories.find(function(s){return s.id==storyId});
+  if(!story){document.getElementById('story-content').textContent='Record not found.';document.getElementById('story-container').classList.add('loaded');return}
+  isNovella=story.type==='novella'&&Array.isArray(story.chapters);
+  if(needsWarningModal()){showWarningModal(proceedInit)}else{proceedInit()}
+ }
+ function proceedInit(){
+  try{var raw=localStorage.getItem('progress_'+storyId);if(raw)savedData=JSON.parse(raw)}catch(e){}
+  var curPct=savedData?savedData.pct:'0',curCh=savedData?savedData.ch:0;
+  localStorage.setItem('progress_'+storyId,JSON.stringify({pct:curPct,ch:curCh,opened:true}));
+  if(isNovella){
+    document.getElementById('ch-bar').classList.add('show');chIndex=0;commentKey=buildCommentKey();renderChapter();document.getElementById('story-container').classList.add('loaded');if(savedData&&savedData.opened&&parseFloat(savedData.pct||0)>=7)setTimeout(showPopup,700);
+  }else{
+    document.title='THE VAULT | '+story.title;
+    document.getElementById('story-title').textContent=story.title;
+    document.getElementById('bc-story').textContent=story.title;
+    document.getElementById('bc-sep-ch').style.display='none';
+    document.getElementById('bc-chapter').textContent='';
+    document.getElementById('story-synopsis').textContent=story.synopsis||'';
+    document.getElementById('story-content').innerHTML=story.text||story.content||'';
+    embedTracer(document.getElementById('story-content'));
+    logTracerRead(storyId);
+    document.getElementById('story-content').style.fontSize=fontSize+'px';
+    document.getElementById('story-container').classList.add('loaded');
+    commentKey=storyId;likeKey='liked_'+commentKey;hasLiked=!!localStorage.getItem(likeKey);
+    updateLikeBtn();loadLikes();loadComments();if(savedData&&savedData.opened&&parseFloat(savedData.pct||0)>=7)setTimeout(showPopup,700);
+  }
+  document.getElementById('engagement-section').style.display='block';
+  getCommenterToken();
+}
+
+window.onload=init;
+
+(function(){if(localStorage.getItem('mz_terms_accepted')!=='1'){setTimeout(function(){document.getElementById('tc-overlay').classList.add('visible')},400)}})();
+function acceptTerms(){localStorage.setItem('mz_terms_accepted','1');var o=document.getElementById('tc-overlay');o.style.opacity='0';o.style.pointerEvents='none';setTimeout(function(){o.style.display='none'},500)}
+</script>
+</body>
+</html>
