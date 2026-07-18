@@ -227,7 +227,7 @@ function renderGrid() {
     return;
   }
 
-  var sortOrder = localStorage.getItem('mz_gallery_sort') || 'desc';
+  var sortOrder = localStorage.getItem('mz_gallery_sort') || 'asc';
   var sortedStories = stories.slice().sort(function(a, b) {
     return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
   });
