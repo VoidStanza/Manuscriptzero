@@ -242,7 +242,7 @@ function clearProgress(){
   paintToggle('toggle-motion', localStorage.getItem('mz_reduce_motion')==='1');
   paintToggle('toggle-tapzones', localStorage.getItem('mz_tap_zones')==='1');
   paintSegment(localStorage.getItem('mz_marginalia_sort')||'asc');
-  paintGallerySegment(localStorage.getItem('mz_gallery_sort')||'desc');
+  paintGallerySegment(localStorage.getItem('mz_gallery_sort')||'asc');
   renderStats();
 })();
 </script>
